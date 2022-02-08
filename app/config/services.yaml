@@ -4,6 +4,16 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    # opcache preload
+    container.dumper.inline_factories: true
+
+    # Настройки приложения
+    app.frontend.domain: '%env(APP_FRONTEND_DOMAIN)%'
+    app.frontend.host: '%env(APP_FRONTEND_HOST)%'
+    app.backend.domain: '%env(APP_BACKEND_DOMAIN)%'
+    app.backend.host: '%env(APP_BACKEND_HOST)%'
+    app.mediaUrl: '%env(APP_MEDIA_URL)%'
+    app.mediaPath: '%env(APP_MEDIA_PATH)%'
 
 services:
     # default configuration for services in *this* file
@@ -11,14 +21,55 @@ services:
         autowire: true      # Automatically injects dependencies in your services.
         autoconfigure: true # Automatically registers your services as commands, event subscribers, etc.
 
-    # makes classes in src/ available to be used as services
-    # this creates a service per class whose id is the fully-qualified class name
+    # Ядро системы
     App\:
         resource: '../src/'
         exclude:
-            - '../src/DependencyInjection/'
-            - '../src/Entity/'
             - '../src/Kernel.php'
 
-    # add more service definitions when explicit configuration is needed
-    # please note that last definitions always *replace* previous ones
+    App\Core\:
+        resource: '../src/Core/'
+        exclude:
+            - '../src/Core/DataCollections/'
+            - '../src/Core/Entity/'
+            - '../src/Core/Event/'
+            - '../src/Core/Dto/'
+            - '../src/Core/Exception/'
+            - '../src/Core/Pagination/'
+
+    App\Core\DataFixtures\ORM\:
+        resource: '../src/Core/DataFixtures/ORM/'
+        tags: [ 'doctrine.fixture.orm' ]
+
+    #App\Core\EventSubscriber\Traits\TimestampableEntityTraitSubscriber:
+    #    tags:
+    #        - { name: doctrine.event_subscriber, priority: 100, lazy: true }
+    #App\Core\EventSubscriber\Traits\BlameableEntityTraitSubscriber:
+    #    tags:
+    #        - { name: doctrine.event_subscriber, priority: 110, lazy: true }
+
+    # Модуль Users
+    App\Users\:
+        resource: '../src/Users/'
+        exclude:
+            - '../src/Users/DataCollections/'
+            - '../src/Users/Entity/'
+            - '../src/Users/Event/'
+            - '../src/Users/Dto/'
+
+    App\Users\DataFixtures\ORM\:
+        resource: '../src/Users/DataFixtures/ORM/'
+        tags: [ 'doctrine.fixture.orm' ]
+
+    # Модуль Questions
+    App\Questions\:
+        resource: '../src/Questions/'
+        exclude:
+            - '../src/Questions/DataCollections/'
+            - '../src/Questions/Entity/'
+            - '../src/Questions/Event/'
+            - '../src/Questions/Dto/'
+
+    App\Questions\DataFixtures\ORM\:
+        resource: '../src/Questions/DataFixtures/ORM/'
+        tags: [ 'doctrine.fixture.orm' ]

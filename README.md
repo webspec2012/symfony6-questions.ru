@@ -25,6 +25,8 @@ git clone git@github.com:webspec2012/symfony6-questions.ru.git .
 
 ### Инициализация проекта (в `dev` режиме):
 
+* Выполнить следующие инструкции:
+
 ```bash
 # Скопировать конфиг и произвести необходимые настройки (для разработки через docker изменений вносить не требуется).
 cp app/env.dev.local.example env.local
@@ -43,8 +45,14 @@ sudo docker-compose exec -T -u www-data php-fpm sh -c "php bin/console doctrine:
 sudo docker-compose exec -T -u www-data php-fpm sh -c "php bin/console cache:clear"
 ```
 
-* Frontend доступен тут: http://127.0.0.1:8110
-* Backend доступен тут: http://127.0.0.1:8120
+* Прописать в `/etc/hosts` (у себя в компьютере):
+
+```bash
+127.0.0.1 symfony6-questions.ru backend.symfony6-questions.ru
+```
+
+* Frontend доступен тут: http://symfony6-questions.ru:8110
+* Backend доступен тут: http://backend.symfony6-questions.ru:8110
 
 ### Инициализация проекта (в `prod` режиме):
 
@@ -57,6 +65,7 @@ sudo docker-compose -f docker-compose.prod.yml up --build --force-recreate -d
 
 # Установка вендоров
 sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "composer install --ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader"
+sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "composer dump-autoload --no-dev --classmap-authoritative"
 
 # Создание hydrators&proxies для Doctrine ORM
 sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "php bin/console doctrine:generate:hydrators --env=prod"

@@ -1,19 +1,18 @@
 framework:
     cache:
-        # Unique name of your app: used to compute stable namespaces for cache keys.
-        #prefix_seed: your_vendor_name/app_name
+        # Для приложения используется кеш в Redis (С инвалидацией по тегам)
+        default_redis_provider: '%env(REDIS_DSN)%'
+        app: cache.adapter.redis_tag_aware
 
-        # The "app" cache stores to the filesystem by default.
-        # The data in this cache should persist between deploys.
-        # Other options include:
+        # Для системного кеша используются файлы
+        system: cache.adapter.system
 
-        # Redis
-        #app: cache.adapter.redis
-        #default_redis_provider: redis://localhost
-
-        # APCu (not recommended with heavy random-write workloads as memory fragmentation can cause perf issues)
-        #app: cache.adapter.apcu
-
-        # Namespaced pools use the above "app" backend by default
-        #pools:
-            #my.dedicated.cache: null
+        # Pools
+        pools:
+            # Для нужд приложения
+            my_cache_pool:
+                adapter: cache.app
+                default_lifetime: 3600
+            # Для нужд Rate Limiter
+            rate_limiter:
+                adapter: cache.app

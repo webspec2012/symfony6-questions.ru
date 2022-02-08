@@ -16,7 +16,7 @@ services:
                 - USER_GID
         volumes:
             - ./app/:/var/www/
-            - ./docker/php-fpm/zz-performance.ini:/usr/local/etc/php/conf.d/zz-performance.ini
+            - ./docker/php-fpm/prod/zz-performance.ini:/usr/local/etc/php/conf.d/zz-performance.ini
 
     ###########
     #  NGINX  #
@@ -34,5 +34,4 @@ services:
         depends_on:
             - php-fpm
         ports:
-            - "127.0.0.1:8110:8110"
-            - "127.0.0.1:8120:8120"
+            - "127.0.0.1:8110:80"

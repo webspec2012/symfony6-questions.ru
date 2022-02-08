@@ -1,0 +1,19 @@
+{# Главное меню в шапке сайта #}
+{% set currentRoute = app.request.get('_route') %}
+{% set menuItems = [
+    {
+        'label': 'Главная',
+        'route': 'frontend_index',
+        'visible': true,
+        'active': currentRoute == 'frontend_index',
+    }
+] %}
+<ul class="navbar-nav mr-auto">
+    {% for menuItem in menuItems %}
+        {% if menuItem.visible %}
+            <li class="nav-item {% if menuItem.active %}active{% endif %}">
+                <a class="nav-link" href="{{ url(menuItem.route) }}">{{ menuItem.label }}</a>
+            </li>
+        {% endif %}
+    {% endfor %}
+</ul>

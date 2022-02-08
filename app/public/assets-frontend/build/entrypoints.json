@@ -1,0 +1,29 @@
+{
+  "entrypoints": {
+    "js/app": {
+      "js": [
+        "/assets-frontend/build/runtime.18a02a75.js",
+        "/assets-frontend/build/js/app.f09dfc06.js"
+      ],
+      "css": [
+        "/assets-frontend/build/js/app.ea8ec7aa.css"
+      ]
+    },
+    "css/main": {
+      "js": [
+        "/assets-frontend/build/runtime.18a02a75.js"
+      ],
+      "css": [
+        "/assets-frontend/build/css/main.14c80b70.css"
+      ]
+    },
+    "css/app": {
+      "js": [
+        "/assets-frontend/build/runtime.18a02a75.js"
+      ],
+      "css": [
+        "/assets-frontend/build/css/app.9ea4d992.css"
+      ]
+    }
+  }
+}

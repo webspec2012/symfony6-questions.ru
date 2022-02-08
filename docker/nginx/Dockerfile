@@ -12,6 +12,3 @@ RUN usermod -u ${USER_UID} nginx && groupmod -g ${USER_GID} nginx
 
 # Рабочая директория
 WORKDIR /var/www/
-
-# Открытие нужных портов
-EXPOSE 8110 8120

@@ -3,3 +3,5 @@
 /.env.*.local
 /var/
 /vendor/
+/public/media
+

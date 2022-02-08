@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}Backend App{% endblock %}</title>
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('css/main', null, 'backend') }}
+        {{ encore_entry_link_tags('css/app', null, 'backend') }}
+    {% endblock %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('js/app', null, 'backend') }}
+    {% endblock %}
+</head>
+<body>
+<header class="header">
+    <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" role="navigation">
+        <a class="navbar-brand" href="/" role="banner">Backend App</a>
+
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Switch Navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarsDefault">
+            {% include "@backend/components/header-menu.html.twig" %}
+        </div>
+    </nav>
+</header>
+
+<main role="main">
+    <div class="container-fluid" style="margin-top: 15px;">
+        <nav aria-label="breadcrumb">
+            <ol class="breadcrumb">
+                {% block breadcrumbs %}{% endblock %}
+            </ol>
+        </nav>
+
+        {% block body %}{% endblock %}
+    </div>
+</main>
+
+<footer role="contentinfo" class="footer">
+    <div class="container-fluid">
+        <span class="text-muted">Copyright &copy; {{ 'now'|date('Y') }} &mdash; Backend App</span>
+    </div>
+</footer>
+</body>
+</html>

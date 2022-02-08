@@ -15,7 +15,7 @@ COPY www.conf /usr/local/etc/php-fpm.d/www.conf
 
 # Установка пакетов
 COPY --from=composer:latest /usr/bin/composer /usr/local/bin/composer
-RUN apk add --update --no-cache git bash autoconf gcc make g++ zlib-dev
+RUN apk add --update --no-cache git bash autoconf gcc make g++ zlib-dev npm
 RUN apk add --update --no-cache \
     libzip-dev \
     libpng-dev \
@@ -31,6 +31,10 @@ RUN docker-php-ext-install \
     pdo \
     pdo_mysql \
     sysvsem
+
+RUN pecl install -o -f redis \
+	&&  rm -rf /tmp/pear \
+	&&  docker-php-ext-enable redis
 
 # Установка workdir
 WORKDIR /var/www

@@ -15,10 +15,10 @@ services:
                 - USER_UID
                 - USER_GID
         environment:
-            MYSQL_DATABASE: 'questions'
-            MYSQL_USER: 'questions'
-            MYSQL_PASSWORD: 'questions_password'
-            MYSQL_ROOT_PASSWORD: 'root_password'
+            - MYSQL_DATABASE
+            - MYSQL_USER
+            - MYSQL_PASSWORD
+            - MYSQL_ROOT_PASSWORD
         volumes:
             - ./docker/mysql/data/:/var/lib/mysql/
 
@@ -38,7 +38,7 @@ services:
             - rabbitmq
         volumes:
             - ./app/:/var/www/
-            - ./docker/php-fpm/zz-perfomance.ini:/usr/local/etc/php/conf.d/zz-perfomance.ini
+            - ./docker/php-fpm/dev/zz-performance.ini:/usr/local/etc/php/conf.d/zz-performance.ini
 
     ###########
     #  NGINX  #
@@ -56,8 +56,7 @@ services:
         depends_on:
             - php-fpm
         ports:
-            - "127.0.0.1:8110:8110"
-            - "127.0.0.1:8120:8120"
+            - "127.0.0.1:8110:80"
 
     ###########
     #  REDIS  #
@@ -90,7 +89,7 @@ services:
             - "127.0.0.1:5672:5672"
             - "127.0.0.1:15672:15672"
         environment:
-            RABBITMQ_USERNAME: 'rabbitmq_user'
-            RABBITMQ_PASSWORD: 'rabbitmq_password'
+            - RABBITMQ_USERNAME
+            - RABBITMQ_PASSWORD
         volumes:
             - ./docker/rabbitmq/data/:/var/lib/rabbitmq/

@@ -1,5 +1,12 @@
 twig:
     default_path: '%kernel.project_dir%/templates'
+    paths:
+        '%kernel.project_dir%/templates/backend': backend
+        '%kernel.project_dir%/templates/frontend': frontend
+    form_themes:
+        - 'bootstrap_4_layout.html.twig'
+    globals:
+        mediaUrl: '%env(APP_MEDIA_URL)%'
 
 when@test:
     twig:
