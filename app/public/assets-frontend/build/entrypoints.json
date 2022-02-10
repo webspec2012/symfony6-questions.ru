@@ -3,10 +3,7 @@
     "js/app": {
       "js": [
         "/assets-frontend/build/runtime.18a02a75.js",
-        "/assets-frontend/build/js/app.f09dfc06.js"
-      ],
-      "css": [
-        "/assets-frontend/build/js/app.ea8ec7aa.css"
+        "/assets-frontend/build/js/app.25ff184c.js"
       ]
     },
     "css/main": {

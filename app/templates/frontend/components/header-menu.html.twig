@@ -1,11 +1,22 @@
 {# Главное меню в шапке сайта #}
 {% set currentRoute = app.request.get('_route') %}
+{% set isAuth = is_granted('IS_AUTHENTICATED_REMEMBERED') %}
 {% set menuItems = [
     {
         'label': 'Главная',
         'route': 'frontend_index',
         'visible': true,
         'active': currentRoute == 'frontend_index',
+    }, {
+        'label': 'Вход',
+        'route': 'frontend_login',
+        'visible': not isAuth,
+        'active': currentRoute == 'frontend_login',
+    }, {
+        'label': 'Выход',
+        'route': 'frontend_logout',
+        'visible': isAuth,
+        'active': false
     }
 ] %}
 <ul class="navbar-nav mr-auto">

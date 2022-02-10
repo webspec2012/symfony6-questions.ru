@@ -1,0 +1,25 @@
+framework:
+    workflows:
+        # User status
+        user_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Users\Entity\UserInterface
+            initial_marking: ACTIVE
+            places:
+                - ACTIVE
+                - BLOCKED
+                - DELETED
+            transitions:
+                restore:
+                    from: ['BLOCKED', 'DELETED']
+                    to: ACTIVE
+                block:
+                    from: ACTIVE
+                    to: BLOCKED
+                delete:
+                    from: ACTIVE
+                    to: DELETED

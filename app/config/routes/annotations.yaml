@@ -1,11 +1,11 @@
 frontend:
-    resource: ../../src/Core/Controller/Frontend/
+    resource: ../../src/Controller/Frontend/
     type: annotation
     name_prefix: 'frontend_'
     host: '%app.frontend.domain%'
 
 backend:
-    resource: ../../src/Core/Controller/Backend/
+    resource: ../../src/Controller/Backend/
     type: annotation
     name_prefix: 'backend_'
     host: '%app.backend.domain%'

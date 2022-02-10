@@ -31,7 +31,6 @@ Encore
     .setPublicPath('/assets-backend/build')
     .addEntry('js/app', './assets/assets-backend/js/app.js')
     .addStyleEntry('css/main', './assets/assets-backend/css/main.scss')
-    .addStyleEntry('css/login', './assets/assets-backend/css/login.css')
     .addStyleEntry('css/app', './assets/assets-backend/css/app.css')
     .autoProvidejQuery()
     .enableSassLoader(function(sassOptions) {}, {

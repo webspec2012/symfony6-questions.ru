@@ -41,12 +41,12 @@ services:
         resource: '../src/Core/DataFixtures/ORM/'
         tags: [ 'doctrine.fixture.orm' ]
 
-    #App\Core\EventSubscriber\Traits\TimestampableEntityTraitSubscriber:
-    #    tags:
-    #        - { name: doctrine.event_subscriber, priority: 100, lazy: true }
-    #App\Core\EventSubscriber\Traits\BlameableEntityTraitSubscriber:
-    #    tags:
-    #        - { name: doctrine.event_subscriber, priority: 110, lazy: true }
+    App\Core\EventSubscriber\Traits\TimestampableEntityTraitSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, priority: 100, lazy: true }
+    App\Core\EventSubscriber\Traits\BlameableEntityTraitSubscriber:
+        tags:
+            - { name: doctrine.event_subscriber, priority: 110, lazy: true }
 
     # Модуль Users
     App\Users\:

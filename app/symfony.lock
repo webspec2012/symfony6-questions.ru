@@ -20,6 +20,9 @@
     "doctrine/common": {
         "version": "3.2.2"
     },
+    "doctrine/data-fixtures": {
+        "version": "1.5.2"
+    },
     "doctrine/dbal": {
         "version": "3.3.2"
     },
@@ -40,6 +43,18 @@
             "config/packages/test/doctrine.yaml",
             "src/Entity/.gitignore",
             "src/Repository/.gitignore"
+        ]
+    },
+    "doctrine/doctrine-fixtures-bundle": {
+        "version": "3.4",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.0",
+            "ref": "1f5514cfa15b947298df4d771e694e578d4c204d"
+        },
+        "files": [
+            "src/DataFixtures/AppFixtures.php"
         ]
     },
     "doctrine/doctrine-migrations-bundle": {
@@ -84,6 +99,9 @@
     },
     "friendsofphp/proxy-manager-lts": {
         "version": "v1.0.5"
+    },
+    "fzaninotto/faker": {
+        "version": "v1.5.0"
     },
     "laminas/laminas-code": {
         "version": "4.5.1"
@@ -132,6 +150,9 @@
         "files": [
             "config/packages/sensio_framework_extra.yaml"
         ]
+    },
+    "symfony/amqp-messenger": {
+        "version": "v6.0.3"
     },
     "symfony/asset": {
         "version": "v6.0.3"
@@ -251,6 +272,18 @@
     "symfony/intl": {
         "version": "v6.0.3"
     },
+    "symfony/lock": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "5.2",
+            "ref": "a1c8800e40ae735206bb14586fdd6c4630a51b8d"
+        },
+        "files": [
+            "config/packages/lock.yaml"
+        ]
+    },
     "symfony/mailer": {
         "version": "6.0",
         "recipe": {
@@ -351,6 +384,9 @@
         "version": "v6.0.3"
     },
     "symfony/proxy-manager-bridge": {
+        "version": "v6.0.3"
+    },
+    "symfony/rate-limiter": {
         "version": "v6.0.3"
     },
     "symfony/routing": {
@@ -502,6 +538,18 @@
             "config/packages/webpack_encore.yaml",
             "package.json",
             "webpack.config.js"
+        ]
+    },
+    "symfony/workflow": {
+        "version": "6.0",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "3.3",
+            "ref": "3b2f8ca32a07fcb00f899649053943fa3d8bbfb6"
+        },
+        "files": [
+            "config/packages/workflow.yaml"
         ]
     },
     "symfony/yaml": {

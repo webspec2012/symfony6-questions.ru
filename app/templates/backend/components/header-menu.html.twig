@@ -9,12 +9,12 @@
     }, {
         'label': 'Пользователи',
         'route': 'backend_users_index',
-        'visible': is_granted('ROLE_MANAGER_USERS'),
+        'visible': false and is_granted('MANAGER_USERS'),
         'active': 'backend_users_' in currentRoute,
     }, {
         'label': 'Вопросы-ответы',
         'route': 'backend_questions_index',
-        'visible': is_granted('ROLE_MANAGER_QUESTIONS'),
+        'visible': false and is_granted('MANAGER_QUESTIONS'),
         'active': 'backend_questions_' in currentRoute,
     }, {
         'label': 'Выход',

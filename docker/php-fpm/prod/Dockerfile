@@ -21,7 +21,8 @@ RUN apk add --update --no-cache \
     libpng-dev \
     icu-dev \
     oniguruma-dev \
-    libsodium-dev
+    libsodium-dev \
+    rabbitmq-c rabbitmq-c-dev
 
 RUN docker-php-ext-install \
     opcache \
@@ -35,6 +36,10 @@ RUN docker-php-ext-install \
 RUN pecl install -o -f redis \
 	&&  rm -rf /tmp/pear \
 	&&  docker-php-ext-enable redis
+
+RUN pecl install -o -f amqp \
+	&&  rm -rf /tmp/pear \
+	&&  docker-php-ext-enable amqp
 
 # Установка workdir
 WORKDIR /var/www

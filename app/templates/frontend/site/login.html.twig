@@ -1,0 +1,36 @@
+{% extends '@frontend/layouts/main.html.twig' %}
+
+{% block body %}
+    <div class="card auth-wrapper">
+        <div class="card-body p-5">
+            <h1 class="fs-4 card-title fw-bold mb-4">Авторизация</h1>
+
+            {% if error %}
+                {{ tools.alert('danger', error.messageKey|trans(error.messageData, 'security')) }}
+            {% endif %}
+
+            <form method="POST" class="needs-validation" novalidate="" autocomplete="off">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+
+                <div class="mb-3">
+                    <label class="mb-2 text-muted" for="email">E-mail</label>
+                    <input id="email" type="email" class="form-control" name="email" value="{{ last_username }}" required autofocus>
+                </div>
+
+                <div class="mb-3">
+                    <div class="mb-2 w-100">
+                        <label class="text-muted" for="password">Пароль</label>
+                    </div>
+
+                    <input id="password" type="password" class="form-control" name="password" required>
+                </div>
+
+                <div class="d-flex align-items-center">
+                    <button type="submit" class="btn btn-primary ms-auto">
+                        Вход
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

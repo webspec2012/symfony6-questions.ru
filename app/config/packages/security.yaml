@@ -1,30 +1,63 @@
 security:
     enable_authenticator_manager: true
+
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'
-    # https://symfony.com/doc/current/security.html#loading-the-user-the-user-provider
+        App\Users\Entity\User:
+            algorithm: auto
+
     providers:
-        users_in_memory: { memory: null }
+        frontend_user_provider:
+            id: App\Core\Security\FrontendUserProvider
+        backend_user_provider:
+            id: App\Core\Security\BackendUserProvider
+
+    # Firewalls
     firewalls:
+        # activate different ways to authenticate
+        # https://symfony.com/doc/current/security.html#the-firewall
+
+        # https://symfony.com/doc/current/security/impersonating_user.html
+        # switch_user: true
         dev:
             pattern: ^/(_(profiler|wdt)|css|images|js)/
             security: false
-        main:
-            lazy: true
-            provider: users_in_memory
 
-            # activate different ways to authenticate
-            # https://symfony.com/doc/current/security.html#the-firewall
+        backend_firewall:
+            host: '%app.backend.domain%'
+            provider: backend_user_provider
+            custom_authenticator: App\Core\Security\BackendLoginFormAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                always_remember_me: true
+            login_throttling: ~
+            logout:
+                path: backend_logout
+                target: backend_index
 
-            # https://symfony.com/doc/current/security/impersonating_user.html
-            # switch_user: true
+        frontend_firewall:
+            host: '%app.frontend.domain%'
+            provider: frontend_user_provider
+            custom_authenticator: App\Core\Security\FrontendLoginFormAuthenticator
+            remember_me:
+                secret: '%kernel.secret%'
+                always_remember_me: true
+            login_throttling: ~
+            logout:
+                path: frontend_logout
+                target: frontend_index
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
     access_control:
-        # - { path: ^/admin, roles: ROLE_ADMIN }
-        # - { path: ^/profile, roles: ROLE_USER }
+        - { path: /login/, roles: PUBLIC_ACCESS, host: '%app.backend.domain%' }
+        - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED, host: '%app.backend.domain%' }
+        - { path: ^/user/, roles: MANAGER_USERS, host: '%app.backend.domain%' }
+        - { path: ^/question/, roles: MANAGER_QUESTIONS, host: '%app.backend.domain%' }
+
+    role_hierarchy:
+        ADMIN: ['MANAGER_USERS', 'MANAGER_QUESTIONS']
 
 when@test:
     security:

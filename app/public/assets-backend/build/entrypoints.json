@@ -17,14 +17,6 @@
         "/assets-backend/build/css/main.95ae1a9f.css"
       ]
     },
-    "css/login": {
-      "js": [
-        "/assets-backend/build/runtime.18a02a75.js"
-      ],
-      "css": [
-        "/assets-backend/build/css/login.04509b7a.css"
-      ]
-    },
     "css/app": {
       "js": [
         "/assets-backend/build/runtime.18a02a75.js"
