@@ -1,15 +1,8 @@
 {
-  "assets-backend/build/js/app.css": "/assets-backend/build/js/app.ea8ec7aa.css",
-  "assets-backend/build/js/app.js": "/assets-backend/build/js/app.5200db9f.js",
-  "assets-backend/build/css/main.css": "/assets-backend/build/css/main.95ae1a9f.css",
+  "assets-backend/build/js/app.js": "/assets-backend/build/js/app.6ed28c6e.js",
+  "assets-backend/build/css/main.css": "/assets-backend/build/css/main.81ec644b.css",
   "assets-backend/build/css/app.css": "/assets-backend/build/css/app.9ea4d992.css",
   "assets-backend/build/runtime.js": "/assets-backend/build/runtime.18a02a75.js",
   "assets-backend/build/fonts/fa-solid-900.ttf": "/assets-backend/build/fonts/fa-solid-900.79da2134.ttf",
-  "assets-backend/build/fonts/fa-solid-900.woff2": "/assets-backend/build/fonts/fa-solid-900.4896d4b0.woff2",
-  "assets-backend/build/images/ui-icons_555555_256x240.png": "/assets-backend/build/images/ui-icons_555555_256x240.35d57320.png",
-  "assets-backend/build/images/ui-icons_444444_256x240.png": "/assets-backend/build/images/ui-icons_444444_256x240.d1b81858.png",
-  "assets-backend/build/images/ui-icons_777777_256x240.png": "/assets-backend/build/images/ui-icons_777777_256x240.f5d5fce2.png",
-  "assets-backend/build/images/ui-icons_ffffff_256x240.png": "/assets-backend/build/images/ui-icons_ffffff_256x240.92bef7e4.png",
-  "assets-backend/build/images/ui-icons_777620_256x240.png": "/assets-backend/build/images/ui-icons_777620_256x240.f423048b.png",
-  "assets-backend/build/images/ui-icons_cc0000_256x240.png": "/assets-backend/build/images/ui-icons_cc0000_256x240.5cbbd560.png"
+  "assets-backend/build/fonts/fa-solid-900.woff2": "/assets-backend/build/fonts/fa-solid-900.4896d4b0.woff2"
 }

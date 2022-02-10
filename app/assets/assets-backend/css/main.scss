@@ -1,10 +1,3 @@
-// assets/backend/css/main.scss
-
-// customize some Bootstrap variables
-// $primary: darken(#428bca, 20%);
-
-// the ~ allows you to reference things in node_modules
-
 // import bootstrap
 @import "~bootstrap/scss/bootstrap";
 
@@ -14,8 +7,8 @@ $fa-font-path: '~@fortawesome/fontawesome-free/webfonts';
 @import '~@fortawesome/fontawesome-free/scss/solid';
 
 // import select2
-@import '~select2/dist/css/select2.min.css';
+//@import '~select2/dist/css/select2.min.css';
 
 // import jquery-datepicker
-@import '~jquery-ui/themes/base/theme.css';
-@import '~jquery-ui/themes/base/datepicker.css';
+//@import '~jquery-ui/themes/base/theme.css';
+//@import '~jquery-ui/themes/base/datepicker.css';

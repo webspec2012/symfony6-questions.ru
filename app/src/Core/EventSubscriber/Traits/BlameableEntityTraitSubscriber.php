@@ -1,6 +1,7 @@
 <?php
 namespace App\Core\EventSubscriber\Traits;
 
+use App\Core\Entity\Traits\BlameableEntityTrait;
 use Doctrine\ORM\Events;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -73,11 +74,12 @@ final class BlameableEntityTraitSubscriber implements EventSubscriberInterface
      */
     private function updateEntity(object $entity): bool
     {
-        if (method_exists( $entity, 'updatedBlameables')) {
-            $entity->updatedBlameables($this->security->getUser());
-            return true;
+        if (!is_subclass_of($entity, BlameableEntityTrait::class)) {
+            return false;
+
         }
 
-        return false;
+        $entity->updatedBlameables($this->security->getUser());
+        return true;
     }
 }

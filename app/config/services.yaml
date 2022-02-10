@@ -48,6 +48,11 @@ services:
         tags:
             - { name: doctrine.event_subscriber, priority: 110, lazy: true }
 
+    # Session Storage
+    Symfony\Component\HttpFoundation\Session\Storage\Handler\PdoSessionHandler:
+        arguments:
+            - '%env(DATABASE_URL)%'
+
     # Модуль Users
     App\Users\:
         resource: '../src/Users/'
