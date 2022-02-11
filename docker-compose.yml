@@ -22,6 +22,19 @@ services:
         volumes:
             - ./docker/mysql/data/:/var/lib/mysql/
 
+    mysql_test:
+        restart: always
+        build:
+            context: ./docker/mysql
+            args:
+                - USER_UID
+                - USER_GID
+        environment:
+            MYSQL_DATABASE: 'test_db'
+            MYSQL_USER: 'test_user'
+            MYSQL_PASSWORD: 'test_password'
+            MYSQL_ROOT_PASSWORD: 'root_password'
+
     #############
     #  PHP-FPM  #
     #############
