@@ -66,6 +66,9 @@ services:
         resource: '../src/Users/DataFixtures/ORM/'
         tags: [ 'doctrine.fixture.orm' ]
 
+    App\Users\Service\PasswordGenerate\SimplePasswordGenerate: ~
+    App\Users\Service\PasswordGenerate\PasswordGenerateInterface: '@App\Users\Service\PasswordGenerate\SimplePasswordGenerate'
+
     # Модуль Questions
     App\Questions\:
         resource: '../src/Questions/'

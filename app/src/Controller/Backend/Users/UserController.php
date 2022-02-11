@@ -4,13 +4,14 @@ namespace App\Controller\Backend\Users;
 use App\Controller\Backend\AppController;
 use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
+use App\Core\Exception\ServiceException;
 use App\Users\Dto\User\UserChangePasswordForm;
 use App\Users\Dto\User\UserCreateForm;
 use App\Users\Dto\User\UserUpdateForm;
 use App\Users\Form\User\UserCreateFormType;
 use App\Users\Form\User\UserSearchFormType;
 use App\Users\Form\User\UserUpdateFormType;
-use App\Users\Service\PasswordGeneratorService;
+use App\Users\Service\PasswordGenerate\PasswordGenerateInterface;
 use App\Users\UseCase\User\UserChangePasswordCase;
 use App\Users\UseCase\User\UserCreateCase;
 use App\Users\UseCase\User\UserFindCase;
@@ -49,16 +50,19 @@ final class UserController extends AppController
      *
      * @param Request $request Request
      * @param UserCreateCase $userCreateCase User Create Case
+     * @param PasswordGenerateInterface $passwordGenerate Password Generate Service
+     *
      * @return Response Response
-     * @throws AppException
+     * @throws ServiceException
      */
     public function create(
         Request $request,
-        UserCreateCase $userCreateCase
+        UserCreateCase $userCreateCase,
+        PasswordGenerateInterface $passwordGenerate,
     ): Response
     {
         $formData = new UserCreateForm();
-        $formData->password = PasswordGeneratorService::generate();
+        $formData->password = $passwordGenerate->generate();
 
         $form = $this->createForm(UserCreateFormType::class, $formData);
         $form->handleRequest($request);
@@ -87,6 +91,7 @@ final class UserController extends AppController
      *
      * @param Request $request Request
      * @param UserListingCase $userListingCase User Listing Case
+     *
      * @return Response Response
      */
     public function list(
@@ -120,6 +125,7 @@ final class UserController extends AppController
      *
      * @param int $id ID пользователя
      * @param UserFindCase $userFindCase User Find Case
+     *
      * @return Response
      */
     public function view(
@@ -145,6 +151,7 @@ final class UserController extends AppController
      * @param Request $request Request
      * @param UserFindCase $userFindCase User Find Case
      * @param UserUpdateCase $userUpdateCase User Update Case
+     *
      * @return Response
      */
     public function update(
@@ -197,6 +204,7 @@ final class UserController extends AppController
      * @param int $id ID пользователя
      * @param Request $request Request
      * @param UserSwitchStatusCase $userSwitchStatusCase User Switch Status Case
+     *
      * @return Response
      */
     public function block(
@@ -228,6 +236,7 @@ final class UserController extends AppController
      * @param int $id ID пользователя
      * @param Request $request Request
      * @param UserSwitchStatusCase $userSwitchStatusCase User Switch Status Case
+     *
      * @return Response
      */
     public function delete(
@@ -259,6 +268,7 @@ final class UserController extends AppController
      * @param int $id ID пользователя
      * @param Request $request Request
      * @param UserSwitchStatusCase $userSwitchStatusCase User Switch Status Case
+     *
      * @return Response
      */
     public function restore(
@@ -290,12 +300,15 @@ final class UserController extends AppController
      * @param int $id ID пользователя
      * @param Request $request Request
      * @param UserChangePasswordCase $userChangePasswordCase User ChangePassword Case
+     * @param PasswordGenerateInterface $passwordGenerate Password Generate Service
+     *
      * @return Response
      */
     public function changePassword(
         int $id,
         Request $request,
-        UserChangePasswordCase $userChangePasswordCase
+        UserChangePasswordCase $userChangePasswordCase,
+        PasswordGenerateInterface $passwordGenerate,
     ): Response
     {
         $this->checkCsrfToken($request);
@@ -303,7 +316,7 @@ final class UserController extends AppController
         try {
             $formData = new UserChangePasswordForm();
             $formData->id = $id;
-            $formData->password = PasswordGeneratorService::generate();
+            $formData->password = $passwordGenerate->generate();
 
             $userChangePasswordCase->changePassword($formData);
 
