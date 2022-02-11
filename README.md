@@ -42,15 +42,8 @@ cp app/env.dev.local.example env.local
 # Запуск docker контейнеров
 sudo docker-compose up --build --force-recreate -d
 
-# Установка вендоров
-sudo docker-compose exec -T -u www-data php-fpm sh -c "composer install --no-interaction --no-plugins --no-progress --no-scripts --ansi"
-
-# Применение миграций и загрузка тестовых данных
-sudo docker-compose exec -T -u www-data php-fpm sh -c "php bin/console doctrine:migrate --up -n"
-sudo docker-compose exec -T -u www-data php-fpm sh -c "php bin/console doctrine:fixtures:load --group=production -n"
-
-# Сброс кеша
-sudo docker-compose exec -T -u www-data php-fpm sh -c "php bin/console cache:clear"
+# Инициализация проекта
+sudo docker-compose exec -T -u www-data php-fpm sh -c "make dev"
 ```
 
 * Прописать в `/etc/hosts` (у себя в компьютере):
@@ -71,14 +64,6 @@ cp app/env.prod.local.example env.local
 # Запуск docker контейнеров
 sudo docker-compose -f docker-compose.prod.yml up --build --force-recreate -d
 
-# Установка вендоров
-sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "composer install --ansi --no-dev --no-interaction --no-plugins --no-progress --no-scripts --optimize-autoloader"
-sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "composer dump-autoload --no-dev --classmap-authoritative"
-
-# Создание hydrators&proxies для Doctrine ORM
-sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "php bin/console doctrine:generate:hydrators --env=prod"
-sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "php bin/console doctrine:generate:proxies --env=prod"
-
-# Сброс кеша
-sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "php bin/console cache:clear"
+# Инициализация проекта
+sudo docker-compose -f docker-compose.prod.yml exec -T -u www-data php-fpm sh -c "make prod"
 ```

@@ -15,6 +15,11 @@ trait BlameableEntityTrait
      * @ORM\ManyToOne(
      *     targetEntity="App\Users\Entity\User"
      * )
+     * @ORM\JoinColumn(
+     *     name="created_by",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
+     * )
      */
     protected ?UserInterface $created_by = null;
 
@@ -23,6 +28,11 @@ trait BlameableEntityTrait
      *
      * @ORM\ManyToOne(
      *     targetEntity="App\Users\Entity\User"
+     * )
+     * @ORM\JoinColumn(
+     *     name="updated_by",
+     *     referencedColumnName="id",
+     *     onDelete="SET NULL"
      * )
      */
     protected ?UserInterface $updated_by = null;
