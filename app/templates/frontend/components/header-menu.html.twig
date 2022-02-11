@@ -22,8 +22,8 @@
 <ul class="navbar-nav mr-auto">
     {% for menuItem in menuItems %}
         {% if menuItem.visible %}
-            <li class="nav-item {% if menuItem.active %}active{% endif %}">
-                <a class="nav-link" href="{{ url(menuItem.route) }}">{{ menuItem.label }}</a>
+            <li class="nav-item">
+                <a class="nav-link {% if menuItem.active %}active{% endif %}" href="{{ url(menuItem.route) }}">{{ menuItem.label }}</a>
             </li>
         {% endif %}
     {% endfor %}

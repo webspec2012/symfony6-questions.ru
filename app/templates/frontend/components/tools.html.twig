@@ -1,0 +1,9 @@
+{% macro alert(type, text) %}
+    <div class="alert alert-{{ type }}" role="alert">
+        {{ text|raw }}
+    </div>
+{% endmacro %}
+
+{% macro badge(key, value) %}
+    <span class="badge bg-{{ key }}">{{ value }}</span>
+{% endmacro %}

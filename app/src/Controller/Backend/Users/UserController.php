@@ -29,7 +29,7 @@ use Symfony\Component\HttpFoundation\Response;
  *
  * @IsGranted("ROLE_MANAGER_USERS")
  *
- * @Route("/users/user", name="backend_users_user_")
+ * @Route("/users/user", name="users_user_")
  */
 final class UserController extends AppController
 {

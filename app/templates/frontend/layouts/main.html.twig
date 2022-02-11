@@ -17,14 +17,16 @@
 <body>
 <header class="header">
     <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark" role="navigation">
-        <a class="navbar-brand" href="/" role="banner">Questions Frontend App</a>
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/" role="banner">Questions Frontend App</a>
 
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Switch Navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarsDefault" aria-controls="navbarsDefault" aria-expanded="false" aria-label="Switch Navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
 
-        <div class="collapse navbar-collapse" id="navbarsDefault">
-            {% include "@frontend/components/header-menu.html.twig" %}
+            <div class="collapse navbar-collapse" id="navbarsDefault">
+                {% include "@frontend/components/header-menu.html.twig" %}
+            </div>
         </div>
     </nav>
 </header>

@@ -3,9 +3,14 @@
     <td>
         {% if entity.createdBy %}
             <a href="{{ path('backend_users_user_view', {'id': entity.createdBy.id}) }}" target="_blank">{{ entity.createdBy.username }}</a>
+        {% else %}
+            <b>NULL</b>
         {% endif %}
+
         {% if entity.createdAt %}
             в {{ entity.createdAt|date('d.m.Y H:i:s') }}
+        {% else %}
+            в <b>NULL</b>
         {% endif %}
     </td>
 </tr>
@@ -15,9 +20,14 @@
     <td>
         {% if entity.updatedBy %}
             <a href="{{ path('backend_users_user_view', {'id': entity.updatedBy.id}) }}" target="_blank">{{ entity.updatedBy.username }}</a>
+        {% else %}
+            <b>NULL</b>
         {% endif %}
+
         {% if entity.updatedAt %}
             в {{ entity.updatedAt|date('d.m.Y H:i:s') }}
+        {% else %}
+            в <b>NULL</b>
         {% endif %}
     </td>
 </tr>
