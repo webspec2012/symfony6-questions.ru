@@ -1,0 +1,27 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Редактировать пользователя '{{ user.username }}' - Пользователи{% endblock %}
+{% block header %}Редактировать пользователя '{{ user.username }}'{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('index') }}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_users_user_list') }}">Пользователи</a></li>
+    <li class="breadcrumb-item">Редактировать пользователя '{{ user.username }}'</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/users/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(updateForm) }}
+    {{ form_row(updateForm.name) }}
+    {{ form_row(updateForm.email) }}
+    {{ form_row(updateForm.is_admin) }}
+    {{ form_row(updateForm.roles) }}
+    {{ form_row(updateForm.about) }}
+
+    <button class="btn btn-primary">Сохранить</button>
+    {{ form_end(updateForm) }}
+{% endblock %}

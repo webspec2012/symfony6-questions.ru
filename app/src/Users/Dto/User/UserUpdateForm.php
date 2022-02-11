@@ -5,10 +5,18 @@ use App\Core\Dto\DtoInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * DTO для создания пользователя
+ * DTO для редактирования пользователя
  */
-final class UserCreateForm  implements DtoInterface
+final class UserUpdateForm implements DtoInterface
 {
+    /**
+     * @var int ID пользователя
+     *
+     * @Assert\NotBlank()
+     * @Assert\Type("int")
+     */
+    public int $id;
+
     /**
      * @var string Имя пользователя
      *
@@ -35,18 +43,6 @@ final class UserCreateForm  implements DtoInterface
     public string $email;
 
     /**
-     * @var string Пароль
-     *
-     * @Assert\NotBlank()
-     * @Assert\Type("string")
-     * @Assert\Length(
-     *     min=8,
-     *     max=100
-     * )
-     */
-    public string $password;
-
-    /**
      * @var bool Администратор?
      *
      * @Assert\Type(type="bool")
@@ -63,4 +59,14 @@ final class UserCreateForm  implements DtoInterface
      * })
      */
     public array $roles = [];
+
+    /**
+     * @var string|null О себе
+     *
+     * @Assert\Type("string")
+     * @Assert\Length(
+     *     max=1000
+     * )
+     */
+    public ?string $about = null;
 }

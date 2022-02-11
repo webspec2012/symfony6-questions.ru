@@ -1,0 +1,23 @@
+<tr>
+    <th scope="row">Создан</th>
+    <td>
+        {% if entity.createdBy %}
+            <a href="{{ path('backend_users_user_view', {'id': entity.createdBy.id}) }}" target="_blank">{{ entity.createdBy.username }}</a>
+        {% endif %}
+        {% if entity.createdAt %}
+            в {{ entity.createdAt|date('d.m.Y H:i:s') }}
+        {% endif %}
+    </td>
+</tr>
+
+<tr>
+    <th scope="row">Обновлён</th>
+    <td>
+        {% if entity.updatedBy %}
+            <a href="{{ path('backend_users_user_view', {'id': entity.updatedBy.id}) }}" target="_blank">{{ entity.updatedBy.username }}</a>
+        {% endif %}
+        {% if entity.updatedAt %}
+            в {{ entity.updatedAt|date('d.m.Y H:i:s') }}
+        {% endif %}
+    </td>
+</tr>

@@ -58,7 +58,7 @@ final class TimestampableEntityTraitSubscriber implements EventSubscriberInterfa
      */
     private function updateEntity(object $entity): bool
     {
-        if (!is_subclass_of($entity, TimestampableEntityTrait::class)) {
+        if (!method_exists($entity, 'updatedTimestamps')) {
             return false;
         }
 

@@ -1,0 +1,113 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Пользователь '{{ user.username }}' - Пользователи{% endblock %}
+{% block header %}Пользователь '{{ user.username }}'{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_users_user_list') }}">Пользователи</a></li>
+    <li class="breadcrumb-item">Пользователь '{{ user.username }}'</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/users/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {% if user.isDeleted %}
+        {{ tools.alert('danger', "Внимание! Данный пользователь удалён.") }}
+    {% elseif user.isBlocked %}
+        {{ tools.alert('warning', "Внимание! Данный пользователь заблокирован.") }}
+    {% endif %}
+
+    <div class="control-buttons">
+        {% set csrf_token = csrf_token('users_user') %}
+        {% if user.isActive %}
+            <a class="btn btn-primary" href="{{ path('backend_users_user_update', {'id': user.id}) }}" title="Редактировать">
+                <i class="fas fa-edit"></i> Редактировать
+            </a>
+        {% endif %}
+
+        {% if workflow_can(user, 'block') %}
+            <form name="user_block" method="POST" action="{{ path('backend_users_user_block', {'id': user.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-warning" onclick="return confirm('Вы действительно хотите заблокировать данного пользователя?');"><i class="fas fa-ban"></i> Заблокировать</button>
+            </form>
+        {% endif %}
+
+        {% if workflow_can(user, 'delete') %}
+            <form name="user_delete" method="POST" action="{{ path('backend_users_user_delete', {'id': user.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить данного пользователя?');"><i class="fas fa-trash"></i> Удалить</button>
+            </form>
+        {% endif %}
+
+        {% if workflow_can(user, 'restore') %}
+            <form name="user_restore" method="POST" action="{{ path('backend_users_user_restore', {'id': user.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите восстановить данного пользователя?');"><i class="fas fa-trash-restore"></i> Восстановить</button>
+            </form>
+        {% endif %}
+
+        {% if user.isActive %}
+            <form name="user_change_password" method="POST" action="{{ path('backend_users_user_change_password', {'id': user.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите изменить пароль данному пользователю?');"><i class="fas fa-key"></i> Изменить пароль</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="detail-view">
+        <table class="table table-striped table-bordered">
+            <colgroup>
+                <col style="width: 30%"/>
+                <col style="width: 70%"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th scope="row">ID</th>
+                <td>{{ user.id }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Статус</th>
+                <td>{{ tools.userStatusLabel(user.status, user.statusAsText) }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Имя</th>
+                <td>{{ user.username }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">E-mail</th>
+                <td>
+                    {{ user.email }}
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Администратор?</th>
+                <td>
+                    {{ user.isAdmin ? 'Да' : 'Нет' }}
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Роль</th>
+                <td>{{ user.roles|join('<br>')|raw }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">О себе</th>
+                <td>
+                    {{ user.about|nl2br }}
+                </td>
+            </tr>
+
+            {% include '@backend/components/_detail_view_created_log.html.twig' with {'entity': user} only %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

@@ -1,0 +1,12 @@
+<div class="list-group">
+    {% for menuItem in menuItems %}
+        {% if menuItem.visible %}
+            <a
+                    href="{{ url(menuItem.route) }}"
+                    class="list-group-item list-group-item-action {% if menuItem.active %}active{% endif %}"
+            >
+                {{ menuItem.label|raw }}
+            </a>
+        {% endif %}
+    {% endfor %}
+</div>

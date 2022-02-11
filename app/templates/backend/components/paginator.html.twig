@@ -1,0 +1,68 @@
+{% set filters = filters|default({}) %}
+{% set currentRoute = app.request.get('_route') %}
+
+{% if paginator.hasToPaginate %}
+<nav style="margin-top: 30px;">
+    <span>
+        Показаны записи
+        <b>{{ paginator.pageSize*(paginator.currentPage-1)+1 }}-{{ paginator.pageSize*paginator.currentPage }}</b>
+        из <b>{{ paginator.numResults|number_format }}</b>.
+    </span>
+
+    <ul class="pagination" style="margin-top: 10px">
+        {% if paginator.currentPage == 1 %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Первая</a>
+            </li>
+        {% else %}
+            <li class="page-item">
+                <a href="{{ path(currentRoute, filters|merge({page: 1})) }}" rel="firstpage" class="page-link">Первая</a>
+            </li>
+        {% endif %}
+
+        {% if paginator.hasPreviousPage %}
+            <li class="page-item">
+                <a href="{{ path(currentRoute, filters|merge({page: paginator.previousPage})) }}" rel="previous" class="page-link">Назад</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Назад</a>
+            </li>
+        {% endif %}
+
+        {% set firstPage = paginator.currentPage > 5 ? paginator.currentPage-5 : 1 %}
+        {% set lastPage = paginator.currentPage+5 > paginator.lastPage ? paginator.lastPage : paginator.currentPage+5 %}
+        {% for i in firstPage..lastPage %}
+            {% if i == paginator.currentPage %}
+                <li class="page-item active">
+                    <a class="page-link" href="{{ path(currentRoute, filters|merge({page: i})) }}">{{ i }}</a>
+                </li>
+            {% else %}
+                <li class="page-item">
+                    <a class="page-link" href="{{ path(currentRoute, filters|merge({page: i})) }}">{{ i }}</a>
+                </li>
+            {% endif %}
+        {% endfor %}
+
+        {% if paginator.hasNextPage %}
+            <li class="page-item">
+                <a class="page-link" href="{{ path(currentRoute, filters|merge({page: paginator.nextPage})) }}">Вперёд</a>
+            </li>
+        {% else %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Вперёд</a>
+            </li>
+        {% endif %}
+
+        {% if paginator.currentPage == paginator.lastPage %}
+            <li class="page-item disabled">
+                <a class="page-link" href="#">Последняя</a>
+            </li>
+        {% else %}
+            <li class="page-item">
+                <a href="{{ path(currentRoute, filters|merge({page: paginator.lastPage})) }}" rel="lastpage" class="page-link">Последняя ({{ paginator.lastPage }})</a>
+            </li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}

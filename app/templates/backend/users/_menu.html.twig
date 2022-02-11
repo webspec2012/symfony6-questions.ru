@@ -1,0 +1,20 @@
+{# Меню в sidebar #}
+{% set currentRoute = app.request.get('_route') %}
+{% set menuType = menuType|default('group') %}
+{% set menuItems = [
+    {
+        'label': '<i class="fas fa-list"></i> Пользователи',
+        'route': 'backend_users_user_list',
+        'visible': is_granted('ROLE_MANAGER_USERS'),
+        'active': 'backend_users_user_' in currentRoute,
+    }
+] %}
+<div class="card">
+    <div class="card-header">
+        <b>Меню</b>
+    </div>
+
+    <div class="card-body">
+        {% include '@backend/components/sidebar-menu.html.twig' with { 'menuItems': menuItems } only %}
+    </div>
+</div>

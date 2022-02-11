@@ -1,0 +1,27 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Создать пользователя - Пользователи{% endblock %}
+{% block header %}Создать пользователя{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_users_user_list') }}">Пользователи</a></li>
+    <li class="breadcrumb-item">Создать пользователя</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/users/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(createForm) }}
+    {{ form_row(createForm.name) }}
+    {{ form_row(createForm.email) }}
+    {{ form_row(createForm.is_admin) }}
+    {{ form_row(createForm.roles) }}
+
+    <button class="btn btn-lg btn-primary" type="submit">Создать</button>
+
+    {{ form_end(createForm) }}
+{% endblock %}

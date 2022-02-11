@@ -37,6 +37,7 @@ abstract class AppController extends AbstractController
      * @param array $data Данные для маппинга
      * @param array $options Конфигурация
      * @return FormInterface Объект формы
+     * @throws
      */
     protected function createNamedForm(string $name, string $type, $data = null, array $options = []): FormInterface
     {
@@ -49,7 +50,7 @@ abstract class AppController extends AbstractController
      * @param Request $request Request
      * @return void
      */
-    protected function checkCsrfToken(Request $request)
+    protected function checkCsrfToken(Request $request): void
     {
         if (!$this->isCsrfTokenValid($this->csrfTokenName, $request->request->get('_csrf_token'))) {
             throw new AccessDeniedException("CSRF check failed");

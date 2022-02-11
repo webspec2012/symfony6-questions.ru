@@ -53,11 +53,9 @@ security:
     access_control:
         - { path: /login/, roles: PUBLIC_ACCESS, host: '%app.backend.domain%' }
         - { path: ^/, roles: IS_AUTHENTICATED_REMEMBERED, host: '%app.backend.domain%' }
-        - { path: ^/user/, roles: MANAGER_USERS, host: '%app.backend.domain%' }
-        - { path: ^/question/, roles: MANAGER_QUESTIONS, host: '%app.backend.domain%' }
 
     role_hierarchy:
-        ADMIN: ['MANAGER_USERS', 'MANAGER_QUESTIONS']
+        ROLE_ADMIN: ['ROLE_MANAGER_USERS', 'ROLE_MANAGER_QUESTIONS']
 
 when@test:
     security:

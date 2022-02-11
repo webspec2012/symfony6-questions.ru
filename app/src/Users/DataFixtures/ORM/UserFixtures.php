@@ -6,7 +6,6 @@ use App\Core\Exception\AppException;
 use App\Users\Dto\User\UserCreateForm;
 use App\Users\Entity\UserInterface;
 use App\Users\UseCase\User\UserCreateCase;
-use Doctrine\ORM\ORMException;
 use Doctrine\Persistence\ObjectManager;
 
 /**
@@ -34,7 +33,7 @@ final class UserFixtures extends BaseFixture
 
     /**
      * @inheritdoc
-     * @throws AppException|ORMException
+     * @throws AppException
      */
     public function load(ObjectManager $manager)
     {
@@ -47,7 +46,7 @@ final class UserFixtures extends BaseFixture
     /**
      * Загрузка User Fixtures
      *
-     * @throws AppException|ORMException
+     * @throws AppException
      */
     private function loadUserFixtures(): void
     {

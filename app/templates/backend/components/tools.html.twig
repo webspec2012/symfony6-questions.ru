@@ -5,5 +5,15 @@
 {% endmacro %}
 
 {% macro badge(key, value) %}
-    <span class="badge badge-{{ key }}">{{ value }}</span>
+    <span class="badge bg-{{ key }}">{{ value }}</span>
+{% endmacro %}
+
+{% macro userStatusLabel(key, value) %}
+    {% set userStatusLabels = {
+        'ACTIVE': 'success',
+        'BLOCKED': 'warning',
+        'DELETED': 'danger'
+    } %}
+
+    <span class="badge bg-{{ userStatusLabels[key] ?? 'light' }}">{{ value }}</span>
 {% endmacro %}

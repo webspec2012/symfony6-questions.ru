@@ -1,9 +1,9 @@
 <?php
 namespace App\Users\UseCase\User;
 
-use App\Core\Exception\NotFoundEntityException;
 use App\Users\Entity\User;
 use App\Users\Repository\UserRepository;
+use App\Core\Exception\NotFoundEntityException;
 
 /**
  * User Case: Найти пользователя по различным критериям

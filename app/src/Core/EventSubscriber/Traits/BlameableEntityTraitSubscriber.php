@@ -74,9 +74,8 @@ final class BlameableEntityTraitSubscriber implements EventSubscriberInterface
      */
     private function updateEntity(object $entity): bool
     {
-        if (!is_subclass_of($entity, BlameableEntityTrait::class)) {
+        if (!method_exists($entity, 'updatedBlameables')) {
             return false;
-
         }
 
         $entity->updatedBlameables($this->security->getUser());

@@ -9,22 +9,22 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
     /**
      * @const string Роль "Пользователь"
      */
-    public const ROLE_USER = 'USER';
+    public const ROLE_USER = 'ROLE_USER';
 
     /**
      * @const string Роль "Администратор"
      */
-    public const ROLE_ADMIN = 'ADMIN';
+    public const ROLE_ADMIN = 'ROLE_ADMIN';
 
     /**
      * @const string Роль "Менеджер пользователей"
      */
-    public const ROLE_MANAGER_USERS = 'MANAGER_USERS';
+    public const ROLE_MANAGER_USERS = 'ROLE_MANAGER_USERS';
 
     /**
      * @const string Роль "Менеджер вопросов-ответов"
      */
-    public const ROLE_MANAGER_QUESTIONS = 'MANAGER_QUESTIONS';
+    public const ROLE_MANAGER_QUESTIONS = 'ROLE_MANAGER_QUESTIONS';
 
     /**
      * @const string Статус "Активен"
@@ -80,6 +80,16 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
      * @return bool Пользователь активен?
      */
     public function isActive(): bool;
+
+    /**
+     * @return bool Пользователь заблокирован?
+     */
+    public function isBlocked(): bool;
+
+    /**
+     * @return bool Пользователь удалён?
+     */
+    public function isDeleted(): bool;
 
     /**
      * @return bool Пользователь администратор?

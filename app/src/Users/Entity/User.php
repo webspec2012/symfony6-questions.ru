@@ -33,9 +33,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var array Список статусов пользователя
      */
     public static array $statusList = [
-        self::STATUS_ACTIVE => 'STATUS_ACTIVE',
-        self::STATUS_BLOCKED => 'STATUS_BLOCKED',
-        self::STATUS_DELETED => 'STATUS_DELETED',
+        self::STATUS_ACTIVE => 'ACTIVE',
+        self::STATUS_BLOCKED => 'BLOCKED',
+        self::STATUS_DELETED => 'DELETED',
     ];
 
     /**
@@ -169,6 +169,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
+     * @var string О себе
+     *
      * @ORM\Column(
      *     type="text",
      *     nullable=false
@@ -437,6 +439,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isActive(): bool
     {
         return $this->getStatus() === self::STATUS_ACTIVE;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isBlocked(): bool
+    {
+        return $this->getStatus() === self::STATUS_BLOCKED;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function isDeleted(): bool
+    {
+        return $this->getStatus() === self::STATUS_DELETED;
     }
 
     /**
