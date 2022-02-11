@@ -91,7 +91,13 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd"
-        }
+        },
+        "psalm": [
+            "php vendor/bin/psalm --report=public/psalm-xml.xml"
+        ],
+        "psalm-report-html": [
+            "php vendor/bin/psalm --output-format=xml | xsltproc vendor/roave/psalm-html-output/psalm-html-output.xsl - > public/psalm-html.html"
+        ]
     },
 
     "conflict": {
@@ -108,9 +114,11 @@
     "require-dev": {
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fzaninotto/faker": "^1.5",
+        "roave/psalm-html-output": "^1.0",
         "symfony/debug-bundle": "6.0.*",
         "symfony/maker-bundle": "^1.0",
         "symfony/stopwatch": "6.0.*",
-        "symfony/web-profiler-bundle": "6.0.*"
+        "symfony/web-profiler-bundle": "6.0.*",
+        "vimeo/psalm": "^4.20"
     }
 }
