@@ -23,7 +23,7 @@ final class UserCreateFormType extends AbstractType
     {
         $builder
             ->add('name', TextType::class, [
-                'label' => 'Имя пользователя',
+                'label' => 'Имя',
                 'required' => true,
             ])
             ->add('email', EmailType::class, [
@@ -35,7 +35,7 @@ final class UserCreateFormType extends AbstractType
                 'required' => false,
             ])
             ->add('roles', ChoiceType::class, [
-                'label' => 'Список ролей',
+                'label' => 'Роли',
                 'choices' => User::getRolesList(),
                 'multiple' => true,
                 'required' => true,

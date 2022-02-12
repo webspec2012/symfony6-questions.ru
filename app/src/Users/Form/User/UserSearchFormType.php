@@ -42,7 +42,7 @@ final class UserSearchFormType extends AbstractType
                 ],
             ])
             ->add('name', TextType::class, [
-                'label' => 'Имя пользователя',
+                'label' => 'Имя',
                 'required' => false,
             ])
             ->add('email', TextType::class, [

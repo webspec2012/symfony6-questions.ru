@@ -25,35 +25,35 @@
         {% set csrf_token = csrf_token('users_user') %}
         {% if user.isActive %}
             <a class="btn btn-primary" href="{{ path('backend_users_user_update', {'id': user.id}) }}" title="Редактировать">
-                <i class="fas fa-edit"></i> Редактировать
+                <i class="fa-solid fa-edit"></i> Редактировать
             </a>
         {% endif %}
 
         {% if workflow_can(user, 'block') %}
             <form name="user_block" method="POST" action="{{ path('backend_users_user_block', {'id': user.id}) }}" style="display: inline-block;">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-warning" onclick="return confirm('Вы действительно хотите заблокировать данного пользователя?');"><i class="fas fa-ban"></i> Заблокировать</button>
+                <button type="submit" class="btn btn-warning" onclick="return confirm('Вы действительно хотите заблокировать данного пользователя?');"><i class="fa-solid fa-ban"></i> Заблокировать</button>
             </form>
         {% endif %}
 
         {% if workflow_can(user, 'delete') %}
             <form name="user_delete" method="POST" action="{{ path('backend_users_user_delete', {'id': user.id}) }}" style="display: inline-block;">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить данного пользователя?');"><i class="fas fa-trash"></i> Удалить</button>
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить данного пользователя?');"><i class="fa-solid fa-trash"></i> Удалить</button>
             </form>
         {% endif %}
 
         {% if workflow_can(user, 'restore') %}
             <form name="user_restore" method="POST" action="{{ path('backend_users_user_restore', {'id': user.id}) }}" style="display: inline-block;">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите восстановить данного пользователя?');"><i class="fas fa-trash-restore"></i> Восстановить</button>
+                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите восстановить данного пользователя?');"><i class="fa-solid fa-trash-restore"></i> Восстановить</button>
             </form>
         {% endif %}
 
         {% if user.isActive %}
             <form name="user_change_password" method="POST" action="{{ path('backend_users_user_change_password', {'id': user.id}) }}" style="display: inline-block;">
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
-                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите изменить пароль данному пользователю?');"><i class="fas fa-key"></i> Изменить пароль</button>
+                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите изменить пароль данному пользователю?');"><i class="fa-solid fa-key"></i> Изменить пароль</button>
             </form>
         {% endif %}
     </div>

@@ -7,9 +7,11 @@ use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
 use App\Users\Dto\User\UserCreateForm;
+use App\Users\Event\User\UserCreatedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * User Case: Создание нового пользователя
@@ -37,12 +39,18 @@ final class UserCreateCase
     private WorkflowInterface $userStatusWorkflow;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param UserFindCase $userFindCase User Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param UserPasswordHasherInterface $passwordEncoder Password Encoder
      * @param WorkflowInterface $userStatusStateMachine Workflow Interface
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
@@ -50,13 +58,15 @@ final class UserCreateCase
         UserFindCase $userFindCase,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordEncoder,
-        WorkflowInterface $userStatusStateMachine
+        WorkflowInterface $userStatusStateMachine,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->userFindCase = $userFindCase;
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
         $this->userStatusWorkflow = $userStatusStateMachine;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -89,6 +99,9 @@ final class UserCreateCase
         // save to DB
         $this->entityManager->persist($user);
         $this->entityManager->flush();
+
+        // user created event
+        $this->eventDispatcher->dispatch(new UserCreatedEvent($user), UserCreatedEvent::NAME);
 
         return $user;
     }

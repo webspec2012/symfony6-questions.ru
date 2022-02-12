@@ -5,9 +5,9 @@ use App\Core\Dto\DtoInterface;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
- * DTO для создания пользователя
+ * DTO для регистрации пользователя
  */
-final class UserCreateForm  implements DtoInterface
+final class UserRegistrationForm  implements DtoInterface
 {
     /**
      * @var string Имя
@@ -16,7 +16,7 @@ final class UserCreateForm  implements DtoInterface
      * @Assert\Type("string")
      * @Assert\Length(
      *     min=1,
-     *     max=100
+     *     max=50
      * )
      */
     public string $name;
@@ -45,22 +45,4 @@ final class UserCreateForm  implements DtoInterface
      * )
      */
     public string $password;
-
-    /**
-     * @var bool Администратор?
-     *
-     * @Assert\Type(type="bool")
-     */
-    public bool $is_admin = false;
-
-    /**
-     * @var array Роли
-     *
-     * @Assert\NotBlank()
-     * @Assert\All({
-     *     @Assert\NotBlank,
-     *     @Assert\Type("string")
-     * })
-     */
-    public array $roles = [];
 }

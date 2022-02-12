@@ -1,0 +1,37 @@
+{% extends '@frontend/layouts/authbox.html.twig' %}
+{% import "@frontend/components/tools.html.twig" as tools %}
+
+{% block title %}Авторизация на сайте{% endblock %}
+{% block header %}Авторизация на сайте{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('frontend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item active">Авторизация на сайте</li>
+{% endblock %}
+
+{% block content %}
+    {% if error %}
+        {{ tools.alert('danger', error.messageKey|trans(error.messageData, 'security')) }}
+    {% endif %}
+
+    <form method="POST" name="user_login_form">
+        <div class="mb-3">
+            <label for="user_login_form_email" class="form-label required" >E-mail</label>
+            <input type="email" id="user_login_form_email" class="form-control" name="email" value="{{ last_username }}" required="required" autofocus>
+        </div>
+
+        <div class="mb-3">
+            <label for="user_login_form_password" class="form-label required">Пароль</label>
+            <input type="password" id="user_login_form_password" name="password" required="required" class="form-control" />
+        </div>
+
+        <button class="btn btn-primary" type="submit">Войти</button>
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+    </form>
+
+    <div class="mt-4">
+        Еще не зарегистрированы? <a href="{{ url('frontend_user_registration') }}" class="link">Регистрация</a>
+        <br>
+        Забыли пароль? <a href="{{ url('frontend_user_password_restore_request') }}" class="link">Восстановить пароль</a>
+    </div>
+{% endblock %}

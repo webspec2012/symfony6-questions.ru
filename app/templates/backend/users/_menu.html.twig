@@ -3,7 +3,7 @@
 {% set menuType = menuType|default('group') %}
 {% set menuItems = [
     {
-        'label': '<i class="fas fa-list"></i> Пользователи',
+        'label': '<i class="fa-solid fa-users"></i> Пользователи',
         'route': 'backend_users_user_list',
         'visible': is_granted('ROLE_MANAGER_USERS'),
         'active': 'backend_users_user_' in currentRoute,

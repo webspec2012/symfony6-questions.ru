@@ -1,0 +1,25 @@
+{% extends '@frontend/layouts/profile.html.twig' %}
+{% import "@frontend/components/tools.html.twig" as tools %}
+
+{% block title %}Редактирование профиля - Мой кабинет{% endblock %}
+{% block header %}Редактирование профиля{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('frontend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('frontend_user_profile_index') }}">Мой кабинет</a></li>
+    <li class="breadcrumb-item active">Редактирование профиля</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@frontend/user-profile/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.about) }}
+
+    <button class="btn btn-primary">Сохранить</button>
+    {{ form_end(form) }}
+{% endblock %}

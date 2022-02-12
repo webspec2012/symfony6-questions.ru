@@ -18,7 +18,7 @@ final class UserUpdateForm implements DtoInterface
     public int $id;
 
     /**
-     * @var string Имя пользователя
+     * @var string Имя
      *
      * @Assert\NotBlank()
      * @Assert\Type("string")
@@ -30,7 +30,7 @@ final class UserUpdateForm implements DtoInterface
     public string $name;
 
     /**
-     * @var string E-mail пользователя
+     * @var string E-mail
      *
      * @Assert\NotBlank()
      * @Assert\Type("string")
@@ -50,7 +50,7 @@ final class UserUpdateForm implements DtoInterface
     public bool $is_admin = false;
 
     /**
-     * @var array Роли пользователя
+     * @var array Роли
      *
      * @Assert\NotBlank()
      * @Assert\All({

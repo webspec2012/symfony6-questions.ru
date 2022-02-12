@@ -1,0 +1,27 @@
+{% extends '@frontend/layouts/authbox.html.twig' %}
+{% import "@frontend/components/tools.html.twig" as tools %}
+
+{% block title %}Регистрация на сайте{% endblock %}
+{% block header %}Регистрация на сайте{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('frontend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item active">Регистрация на сайте</li>
+{% endblock %}
+
+{% block content %}
+    {{ form_start(form) }}
+    {{ form_row(form.name) }}
+    {{ form_row(form.email) }}
+    {{ form_row(form.password) }}
+
+    <button class="btn btn-primary" type="submit">Регистрация</button>
+
+    {{ form_end(form) }}
+
+    <div class="mt-4">
+        Вы уже зарегистрированы? <a href="{{ url('frontend_user_login') }}" class="link">Войти</a>
+        <br>
+        Забыли пароль? <a href="{{ url('frontend_user_password_restore_request') }}" class="link">Восстановить пароль</a>
+    </div>
+{% endblock %}

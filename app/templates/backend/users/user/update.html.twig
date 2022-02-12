@@ -5,7 +5,7 @@
 {% block header %}Редактировать пользователя '{{ user.username }}'{% endblock %}
 
 {% block breadcrumbs %}
-    <li class="breadcrumb-item"><a href="{{ path('index') }}">Главная</a></li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
     <li class="breadcrumb-item"><a href="{{ path('backend_users_user_list') }}">Пользователи</a></li>
     <li class="breadcrumb-item">Редактировать пользователя '{{ user.username }}'</li>
 {% endblock %}

@@ -1,0 +1,21 @@
+{# Layout для личного кабинета пользователя #}
+{% extends '@frontend/layouts/main.html.twig' %}
+
+{% block body %}
+    <div class="controlbox" style="margin-top: 15px;">
+        <div class="row">
+            <div class="col-md-3">
+                {% block menu %}{% endblock %}
+                {% block filters %}{% endblock %}
+            </div>
+
+            <div class="col-md-9">
+                <h2>{% block header %}{% endblock %}</h2>
+
+                {% include '@frontend/components/flash-messages.html.twig' %}
+
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

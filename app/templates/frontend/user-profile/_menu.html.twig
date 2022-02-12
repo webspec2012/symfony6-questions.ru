@@ -1,0 +1,30 @@
+{# Меню в sidebar #}
+{% set currentRoute = app.request.get('_route') %}
+{% set menuType = menuType|default('group') %}
+{% set menuItems = [
+    {
+        'label': '<i class="fa-solid fa-passport"></i> Главная',
+        'route': 'frontend_user_profile_index',
+        'visible': true,
+        'active': currentRoute == 'frontend_user_profile_index',
+    }, {
+        'label': '<i class="fa-solid fa-edit"></i> Редактирование профиля',
+        'route': 'frontend_user_profile_update',
+        'visible': true,
+        'active': currentRoute == 'frontend_user_profile_update',
+    }, {
+        'label': '<i class="fa-solid fa-key"></i> Изменение пароля',
+        'route': 'frontend_user_profile_change_password',
+        'visible': true,
+        'active': currentRoute == 'frontend_user_profile_change_password',
+    }
+] %}
+<div class="card">
+    <div class="card-header">
+        <b>Мой кабинет</b>
+    </div>
+
+    <div class="card-body">
+        {% include '@frontend/components/sidebar-menu.html.twig' with { 'menuItems': menuItems } only %}
+    </div>
+</div>

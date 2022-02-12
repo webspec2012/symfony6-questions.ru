@@ -75,6 +75,6 @@ final class FrontendLoginFormAuthenticator extends AbstractLoginFormAuthenticato
      */
     protected function getLoginUrl(Request $request): string
     {
-        return $this->urlGenerator->generate('frontend_login');
+        return $this->urlGenerator->generate('frontend_user_login');
     }
 }

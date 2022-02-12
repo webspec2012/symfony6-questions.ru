@@ -5,9 +5,12 @@ use App\Core\Exception\EntityValidationException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
+use App\Users\Dto\User\UserProfileUpdateForm;
 use App\Users\Dto\User\UserUpdateForm;
 use App\Users\Entity\User;
+use App\Users\Event\User\UserEmailChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 
 /**
  * User Case: Редактирование пользователя
@@ -25,20 +28,28 @@ final class UserUpdateCase
     private EntityManagerInterface $entityManager;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param UserFindCase $userFindCase User Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
     public function __construct(
         UserFindCase $userFindCase,
-        EntityManagerInterface $entityManager
+        EntityManagerInterface $entityManager,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->userFindCase = $userFindCase;
         $this->entityManager = $entityManager;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -59,7 +70,11 @@ final class UserUpdateCase
             try {
                 $this->userFindCase->getUserByEmail($email, false);
                 throw new ServiceException(sprintf("E-mail адрес '%s' уже используется другим пользователем.", $email));
-            } catch (NotFoundEntityException $e) {}
+            } catch (NotFoundEntityException $e) {
+                $emailChanged = true;
+            }
+        } else {
+            $emailChanged = false;
         }
 
         $user->setUsername($form->name);
@@ -72,6 +87,35 @@ final class UserUpdateCase
         $this->entityManager->persist($user);
         $this->entityManager->flush();
 
+        // user changed e-mail event
+        if ($emailChanged) {
+            $this->eventDispatcher->dispatch(new UserEmailChangedEvent($user), UserEmailChangedEvent::NAME);
+        }
+
         return $user;
+    }
+
+    /**
+     * Редактирование профиля пользователя
+     *
+     * @param UserProfileUpdateForm $form DTO с данными профиля пользователя
+     * @return User Обновленный пользователь
+     * @throws ServiceException|EntityValidationException|NotFoundEntityException
+     */
+    public function updateProfile(UserProfileUpdateForm $form): User
+    {
+        ValidateDtoService::validateDto($form);
+
+        $user = $this->userFindCase->getUserById($form->id);
+
+        $formData = new UserUpdateForm();
+        $formData->id = $form->id;
+        $formData->name = $form->name;
+        $formData->email = $form->email;
+        $formData->is_admin = $user->getIsAdmin();
+        $formData->roles = $user->getRoles();
+        $formData->about = $form->about;
+
+        return $this->update($formData);
     }
 }

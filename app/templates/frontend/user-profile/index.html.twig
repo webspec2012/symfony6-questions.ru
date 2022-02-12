@@ -1,0 +1,18 @@
+{% extends '@frontend/layouts/profile.html.twig' %}
+{% import "@frontend/components/tools.html.twig" as tools %}
+
+{% block title %}Мой кабинет{% endblock %}
+{% block header %}Мой кабинет{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('frontend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item active">Мой кабинет</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@frontend/user-profile/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    <p>Мой кабинет. Тут будет что-то интересное. Со временем.</p>
+{% endblock %}

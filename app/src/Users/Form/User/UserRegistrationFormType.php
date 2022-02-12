@@ -1,21 +1,18 @@
 <?php
 namespace App\Users\Form\User;
 
-use App\Users\Dto\User\UserUpdateForm;
-use App\Users\Entity\User;
+use App\Users\Dto\User\UserRegistrationForm;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
-use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\EmailType;
-use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 /**
- * Форма для редактирования пользователя
+ * Форма для регистрации пользователя
  */
-final class UserUpdateFormType extends AbstractType
+final class UserRegistrationFormType extends AbstractType
 {
     /**
      * @inheritdoc
@@ -31,19 +28,9 @@ final class UserUpdateFormType extends AbstractType
                 'label' => 'E-mail',
                 'required' => true,
             ])
-            ->add('is_admin', CheckboxType::class, [
-                'label' => 'Администратор?',
-                'required' => false,
-            ])
-            ->add('roles', ChoiceType::class, [
-                'label' => 'Роли',
-                'choices' => User::getRolesList(),
-                'multiple' => true,
+            ->add('password', PasswordType::class, [
+                'label' => 'Пароль',
                 'required' => true,
-            ])
-            ->add('about', TextareaType::class, [
-                'label' => 'О себе',
-                'required' => false,
             ])
         ;
     }
@@ -54,7 +41,7 @@ final class UserUpdateFormType extends AbstractType
     public function configureOptions(OptionsResolver $resolver)
     {
         $resolver->setDefaults([
-            'data_class' => UserUpdateForm::class,
+            'data_class' => UserRegistrationForm::class,
         ]);
     }
 }

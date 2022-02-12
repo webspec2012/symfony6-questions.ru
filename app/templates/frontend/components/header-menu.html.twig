@@ -8,13 +8,18 @@
         'visible': true,
         'active': currentRoute == 'frontend_index',
     }, {
-        'label': 'Вход',
-        'route': 'frontend_login',
+        'label': 'Войти',
+        'route': 'frontend_user_login',
         'visible': not isAuth,
-        'active': currentRoute == 'frontend_login',
+        'active': currentRoute == 'frontend_user_login',
+    }, {
+        'label': 'Мой кабинет',
+        'route': 'frontend_user_profile_index',
+        'visible': isAuth,
+        'active': 'frontend_user_profile_' in currentRoute,
     }, {
         'label': 'Выход',
-        'route': 'frontend_logout',
+        'route': 'frontend_user_logout',
         'visible': isAuth,
         'active': false
     }

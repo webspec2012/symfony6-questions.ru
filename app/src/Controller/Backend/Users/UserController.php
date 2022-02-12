@@ -18,6 +18,7 @@ use App\Users\UseCase\User\UserFindCase;
 use App\Users\UseCase\User\UserListingCase;
 use App\Users\UseCase\User\UserSwitchStatusCase;
 use App\Users\UseCase\User\UserUpdateCase;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Routing\Annotation\Route;
@@ -42,6 +43,23 @@ final class UserController extends AppController
      * @inheritdoc
      */
     protected string $routePrefix = 'backend_users_user_';
+
+    /**
+     * @var LoggerInterface Logger
+     */
+    private LoggerInterface $logger;
+
+    /**
+     * Конструктор
+     *
+     * @param LoggerInterface $logger Logger
+     */
+    public function __construct(
+        LoggerInterface $logger,
+    )
+    {
+        $this->logger = $logger;
+    }
 
     /**
      * Создание пользователя.
@@ -74,7 +92,8 @@ final class UserController extends AppController
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $user->getId()]);
             } catch (AppException $e) {
                 $this->addFlash('error', $e->getMessage());
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
+                $this->logger->error(__METHOD__.': '.$e->getMessage());
                 $this->addFlash('error', "Произошла ошибка в процессе создания пользователя. Попробуйте позже.");
             }
         }
@@ -185,7 +204,8 @@ final class UserController extends AppController
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $id]);
             } catch (AppException $e) {
                 $this->addFlash('error', $e->getMessage());
-            } catch (\Exception $e) {
+            } catch (\Throwable $e) {
+                $this->logger->error(__METHOD__.': '.$e->getMessage());
                 $this->addFlash('error', "Произошла ошибка в процессе сохранения. Попробуйте позже.");
             }
         }
@@ -221,7 +241,8 @@ final class UserController extends AppController
             $this->addFlash('success', 'Пользователь успешно заблокирован!');
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
             $this->addFlash('error', "Произошла ошибка в процессе изменения статуса пользователю. Попробуйте позже.");
         }
 
@@ -253,7 +274,8 @@ final class UserController extends AppController
             $this->addFlash('success', 'Пользователь успешно удалён!');
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
             $this->addFlash('error', "Произошла ошибка в процессе изменения статуса пользователю. Попробуйте позже.");
         }
 
@@ -285,7 +307,8 @@ final class UserController extends AppController
             $this->addFlash('success', 'Пользователь успешно восстановлен!');
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
             $this->addFlash('error', "Произошла ошибка в процессе изменения статуса пользователю. Попробуйте позже.");
         }
 
@@ -323,7 +346,8 @@ final class UserController extends AppController
             $this->addFlash('success', sprintf("Пароль изменен! Новый пароль: '%s'", $formData->password));
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
             $this->addFlash('error', "Произошла ошибка в процессе изменения пароля пользователю. Попробуйте позже.");
         }
 

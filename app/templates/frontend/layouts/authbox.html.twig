@@ -1,0 +1,17 @@
+{# Layout для нужд функционала авторизации/регистрации #}
+{% extends '@frontend/layouts/main.html.twig' %}
+{% import "@frontend/components/tools.html.twig" as tools %}
+
+{% block body %}
+    <div class="d-flex aligns-items-center card w-50 mx-auto">
+        <div class="card-header">
+            {% block header %}{% endblock %}
+        </div>
+
+        <div class="card-body">
+            {% include '@backend/components/flash-messages.html.twig' %}
+
+            {% block content %}{% endblock %}
+        </div>
+    </div>
+{% endblock %}

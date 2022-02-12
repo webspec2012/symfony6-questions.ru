@@ -45,7 +45,7 @@ security:
                 always_remember_me: true
             login_throttling: ~
             logout:
-                path: frontend_logout
+                path: frontend_user_logout
                 target: frontend_index
 
     # Easy way to control access for large sections of your site

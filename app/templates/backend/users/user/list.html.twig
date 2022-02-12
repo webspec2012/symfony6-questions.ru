@@ -16,7 +16,7 @@
 {% block content %}
     <div class="control-buttons">
         <a class="btn btn-success btn-sm" href="{{ path('backend_users_user_create') }}" title="Создать пользователя">
-            <i class="fas fa-user-plus"></i> Создать пользователя
+            <i class="fa-solid fa-plus"></i> Создать пользователя
         </a>
     </div>
 
@@ -43,12 +43,12 @@
                     <td>{{ tools.userStatusLabel(user.status, user.statusAsText) }}</td>
                     <td>
                         <a class="btn btn-success btn-sm" href="{{ path('backend_users_user_view', {'id': user.id}) }}" title="Просмотр">
-                            <i class="fas fa-eye"></i>
+                            <i class="fa-solid fa-eye"></i>
                         </a>
 
                         {% if user.isActive %}
                             <a class="btn btn-primary btn-sm" href="{{ path('backend_users_user_update', {'id': user.id}) }}" title="Редактировать">
-                                <i class="fas fa-edit"></i>
+                                <i class="fa-solid fa-edit"></i>
                             </a>
                         {% endif %}
                     </td>

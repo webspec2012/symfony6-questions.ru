@@ -201,7 +201,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setUsername(string $username): self
     {
-        $this->username = $username;
+        $this->username = trim(strip_tags($username));
 
         return $this;
     }
@@ -412,7 +412,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setAbout(string $about): self
     {
-        $this->about = $about;
+        $this->about = trim(strip_tags($about));
 
         return $this;
     }
@@ -483,7 +483,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function setPlainPassword(string $password, UserPasswordHasherInterface $passwordEncoder) : void
     {
-        $password = trim($password);
+        $password = trim(strip_tags($password));
         if (mb_strlen($password) < 8) {
             throw new EntityValidationException("Пароль должен содержать не менее 8 символов.");
         }
