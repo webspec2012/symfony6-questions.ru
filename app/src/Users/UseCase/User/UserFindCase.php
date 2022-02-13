@@ -61,4 +61,20 @@ final class UserFindCase
 
         return $user;
     }
+
+    /**
+     * @param string $token Token для подтверждения E-mail адреса
+     * @return User Информация о пользователе
+     * @throws NotFoundEntityException В случае если пользователь не найден
+     */
+    public function getUserByEmailVerificationToken(string $token): User
+    {
+        $token = trim(strip_tags($token));
+        $user = $this->userRepository->findOneByEmailVerifiedToken($token);
+        if (empty($user)) {
+            throw new NotFoundEntityException(sprintf("Пользователь с E-mail Verified Token '%s' не найден.", $token));
+        }
+
+        return $user;
+    }
 }

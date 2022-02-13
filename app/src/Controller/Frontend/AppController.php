@@ -18,10 +18,22 @@ abstract class AppController extends AbstractController
     }
 
     /**
+     * @return Response Редирект на страницу где можно отобразить сообщение
+     */
+    protected function redirectToAuthbox(): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToUserProfile();
+        } else {
+            return $this->redirectToRoute('frontend_login');
+        }
+    }
+
+    /**
      * @return Response Редирект на страницу профиля пользователя
      */
     protected function redirectToUserProfile(): Response
     {
-        return $this->redirectToRoute('frontend_user_profile_main');
+        return $this->redirectToRoute('frontend_user_profile_index');
     }
 }

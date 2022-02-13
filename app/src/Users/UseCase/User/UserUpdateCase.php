@@ -71,6 +71,9 @@ final class UserUpdateCase
                 $this->userFindCase->getUserByEmail($email, false);
                 throw new ServiceException(sprintf("E-mail адрес '%s' уже используется другим пользователем.", $email));
             } catch (NotFoundEntityException $e) {
+                $user->setEmailVerified(false);
+                $user->setEmailVerifiedToken(null);
+
                 $emailChanged = true;
             }
         } else {

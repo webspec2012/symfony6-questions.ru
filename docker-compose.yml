@@ -101,8 +101,5 @@ services:
         ports:
             - "127.0.0.1:5672:5672"
             - "127.0.0.1:15672:15672"
-        environment:
-            - RABBITMQ_USERNAME
-            - RABBITMQ_PASSWORD
         volumes:
             - ./docker/rabbitmq/data/:/var/lib/rabbitmq/

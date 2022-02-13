@@ -4,6 +4,7 @@ namespace App\Controller\Frontend;
 use App\Core\Exception\AppException;
 use App\Core\Security\FrontendLoginFormAuthenticator;
 use App\Users\Form\User\UserRegistrationFormType;
+use App\Users\UseCase\User\UserEmailVerificationCase;
 use App\Users\UseCase\User\UserRegistrationCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -93,7 +94,7 @@ final class UserController extends AppController
      * @Route("/login/", name="login")
      *
      * @param AuthenticationUtils $authenticationUtils
-     * @return Response
+     * @return Response Response
      */
     public function login(AuthenticationUtils $authenticationUtils): Response
     {
@@ -130,5 +131,34 @@ final class UserController extends AppController
     {
         // @TODO
         return $this->render('user/password-restore-request');
+    }
+
+    /**
+     * Подтверждение E-mail адреса пользователя
+     *
+     * @Route("/email-verification/", name="email_verification")
+     *
+     * @param Request $request Request
+     * @param UserEmailVerificationCase $userEmailVerificationCase User Email Verification Case
+     *
+     * @return Response Response
+     */
+    public function emailVerification(
+        Request $request,
+
+        UserEmailVerificationCase $userEmailVerificationCase,
+    ): Response
+    {
+        try {
+            $userEmailVerificationCase->handle($request->get('token', ''));
+
+            $this->addFlash('success', 'Ваш E-mail успешно подтвержден!');
+        } catch (AppException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', "Произошла ошибка при подтверждении E-mail адреса. Попробуйте позже.");
+        }
+
+        return $this->redirectToAuthbox();
     }
 }

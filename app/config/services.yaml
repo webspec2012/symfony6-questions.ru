@@ -37,6 +37,13 @@ services:
             - '../src/Core/Exception/'
             - '../src/Core/Pagination/'
 
+    # Сервис отправки e-mail уведомлений
+    App\Core\Service\Notification\EmailNotification\SimpleEmailNotification:
+        arguments:
+            $fromName: '%env(APP_EMAIL_FROM_NAME)%'
+            $fromEmail: '%env(APP_EMAIL_FROM_EMAIL)%'
+    App\Core\Service\Notification\EmailNotification\EmailNotificationInterface: '@App\Core\Service\Notification\EmailNotification\SimpleEmailNotification'
+
     App\Core\DataFixtures\ORM\:
         resource: '../src/Core/DataFixtures/ORM/'
         tags: [ 'doctrine.fixture.orm' ]
@@ -61,11 +68,13 @@ services:
             - '../src/Users/Entity/'
             - '../src/Users/Event/'
             - '../src/Users/Dto/'
+            - '../src/Users/Message/'
 
     App\Users\DataFixtures\ORM\:
         resource: '../src/Users/DataFixtures/ORM/'
         tags: [ 'doctrine.fixture.orm' ]
 
+    # Сервис генерации случайных паролей
     App\Users\Service\PasswordGenerate\SimplePasswordGenerate: ~
     App\Users\Service\PasswordGenerate\PasswordGenerateInterface: '@App\Users\Service\PasswordGenerate\SimplePasswordGenerate'
 

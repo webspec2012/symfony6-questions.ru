@@ -10,7 +10,7 @@ framework:
             # sync: 'sync://'
 
         routing:
-            Symfony\Component\Mailer\Messenger\SendEmailMessage: async
+            App\Users\Message\User\UserEmailVerification: async
 
             # Route your messages to the transports
             # 'App\Message\YourMessage': async
