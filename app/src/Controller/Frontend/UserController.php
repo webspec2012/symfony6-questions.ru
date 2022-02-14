@@ -2,12 +2,14 @@
 namespace App\Controller\Frontend;
 
 use App\Core\Exception\AppException;
+use App\Core\Exception\ServiceException;
 use App\Core\Security\FrontendLoginFormAuthenticator;
 use App\Users\Form\User\UserRegistrationFormType;
 use App\Users\UseCase\User\UserEmailVerificationCase;
 use App\Users\UseCase\User\UserRegistrationCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\RateLimiter\RateLimiterFactory;
 use Symfony\Component\Routing\Annotation\Route;
 use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Component\HttpFoundation\Response;
@@ -44,17 +46,19 @@ final class UserController extends AppController
      * @Route("/registration/", name="registration")
      *
      * @param Request $request Request
-     * @param FrontendLoginFormAuthenticator $loginFormAuthenticator
-     * @param UserAuthenticatorInterface $userAuthenticator
+     * @param FrontendLoginFormAuthenticator $loginFormAuthenticator Login Form Authenticator
+     * @param UserAuthenticatorInterface $userAuthenticator User Authenticator
+     * @param RateLimiterFactory $userRegistrationLimiter Rate Limiter
      *
      * @param UserRegistrationCase $userRegistrationCase User Registration Case
      *
      * @return Response Response
      */
-    public function create(
+    public function registration(
         Request $request,
         FrontendLoginFormAuthenticator $loginFormAuthenticator,
         UserAuthenticatorInterface $userAuthenticator,
+        RateLimiterFactory $userRegistrationLimiter,
 
         UserRegistrationCase $userRegistrationCase,
     ): Response
@@ -67,6 +71,12 @@ final class UserController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
+                // Rate Limiter
+                $limiter = $userRegistrationLimiter->create($request->getClientIp());
+                if (false === $limiter->consume()->isAccepted()) {
+                    throw new ServiceException("Превышен лимит на количество регистраций. Попробуйте позже.");
+                }
+
                 // Регистрация
                 $user = $userRegistrationCase->registration($form->getData());
 

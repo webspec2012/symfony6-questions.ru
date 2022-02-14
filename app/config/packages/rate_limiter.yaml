@@ -1,0 +1,7 @@
+framework:
+  rate_limiter:
+    # Регистрация на сайте
+    user_registration:
+      policy: 'fixed_window'
+      limit: 60
+      interval: '60 minutes'
