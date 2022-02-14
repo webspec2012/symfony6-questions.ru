@@ -26,8 +26,7 @@
 * Выгрузить код из гита
 
 ```bash
-sudo mkdir -p /var/www/projects/symfony6-questions.ru && cd $_
-sudo chown fastuser:fastuser .
+mkdir -p /var/www/projects/symfony6-questions.ru && cd $_
 git clone git@github.com:webspec2012/symfony6-questions.ru.git .
 ```
 
@@ -36,9 +35,6 @@ git clone git@github.com:webspec2012/symfony6-questions.ru.git .
 * Выполнить следующие инструкции:
 
 ```bash
-# Скопировать конфиг и произвести необходимые настройки (для разработки через docker изменений вносить не требуется).
-cp app/env.dev.local.example env.local
-
 # Запуск docker контейнеров
 sudo docker-compose up --build --force-recreate -d
 
@@ -59,7 +55,7 @@ sudo docker-compose exec -T -u www-data php-fpm sh -c "make dev"
 
 ```bash
 # Скопировать конфиг и произвести необходимые настройки.
-cp app/env.prod.local.example env.local
+cp app/.env app/.env.local
 
 # Запуск docker контейнеров
 sudo docker-compose -f docker-compose.prod.yml up --build --force-recreate -d

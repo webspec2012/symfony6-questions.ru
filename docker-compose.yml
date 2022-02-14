@@ -8,6 +8,7 @@ services:
     #   MYSQL   #
     #############
     mysql:
+        hostname: mysql
         restart: always
         build:
             context: ./docker/mysql
@@ -23,6 +24,7 @@ services:
             - ./docker/mysql/data/:/var/lib/mysql/
 
     mysql_test:
+        hostname: mysql_test
         restart: always
         build:
             context: ./docker/mysql
@@ -39,6 +41,7 @@ services:
     #  PHP-FPM  #
     #############
     php-fpm:
+        hostname: php-fpm
         restart: always
         build:
             context: ./docker/php-fpm/dev
@@ -57,6 +60,7 @@ services:
     #  NGINX  #
     ###########
     nginx:
+        hostname: nginx
         restart: always
         build:
             context: ./docker/nginx
@@ -75,14 +79,14 @@ services:
     #  REDIS  #
     ###########
     redis:
+        hostname: redis
         restart: always
         build:
             context: ./docker/redis
             args:
                 - USER_UID
                 - USER_GID
-        ports:
-            - "127.0.0.1:6379:6379"
+        command: ["redis-server", "/etc/redis.conf", "--requirepass", "redis_password"]
         volumes:
             - ./docker/redis/redis.conf:/etc/redis.conf
         sysctls:
@@ -92,14 +96,12 @@ services:
     #   RABBITMQ   #
     ################
     rabbitmq:
+        hostname: rabbitmq
         restart: always
         build:
             context: ./docker/rabbitmq
             args:
                 - USER_UID
                 - USER_GID
-        ports:
-            - "127.0.0.1:5672:5672"
-            - "127.0.0.1:15672:15672"
         volumes:
             - ./docker/rabbitmq/data/:/var/lib/rabbitmq/

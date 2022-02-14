@@ -1,7 +1,8 @@
 # docker/redis/Dockerfile
 
-# REDIS 6
-FROM redis:6-alpine
+# REDIS 6.2
+# https://github.com/docker-library/redis/blob/master/6.2/Dockerfile
+FROM redis:6.2-alpine
 
 # Работа от пользователя
 ARG USER_UID
