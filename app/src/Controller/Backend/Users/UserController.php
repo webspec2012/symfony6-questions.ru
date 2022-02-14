@@ -5,7 +5,6 @@ use App\Controller\Backend\AppController;
 use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
-use App\Users\Dto\User\UserChangePasswordForm;
 use App\Users\Dto\User\UserCreateForm;
 use App\Users\Dto\User\UserUpdateForm;
 use App\Users\Form\User\UserCreateFormType;
@@ -323,7 +322,6 @@ final class UserController extends AppController
      * @param int $id ID пользователя
      * @param Request $request Request
      * @param UserChangePasswordCase $userChangePasswordCase User ChangePassword Case
-     * @param PasswordGenerateInterface $passwordGenerate Password Generate Service
      *
      * @return Response
      */
@@ -331,19 +329,14 @@ final class UserController extends AppController
         int $id,
         Request $request,
         UserChangePasswordCase $userChangePasswordCase,
-        PasswordGenerateInterface $passwordGenerate,
     ): Response
     {
         $this->checkCsrfToken($request);
 
         try {
-            $formData = new UserChangePasswordForm();
-            $formData->id = $id;
-            $formData->password = $passwordGenerate->generate();
+            $userChangePasswordCase->generateNewPasswordAndSendToEmail($id);
 
-            $userChangePasswordCase->changePassword($formData);
-
-            $this->addFlash('success', sprintf("Пароль изменен! Новый пароль: '%s'", $formData->password));
+            $this->addFlash('success', "Новый пароль установлен и отправлен на почту пользователю.");
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
         } catch (\Throwable $e) {

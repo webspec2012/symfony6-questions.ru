@@ -25,7 +25,7 @@ abstract class AppController extends AbstractController
         if ($this->getUser()) {
             return $this->redirectToUserProfile();
         } else {
-            return $this->redirectToRoute('frontend_login');
+            return $this->redirectToRoute('frontend_user_login');
         }
     }
 

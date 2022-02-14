@@ -5,3 +5,8 @@ framework:
       policy: 'fixed_window'
       limit: 60
       interval: '60 minutes'
+    # Восстановление пароля
+    user_password_restore:
+        policy: 'fixed_window'
+        limit: 60
+        interval: '60 minutes'

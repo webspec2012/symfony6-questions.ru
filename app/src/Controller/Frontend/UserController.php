@@ -5,7 +5,10 @@ use App\Core\Exception\AppException;
 use App\Core\Exception\ServiceException;
 use App\Core\Security\FrontendLoginFormAuthenticator;
 use App\Users\Form\User\UserRegistrationFormType;
+use App\Users\Form\User\UserRestorePasswordRequestFormType;
 use App\Users\UseCase\User\UserEmailVerificationCase;
+use App\Users\UseCase\User\UserFindCase;
+use App\Users\UseCase\User\UserPasswordRestoreCase;
 use App\Users\UseCase\User\UserRegistrationCase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -135,12 +138,75 @@ final class UserController extends AppController
      *
      * @Route("/password-restore/request/", name="password_restore_request")
      *
+     * @param Request $request Request
+     * @param UserFindCase $userFindCase User Find Case
+     * @param RateLimiterFactory $userPasswordRestoreLimiter Rate Limiter
+     * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
+     *
      * @return Response Response
      */
-    public function passwordRestoreRequest(): Response
+    public function passwordRestoreRequest(
+        Request $request,
+        UserFindCase $userFindCase,
+        RateLimiterFactory $userPasswordRestoreLimiter,
+        UserPasswordRestoreCase $userPasswordRestoreCase,
+    ): Response
     {
-        // @TODO
-        return $this->render('user/password-restore-request');
+        $form = $this->createForm(UserRestorePasswordRequestFormType::class);
+        $form->handleRequest($request);
+        if ($form->isSubmitted() && $form->isValid()) {
+            try {
+                // Rate Limiter
+                $limiter = $userPasswordRestoreLimiter->create($request->getClientIp());
+                if (false === $limiter->consume()->isAccepted()) {
+                    throw new ServiceException("Превышен лимит на количество запросов восстановления пароля. Попробуйте позже.");
+                }
+
+                $user = $userFindCase->getUserByEmail($form->getData()['email'] ?? '');
+                $userPasswordRestoreCase->sendEmail($user->getId());
+
+                $this->addFlash('success',"Мы отправили Вам на почту письмо с подтверждением смены пароля. Перейдите по ссылке из письма.");
+
+                return $this->redirectToAuthbox();
+            } catch (AppException $e) {
+                $this->addFlash('error', $e->getMessage());
+            } catch (\Throwable $e) {
+                $this->logger->error(__METHOD__.': '.$e->getMessage());
+                $this->addFlash('error', "Произошла ошибка в процессе восстановления пароля. Попробуйте позже.");
+            }
+        }
+
+        return $this->render('user/password-restore-request', [
+            'form' => $form->createView(),
+        ]);
+    }
+
+    /**
+     * Изменение пароля пользователю на основе токена восстановления пароля.
+     *
+     * @Route("/password-restore/reset/", name="password_restore_reset")
+     *
+     * @param Request $request Request
+     * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
+     *
+     * @return Response Response
+     */
+    public function passwordRestoreReset(
+        Request $request,
+        UserPasswordRestoreCase $userPasswordRestoreCase,
+    ): Response
+    {
+        try {
+            $userPasswordRestoreCase->handle($request->get('token', ''));
+
+            $this->addFlash('success', 'Пароль успешно изменен! Новый пароль отправлен вам на почту.');
+        } catch (AppException $e) {
+            $this->addFlash('error', $e->getMessage());
+        } catch (\Exception $e) {
+            $this->addFlash('error', "Произошла ошибка при восстановлении пароля. Попробуйте позже.");
+        }
+
+        return $this->redirectToAuthbox();
     }
 
     /**

@@ -4,10 +4,15 @@ namespace App\Users\UseCase\User;
 use App\Core\Exception\EntityValidationException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
+use App\Core\Service\Notification\EmailNotification\EmailAddress;
+use App\Core\Service\Notification\EmailNotification\EmailMessage;
+use App\Core\Service\Notification\EmailNotification\EmailNotificationInterface;
 use App\Core\Service\ValidateDtoService;
 use App\Users\Dto\User\UserChangePasswordForm;
 use App\Users\Entity\User;
+use App\Users\Service\PasswordGenerate\PasswordGenerateInterface;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 /**
@@ -31,11 +36,29 @@ final class UserChangePasswordCase
     private UserPasswordHasherInterface $passwordEncoder;
 
     /**
+     * @var PasswordGenerateInterface Password Generate
+     */
+    private PasswordGenerateInterface $passwordGenerate;
+
+    /**
+     * @var EmailNotificationInterface Email Notification
+     */
+    private EmailNotificationInterface $emailNotification;
+
+    /**
+     * @var LoggerInterface Logger
+     */
+    private LoggerInterface $logger;
+
+    /**
      * Конструктор сервиса
      *
      * @param UserFindCase $userFindCase User Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param UserPasswordHasherInterface $passwordEncoder Password Encoder
+     * @param PasswordGenerateInterface $passwordGenerate Password Generate
+     * @param EmailNotificationInterface $emailNotification Email Notification
+     * @param LoggerInterface $logger Logger
      *
      * @return void
      */
@@ -43,11 +66,17 @@ final class UserChangePasswordCase
         UserFindCase $userFindCase,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordEncoder,
+        PasswordGenerateInterface $passwordGenerate,
+        EmailNotificationInterface $emailNotification,
+        LoggerInterface $logger
     )
     {
         $this->userFindCase = $userFindCase;
         $this->entityManager = $entityManager;
         $this->passwordEncoder = $passwordEncoder;
+        $this->passwordGenerate = $passwordGenerate;
+        $this->emailNotification = $emailNotification;
+        $this->logger = $logger;
     }
 
     /**
@@ -69,5 +98,41 @@ final class UserChangePasswordCase
         $this->entityManager->flush();
 
         return $user;
+    }
+
+    /**
+     * Сформировать новый случайный пароль и отправить на почту пользователю.
+     *
+     * @param int $userId ID пользователя
+     * @return bool Результат выполнения операции
+     * @throws ServiceException|NotFoundEntityException
+     */
+    public function generateNewPasswordAndSendToEmail(int $userId): bool
+    {
+        $user = $this->userFindCase->getUserById($userId);
+
+        try {
+            // Устарновка нового пароля
+            $password = $this->passwordGenerate->generate();
+            $user->setPlainPassword($password, $this->passwordEncoder);
+
+            // save to DB
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            // Отправка пароля на почту
+            $message = (new EmailMessage())
+                ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
+                ->setSubject('Установлен новый пароль')
+                ->setTemplate('user/set-new-password')
+                ->setContext(compact('user', 'password'))
+            ;
+
+            $this->emailNotification->send($message);
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+            return false;
+        }
     }
 }

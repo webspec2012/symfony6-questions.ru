@@ -77,4 +77,20 @@ final class UserFindCase
 
         return $user;
     }
+
+    /**
+     * @param string $token Token для восстановления пароля
+     * @return User Информация о пользователе
+     * @throws NotFoundEntityException В случае если пользователь не найден
+     */
+    public function getUserByPasswordRestoreToken(string $token): User
+    {
+        $token = trim(strip_tags($token));
+        $user = $this->userRepository->findOneByPasswordRestoreToken($token);
+        if (empty($user)) {
+            throw new NotFoundEntityException(sprintf("Пользователь с Password Reset Token '%s' не найден.", $token));
+        }
+
+        return $user;
+    }
 }
