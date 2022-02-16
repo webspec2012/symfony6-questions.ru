@@ -1,0 +1,29 @@
+name: PHPUnit Tests
+
+on:
+    push:
+        branches:
+            - master
+
+    pull_request:
+        branches:
+            - master
+
+jobs:
+    tests:
+        runs-on: ubuntu-latest
+        steps:
+            # Git checkout branch
+            -   name: Git checkout branch
+                uses: actions/checkout@v2
+
+            # Copy config .env.github .env.test.local
+            -   name: Copy config .env.github .env.test.local
+                run: php -r "file_exists('.env.test.local') || copy('.env.github', '.env.test.local');"
+
+            # Composer install
+            -   name: Composer install
+                uses: php-actions/composer@v6
+                with:
+                    dev: yes
+                    args: --no-ansi --no-interaction --no-scripts --no-progress --prefer-dist
