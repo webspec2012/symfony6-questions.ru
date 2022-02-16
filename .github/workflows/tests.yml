@@ -1,0 +1,36 @@
+# https://help.github.com/en/actions
+name: PHPUnit Tests
+on:
+    push:
+    pull_request:
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    tests:
+        name: Tests
+        env:
+            extensions: amqp,apcu,igbinary,intl,mbstring,memcached,redis-5.3.4
+
+        strategy:
+            matrix:
+                php: ['8.1']
+            fail-fast: false
+
+        runs-on: ubuntu-20.04
+
+        steps:
+            # Checkout Code from github
+            -   name: Checkout
+                uses: actions/checkout@v2
+                with:
+                    fetch-depth: 2
+
+            # Install MySQL 8.0
+            -   name: Install MySQL 8.0
+                uses: shogo82148/actions-setup-mysql@v1
+                with:
+                    mysql-version: '8.0'
+                run: mysql -uroot -h127.0.0.1 -e 'SELECT version()'
