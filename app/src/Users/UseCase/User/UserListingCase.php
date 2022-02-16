@@ -25,7 +25,7 @@ final class UserListingCase
      * @return void
      */
     public function __construct(
-        UserRepository $userRepository
+        UserRepository $userRepository,
     )
     {
         $this->userRepository = $userRepository;

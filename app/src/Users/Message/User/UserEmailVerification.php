@@ -5,7 +5,7 @@ namespace App\Users\Message\User;
  * Процесс подтверждения E-mail адреса пользователя.
  * Отправляет письмо с кодом подтверждения.
  */
-class UserEmailVerification
+final class UserEmailVerification
 {
     /**
      * @var int $userId ID пользователя

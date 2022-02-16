@@ -47,9 +47,9 @@ trait BlameableEntityTrait
 
     /**
      * @param UserInterface|null $created_by
-     * @return self
+     * @return static
      */
-    public function setCreatedBy(?UserInterface $created_by): self
+    public function setCreatedBy(?UserInterface $created_by): static
     {
         $this->created_by = $created_by;
 
@@ -66,9 +66,9 @@ trait BlameableEntityTrait
 
     /**
      * @param UserInterface|null $updated_by
-     * @return self
+     * @return static
      */
-    public function setUpdatedBy(?UserInterface $updated_by): self
+    public function setUpdatedBy(?UserInterface $updated_by): static
     {
         $this->updated_by = $updated_by;
 

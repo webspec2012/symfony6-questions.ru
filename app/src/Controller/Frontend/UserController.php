@@ -139,16 +139,18 @@ final class UserController extends AppController
      * @Route("/password-restore/request/", name="password_restore_request")
      *
      * @param Request $request Request
-     * @param UserFindCase $userFindCase User Find Case
      * @param RateLimiterFactory $userPasswordRestoreLimiter Rate Limiter
+     *
+     * @param UserFindCase $userFindCase User Find Case
      * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
      *
      * @return Response Response
      */
     public function passwordRestoreRequest(
         Request $request,
-        UserFindCase $userFindCase,
         RateLimiterFactory $userPasswordRestoreLimiter,
+
+        UserFindCase $userFindCase,
         UserPasswordRestoreCase $userPasswordRestoreCase,
     ): Response
     {
@@ -163,7 +165,9 @@ final class UserController extends AppController
                 }
 
                 $user = $userFindCase->getUserByEmail($form->getData()['email'] ?? '');
-                $userPasswordRestoreCase->sendEmail($user->getId());
+                if (!$userPasswordRestoreCase->sendEmail($user->getId())) {
+                    throw new ServiceException("Ошибка при запросе восстановления пароля. Попробуйте позже.");
+                }
 
                 $this->addFlash('success',"Мы отправили Вам на почту письмо с подтверждением смены пароля. Перейдите по ссылке из письма.");
 
@@ -187,17 +191,21 @@ final class UserController extends AppController
      * @Route("/password-restore/reset/", name="password_restore_reset")
      *
      * @param Request $request Request
+     *
      * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
      *
      * @return Response Response
      */
     public function passwordRestoreReset(
         Request $request,
+
         UserPasswordRestoreCase $userPasswordRestoreCase,
     ): Response
     {
         try {
-            $userPasswordRestoreCase->handle($request->get('token', ''));
+            if (!$userPasswordRestoreCase->handle($request->get('token', ''))) {
+                throw new ServiceException("Ошибка при сбросе пароля. Попробуйте позже.");
+            }
 
             $this->addFlash('success', 'Пароль успешно изменен! Новый пароль отправлен вам на почту.');
         } catch (AppException $e) {
@@ -215,6 +223,7 @@ final class UserController extends AppController
      * @Route("/email-verification/", name="email_verification")
      *
      * @param Request $request Request
+     *
      * @param UserEmailVerificationCase $userEmailVerificationCase User Email Verification Case
      *
      * @return Response Response
@@ -226,7 +235,9 @@ final class UserController extends AppController
     ): Response
     {
         try {
-            $userEmailVerificationCase->handle($request->get('token', ''));
+            if (!$userEmailVerificationCase->handle($request->get('token', ''))) {
+                throw new ServiceException("Ошибка при подтверждении e-mail адреса. Попробуйте позже.");
+            }
 
             $this->addFlash('success', 'Ваш E-mail успешно подтвержден!');
         } catch (AppException $e) {

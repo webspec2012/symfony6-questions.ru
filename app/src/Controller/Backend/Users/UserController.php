@@ -74,6 +74,7 @@ final class UserController extends AppController
      */
     public function create(
         Request $request,
+
         UserCreateCase $userCreateCase,
         PasswordGenerateInterface $passwordGenerate,
     ): Response
@@ -114,7 +115,8 @@ final class UserController extends AppController
      */
     public function list(
         Request $request,
-        UserListingCase $userListingCase
+
+        UserListingCase $userListingCase,
     ): Response
     {
         $form = $this->createNamedForm('', UserSearchFormType::class);
@@ -148,7 +150,8 @@ final class UserController extends AppController
      */
     public function view(
         int $id,
-        UserFindCase $userFindCase
+
+        UserFindCase $userFindCase,
     ): Response
     {
         try {
@@ -175,6 +178,7 @@ final class UserController extends AppController
     public function update(
         int $id,
         Request $request,
+
         UserFindCase $userFindCase,
         UserUpdateCase $userUpdateCase
     ): Response
@@ -185,19 +189,14 @@ final class UserController extends AppController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $formData = new UserUpdateForm();
-        $formData->id = $user->getId();
-        $formData->name = $user->getUsername();
-        $formData->email = $user->getEmail();
-        $formData->is_admin = $user->getIsAdmin();
-        $formData->roles = $user->getRoles();
-        $formData->about = $user->getAbout();
-
-        $form = $this->createForm(UserUpdateFormType::class, $formData);
+        $form = $this->createForm(UserUpdateFormType::class, new UserUpdateForm($user));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $userUpdateCase->update($form->getData());
+                if (!$userUpdateCase->update($form->getData())) {
+                    throw new ServiceException("Ошибка в процессе обновления пользователя. Попробуйте позже.");
+                }
+
                 $this->addFlash('success', 'Информация о пользователе успешно обновлена.');
 
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $id]);
@@ -229,13 +228,16 @@ final class UserController extends AppController
     public function block(
         int $id,
         Request $request,
+
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
         $this->checkCsrfToken($request);
 
         try {
-            $userSwitchStatusCase->block($id);
+            if (!$userSwitchStatusCase->block($id)) {
+                throw new ServiceException("Ошибка в процессе блокировки пользователя. Попробуйте позже.");
+            }
 
             $this->addFlash('success', 'Пользователь успешно заблокирован!');
         } catch (AppException $e) {
@@ -262,13 +264,16 @@ final class UserController extends AppController
     public function delete(
         int $id,
         Request $request,
+
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
         $this->checkCsrfToken($request);
 
         try {
-            $userSwitchStatusCase->delete($id);
+            if (!$userSwitchStatusCase->delete($id)) {
+                throw new ServiceException("Ошибка в процессе удаления пользователя. Попробуйте позже.");
+            }
 
             $this->addFlash('success', 'Пользователь успешно удалён!');
         } catch (AppException $e) {
@@ -295,13 +300,16 @@ final class UserController extends AppController
     public function restore(
         int $id,
         Request $request,
+
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
         $this->checkCsrfToken($request);
 
         try {
-            $userSwitchStatusCase->restore($id);
+            if (!$userSwitchStatusCase->restore($id)) {
+                throw new ServiceException("Ошибка в процессе восстановления пользователя. Попробуйте позже.");
+            }
 
             $this->addFlash('success', 'Пользователь успешно восстановлен!');
         } catch (AppException $e) {
@@ -328,13 +336,16 @@ final class UserController extends AppController
     public function changePassword(
         int $id,
         Request $request,
+
         UserChangePasswordCase $userChangePasswordCase,
     ): Response
     {
         $this->checkCsrfToken($request);
 
         try {
-            $userChangePasswordCase->generateNewPasswordAndSendToEmail($id);
+            if (!$userChangePasswordCase->generateNewPasswordAndSendToEmail($id)) {
+                throw new ServiceException("Ошибка в процессе изменения пароля. Попробуйте позже.");
+            }
 
             $this->addFlash('success', "Новый пароль установлен и отправлен на почту пользователю.");
         } catch (AppException $e) {

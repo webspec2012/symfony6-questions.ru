@@ -33,7 +33,7 @@ final class FrontendLoginFormAuthenticator extends AbstractLoginFormAuthenticato
      * @param UrlGeneratorInterface $urlGenerator
      */
     public function __construct(
-        UrlGeneratorInterface $urlGenerator
+        UrlGeneratorInterface $urlGenerator,
     )
     {
         $this->urlGenerator = $urlGenerator;

@@ -13,6 +13,7 @@ final class SiteController extends AppController
      * Главная страница приложения
      *
      * @Route("/", name="index")
+     *
      * @return Response
      */
     public function index(): Response

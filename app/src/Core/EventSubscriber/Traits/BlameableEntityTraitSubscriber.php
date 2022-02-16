@@ -23,7 +23,9 @@ final class BlameableEntityTraitSubscriber implements EventSubscriberInterface
      *
      * @param Security $security
      */
-    public function __construct(Security $security)
+    public function __construct(
+        Security $security,
+    )
     {
         $this->security = $security;
     }

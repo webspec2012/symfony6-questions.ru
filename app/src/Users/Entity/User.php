@@ -198,8 +198,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить Username пользователя
      *
      * @param string $username Username
+     * @return static
      */
-    public function setUsername(string $username): self
+    public function setUsername(string $username): static
     {
         $this->username = trim(strip_tags($username));
 
@@ -218,8 +219,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить E-mail пользователя
      *
      * @param string $email E-mail
+     * @return static
      */
-    public function setEmail(string $email): self
+    public function setEmail(string $email): static
     {
         $this->email = trim(mb_strtolower($email));
 
@@ -238,8 +240,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить E-mail подтверждён?
      *
      * @param bool $email_verified E-mail Verified?
+     * @return static
      */
-    public function setEmailVerified(bool $email_verified): self
+    public function setEmailVerified(bool $email_verified): static
     {
         $this->email_verified = $email_verified;
 
@@ -258,8 +261,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить Token для подтверждения e-mail адреса
      *
      * @param string|null $email_verified_token E-mail Verified Token
+     * @return static
      */
-    public function setEmailVerifiedToken(?string $email_verified_token): self
+    public function setEmailVerifiedToken(?string $email_verified_token): static
     {
         $this->email_verified_token = $email_verified_token;
 
@@ -278,8 +282,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить E-mail подписан на рассылку?
      *
      * @param bool $email_subscribed E-mail Subscribed?
+     * @return static
      */
-    public function setEmailSubscribed(bool $email_subscribed): self
+    public function setEmailSubscribed(bool $email_subscribed): static
     {
         $this->email_subscribed = $email_subscribed;
 
@@ -298,8 +303,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить Token для подписки на e-mail рассылку
      *
      * @param string|null $email_subscribed_token E-mail Subscribed Token
+     * @return static
      */
-    public function setEmailSubscribedToken(?string $email_subscribed_token): self
+    public function setEmailSubscribedToken(?string $email_subscribed_token): static
     {
         $this->email_subscribed_token = $email_subscribed_token;
 
@@ -318,8 +324,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить пароль
      *
      * @param string $password Пароль
+     * @return static
      */
-    protected function setPassword(string $password): self
+    protected function setPassword(string $password): static
     {
         $this->password = $password;
 
@@ -338,8 +345,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить Token для восстановления пароля
      *
      * @param string|null $password_restore_token Password Restore Token
+     * @return static
      */
-    public function setPasswordRestoreToken(?string $password_restore_token): self
+    public function setPasswordRestoreToken(?string $password_restore_token): static
     {
         $this->password_restore_token = $password_restore_token;
 
@@ -358,8 +366,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить Пользователь является администратором?
      *
      * @param bool $is_admin Is Admin?
+     * @return static
      */
-    public function setIsAdmin(bool $is_admin): self
+    public function setIsAdmin(bool $is_admin): static
     {
         $this->is_admin = $is_admin;
 
@@ -378,9 +387,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить список ролей
      *
      * @param string[] $roles Список ролей
+     * @return static
      * @throws EntityValidationException
      */
-    public function setRoles(array $roles): self
+    public function setRoles(array $roles): static
     {
         array_map(function (string $role) {
             if (!isset(static::getRolesList()[$role])) {
@@ -409,8 +419,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * Установить About пользователя
      *
      * @param string $about About
+     * @return static
      */
-    public function setAbout(string $about): self
+    public function setAbout(string $about): static
     {
         $this->about = trim(strip_tags($about));
 

@@ -10,7 +10,7 @@ use Symfony\Component\Messenger\Handler\MessageHandlerInterface;
 /**
  * Обработчик сообщения UserEmailVerification
  */
-class UserEmailVerificationHandler implements MessageHandlerInterface
+final class UserEmailVerificationHandler implements MessageHandlerInterface
 {
     /**
      * @var UserEmailVerificationCase User Email Verification Case

@@ -2,6 +2,7 @@
 namespace App\Users\Dto\User;
 
 use App\Core\Dto\DtoInterface;
+use App\Users\Entity\User;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
@@ -9,6 +10,23 @@ use Symfony\Component\Validator\Constraints as Assert;
  */
 final class UserUpdateForm implements DtoInterface
 {
+    /**
+     * Конструктор
+     *
+     * @param User|null $user User Entity
+     */
+    public function __construct(?User $user = null)
+    {
+        if ($user) {
+            $this->id = $user->getId();
+            $this->name = $user->getUsername();
+            $this->email = $user->getEmail();
+            $this->is_admin = $user->getIsAdmin();
+            $this->roles = $user->getRoles();
+            $this->about = $user->getAbout();
+        }
+    }
+
     /**
      * @var int ID пользователя
      *
@@ -47,7 +65,7 @@ final class UserUpdateForm implements DtoInterface
      *
      * @Assert\Type(type="bool")
      */
-    public bool $is_admin = false;
+    public bool $is_admin;
 
     /**
      * @var array Роли
@@ -58,7 +76,7 @@ final class UserUpdateForm implements DtoInterface
      *     @Assert\Type("string")
      * })
      */
-    public array $roles = [];
+    public array $roles;
 
     /**
      * @var string|null О себе
@@ -68,5 +86,5 @@ final class UserUpdateForm implements DtoInterface
      *     max=1000
      * )
      */
-    public ?string $about = null;
+    public ?string $about;
 }

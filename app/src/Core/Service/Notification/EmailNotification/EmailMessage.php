@@ -42,7 +42,7 @@ class EmailMessage implements EmailMessageInterface
     /**
      * @inheritDoc
      */
-    public function setFrom(EmailAddressInterface $from): self
+    public function setFrom(EmailAddressInterface $from): static
     {
         $this->from = $from;
 
@@ -61,9 +61,9 @@ class EmailMessage implements EmailMessageInterface
      * Установить Кому
      *
      * @param EmailAddressInterface[] $to To
-     * @return self
+     * @return static
      */
-    public function setTo(EmailAddressInterface ...$to): self
+    public function setTo(EmailAddressInterface ...$to): static
     {
         $this->to = $to;
 
@@ -82,9 +82,9 @@ class EmailMessage implements EmailMessageInterface
      * Установить Тема
      *
      * @param string $subject Subject
-     * @return self
+     * @return static
      */
-    public function setSubject(string $subject): self
+    public function setSubject(string $subject): static
     {
         $this->subject = $subject;
 
@@ -103,9 +103,9 @@ class EmailMessage implements EmailMessageInterface
      * Установить Шаблон
      *
      * @param string $template Template
-     * @return self
+     * @return static
      */
-    public function setTemplate(string $template): self
+    public function setTemplate(string $template): static
     {
         $this->template = $template;
 
@@ -124,9 +124,9 @@ class EmailMessage implements EmailMessageInterface
      * Установить Контекст
      *
      * @param array $context Context
-     * @return self
+     * @return static
      */
-    public function setContext(array $context): self
+    public function setContext(array $context): static
     {
         $this->context = $context;
 

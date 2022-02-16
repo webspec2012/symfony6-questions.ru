@@ -3,8 +3,8 @@ namespace App\Users\UseCase\User;
 
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
-use App\Users\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -28,33 +28,41 @@ final class UserSwitchStatusCase
     private WorkflowInterface $userStatusWorkflow;
 
     /**
+     * @var LoggerInterface Logger
+     */
+    private LoggerInterface $logger;
+
+    /**
      * Конструктор сервиса
      *
      * @param UserFindCase $userFindCase User Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $userStatusStateMachine Workflow Interface
+     * @param LoggerInterface $logger Logger
      *
      * @return void
      */
     public function __construct(
         UserFindCase $userFindCase,
         EntityManagerInterface $entityManager,
-        WorkflowInterface $userStatusStateMachine
+        WorkflowInterface $userStatusStateMachine,
+        LoggerInterface $logger,
     )
     {
         $this->userFindCase = $userFindCase;
         $this->entityManager = $entityManager;
         $this->userStatusWorkflow = $userStatusStateMachine;
+        $this->logger = $logger;
     }
 
     /**
      * Блокировка пользователя
      *
      * @param int $id ID пользователя
-     * @return User Заблокированный пользователь
+     * @return bool Результат выполнения операции
      * @throws ServiceException|NotFoundEntityException
      */
-    public function block(int $id): User
+    public function block(int $id): bool
     {
         return $this->userStatusWorkflow($id, 'block');
     }
@@ -63,10 +71,10 @@ final class UserSwitchStatusCase
      * Удаление пользователя
      *
      * @param int $id ID пользователя
-     * @return User Удаленный пользователь
+     * @return bool Результат выполнения операции
      * @throws ServiceException|NotFoundEntityException
      */
-    public function delete(int $id): User
+    public function delete(int $id): bool
     {
         return $this->userStatusWorkflow($id, 'delete');
     }
@@ -75,10 +83,10 @@ final class UserSwitchStatusCase
      * Восстановление пользователя
      *
      * @param int $id ID пользователя
-     * @return User Восстановенный пользователь
+     * @return bool Результат выполнения операции
      * @throws ServiceException|NotFoundEntityException
      */
-    public function restore(int $id): User
+    public function restore(int $id): bool
     {
         return $this->userStatusWorkflow($id, 'restore');
     }
@@ -89,10 +97,10 @@ final class UserSwitchStatusCase
      *
      * @param int $id ID пользователя
      * @param string $action Действие
-     * @return User Обновленный пользователь
+     * @return bool Результат выполнения операции
      * @throws ServiceException|NotFoundEntityException
      */
-    private function userStatusWorkflow(int $id, string $action): User
+    private function userStatusWorkflow(int $id, string $action): bool
     {
         $user = $this->userFindCase->getUserById($id, false);
 
@@ -106,10 +114,15 @@ final class UserSwitchStatusCase
             throw new ServiceException(sprintf("Произошла ошибка в процессе '%s'. Попробуйте позже.", $action));
         }
 
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        return $user;
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
     }
 }

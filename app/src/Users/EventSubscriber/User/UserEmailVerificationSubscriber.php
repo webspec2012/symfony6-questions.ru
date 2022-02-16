@@ -11,7 +11,7 @@ use Symfony\Component\Messenger\MessageBusInterface;
 /**
  * Данный подписчик отвечает за отправку E-mail уведомлений с подтверждением E-mail адреса
  */
-class UserEmailVerificationSubscriber implements EventSubscriberInterface
+final class UserEmailVerificationSubscriber implements EventSubscriberInterface
 {
     /**
      * @var MessageBusInterface Message Bus

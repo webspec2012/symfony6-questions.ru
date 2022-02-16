@@ -9,7 +9,6 @@ use App\Core\Service\Notification\EmailNotification\EmailMessage;
 use App\Core\Service\Notification\EmailNotification\EmailNotificationInterface;
 use App\Core\Service\ValidateDtoService;
 use App\Users\Dto\User\UserChangePasswordForm;
-use App\Users\Entity\User;
 use App\Users\Service\PasswordGenerate\PasswordGenerateInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -68,7 +67,7 @@ final class UserChangePasswordCase
         UserPasswordHasherInterface $passwordEncoder,
         PasswordGenerateInterface $passwordGenerate,
         EmailNotificationInterface $emailNotification,
-        LoggerInterface $logger
+        LoggerInterface $logger,
     )
     {
         $this->userFindCase = $userFindCase;
@@ -83,21 +82,26 @@ final class UserChangePasswordCase
      * Изменение пароля пользователю
      *
      * @param UserChangePasswordForm $form DTO с данными пользователя
-     * @return User Обновленный пользователь
+     * @return bool Результат выполнения операции
      * @throws ServiceException|EntityValidationException|NotFoundEntityException
      */
-    public function changePassword(UserChangePasswordForm $form): User
+    public function changePassword(UserChangePasswordForm $form): bool
     {
         ValidateDtoService::validateDto($form);
 
         $user = $this->userFindCase->getUserById($form->id);
         $user->setPlainPassword($form->password, $this->passwordEncoder);
 
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        return $user;
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
     }
 
     /**
@@ -111,16 +115,17 @@ final class UserChangePasswordCase
     {
         $user = $this->userFindCase->getUserById($userId);
 
+        // Установка нового пароля
+        $password = $this->passwordGenerate->generate();
+        $formData = new UserChangePasswordForm();
+        $formData->id = $user->getId();
+        $formData->password = $password;
+        if (!$this->changePassword($formData)) {
+            return false;
+        }
+
+        // Отправка пароля на почту
         try {
-            // Устарновка нового пароля
-            $password = $this->passwordGenerate->generate();
-            $user->setPlainPassword($password, $this->passwordEncoder);
-
-            // save to DB
-            $this->entityManager->persist($user);
-            $this->entityManager->flush();
-
-            // Отправка пароля на почту
             $message = (new EmailMessage())
                 ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
                 ->setSubject('Установлен новый пароль')
@@ -129,9 +134,11 @@ final class UserChangePasswordCase
             ;
 
             $this->emailNotification->send($message);
+
             return true;
         } catch (\Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage());
+
             return false;
         }
     }

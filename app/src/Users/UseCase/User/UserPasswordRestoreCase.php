@@ -79,34 +79,34 @@ final class UserPasswordRestoreCase
             throw new ServiceException("Для данного пользователя функционал недоступен.");
         }
 
-        // формирование токена для подтверждения (срок действия токена - 5 дней)
-        $token = $this->getRandomToken()."___".strtotime('+5 days');
-        $user->setPasswordRestoreToken($token);
-
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        // отправка письма пользователю
-        $message = (new EmailMessage())
-            ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
-            ->setSubject('Восстановление пароля')
-            ->setTemplate('user/password-restore-request')
-            ->setContext(compact('user', 'token'))
-        ;
-
         try {
+            // формирование токена для подтверждения (срок действия токена - 5 дней)
+            $token = $this->getRandomToken()."___".strtotime('+5 days');
+            $user->setPasswordRestoreToken($token);
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            // отправка письма пользователю
+            $message = (new EmailMessage())
+                ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
+                ->setSubject('Восстановление пароля')
+                ->setTemplate('user/password-restore-request')
+                ->setContext(compact('user', 'token'))
+            ;
             $this->emailNotification->send($message);
+
             return true;
         } catch (\Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage());
+
             return false;
         }
     }
 
     /**
      * @param string $token Token подтверждения
-     * @return bool Процессинг подтверждения E-mail адреса
+     * @return bool Процессинг восстановления пароля
      * @throws ServiceException В случае ошибки
      */
     public function handle(string $token): bool
@@ -131,17 +131,21 @@ final class UserPasswordRestoreCase
 
         $user->setPasswordRestoreToken(null);
 
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        // Сформировать новый пароль и отправить на почту
-        return $this->userChangePasswordCase->generateNewPasswordAndSendToEmail($user->getId());
+            return $this->userChangePasswordCase->generateNewPasswordAndSendToEmail($user->getId());
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
     }
 
     /**
      * @return string Случайный токен
-     * @throws
+     * @throws \Exception
      */
     private function getRandomToken(): string
     {

@@ -61,7 +61,7 @@ final class UserEmailVerificationCase
      * Отправка письма с токеном подтверждения
      *
      * @param int $id ID пользователя
-     * @return bool Результат отправки письма
+     * @return bool Результат выполнения операции
      * @throws NotFoundEntityException|ServiceException
      */
     public function sendEmail(int $id): bool
@@ -71,27 +71,27 @@ final class UserEmailVerificationCase
             throw new ServiceException(sprintf("У пользователя '%s' e-mail адрес уже подтверждён.", $user->getEmail()));
         }
 
-        // формирование токена для подтверждения (срок действия токена - 5 дней)
-        $token = $this->getRandomToken()."___".strtotime('+5 days');
-        $user->setEmailVerifiedToken($token);
-
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
-
-        // отправка письма пользователю
-        $message = (new EmailMessage())
-            ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
-            ->setSubject('Подтверждение E-mail адреса')
-            ->setTemplate('user/email-verification')
-            ->setContext(compact('user', 'token'))
-        ;
-
         try {
+            // формирование токена для подтверждения (срок действия токена - 5 дней)
+            $token = $this->getRandomToken()."___".strtotime('+5 days');
+            $user->setEmailVerifiedToken($token);
+
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
+
+            // отправка письма пользователю
+            $message = (new EmailMessage())
+                ->setTo(new EmailAddress($user->getEmail(), $user->getUsername()))
+                ->setSubject('Подтверждение E-mail адреса')
+                ->setTemplate('user/email-verification')
+                ->setContext(compact('user', 'token'))
+            ;
             $this->emailNotification->send($message);
+
             return true;
         } catch (\Throwable $e) {
             $this->logger->error(__METHOD__.': '.$e->getMessage());
+
             return false;
         }
     }
@@ -124,16 +124,21 @@ final class UserEmailVerificationCase
         $user->setEmailVerified(true);
         $user->setEmailVerifiedToken(null);
 
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        return true;
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
     }
 
     /**
      * @return string Случайный токен
-     * @throws
+     * @throws \Exception
      */
     private function getRandomToken(): string
     {

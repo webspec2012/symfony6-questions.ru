@@ -3,6 +3,7 @@ namespace App\Users\DataFixtures\ORM;
 
 use App\Core\DataFixtures\ORM\BaseFixture;
 use App\Core\Exception\AppException;
+use App\Core\Exception\ServiceException;
 use App\Users\Dto\User\UserCreateForm;
 use App\Users\Entity\UserInterface;
 use App\Users\UseCase\User\UserCreateCase;
@@ -22,10 +23,11 @@ final class UserFixtures extends BaseFixture
      * Конструктор класса
      *
      * @param UserCreateCase $userCreateCase
+     *
      * @return void
      */
     public function __construct(
-        UserCreateCase $userCreateCase
+        UserCreateCase $userCreateCase,
     )
     {
         $this->userCreateCase = $userCreateCase;
@@ -46,7 +48,7 @@ final class UserFixtures extends BaseFixture
     /**
      * Загрузка User Fixtures
      *
-     * @throws AppException
+     * @throws ServiceException
      */
     private function loadUserFixtures(): void
     {

@@ -32,9 +32,10 @@ trait StatusesEntityTrait
      * Установить статус
      *
      * @param string $status Статус
+     * @return static
      * @throws EntityValidationException
      */
-    public function setStatus(string $status): self
+    public function setStatus(string $status): static
     {
         if (!isset(static::getStatusList()[$status])) {
             throw new EntityValidationException(sprintf("Некорректный статус для пользователя: '%s'", $status));

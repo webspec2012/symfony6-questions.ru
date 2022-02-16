@@ -23,9 +23,12 @@ final class BackendUserProvider implements UserProviderInterface
      * Конструктор
      *
      * @param UserFindCase $userFindCase
+     *
      * @return void
      */
-    public function __construct(UserFindCase $userFindCase)
+    public function __construct
+    (UserFindCase $userFindCase,
+    )
     {
         $this->userFindCase = $userFindCase;
     }

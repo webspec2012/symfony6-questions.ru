@@ -109,7 +109,6 @@
         "doctrine/doctrine-fixtures-bundle": "^3.4",
         "fzaninotto/faker": "^1.5",
         "phpunit/phpunit": "^9.5",
-        "roave/psalm-html-output": "^1.0",
         "symfony/browser-kit": "6.0.*",
         "symfony/css-selector": "6.0.*",
         "symfony/debug-bundle": "6.0.*",

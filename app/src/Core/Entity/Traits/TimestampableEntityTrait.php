@@ -39,9 +39,9 @@ trait TimestampableEntityTrait
 
     /**
      * @param DateTime $created_at
-     * @return self
+     * @return static
      */
-    public function setCreatedAt(DateTime $created_at): self
+    public function setCreatedAt(DateTime $created_at): static
     {
         $this->created_at = $created_at;
 
@@ -58,9 +58,9 @@ trait TimestampableEntityTrait
 
     /**
      * @param DateTime $updated_at
-     * @return self
+     * @return static
      */
-    public function setUpdatedAt(DateTime $updated_at): self
+    public function setUpdatedAt(DateTime $updated_at): static
     {
         $this->updated_at = $updated_at;
 

@@ -4,7 +4,7 @@ namespace App\Core\Exception;
 /**
  * Exception в случае ошибки валидации сущности.
  */
-class EntityValidationException extends ServiceException
+final class EntityValidationException extends ServiceException
 {
 
 }

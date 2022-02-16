@@ -33,11 +33,21 @@ final class ValidateDtoService
                 $errors[] = '['.$violation->getPropertyPath().'] '.$violation->getMessage();
             }
 
-            throw new ServiceException(sprintf(
-                "Ошибка валидации '%s': \n\n%s",
-                substr(strrchr(get_class($dto), "\\"), 1),
-                implode("\n", $errors)
-            ));
+            throw new ServiceException(ValidateDtoService::formattedError($dto, $errors));
         }
+    }
+
+    /**
+     * @param DtoInterface $dto Объект формы
+     * @param string[] $errors Список ошибок к форме
+     * @return string Форматирование вывода ошибки
+     */
+    public static function formattedError(DtoInterface $dto, array $errors): string
+    {
+        return sprintf(
+            "Ошибка валидации '%s': \n\n%s",
+            substr(strrchr(get_class($dto), "\\"), 1),
+            implode("\n", $errors)
+        );
     }
 }

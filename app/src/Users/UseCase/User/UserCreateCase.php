@@ -74,7 +74,7 @@ final class UserCreateCase
      *
      * @param UserCreateForm $form DTO с данными пользователя
      * @return User Созданный пользователь
-     * @throws ServiceException В случае ошибки валидации данных
+     * @throws ServiceException В случае ошибки
      */
     public function create(UserCreateForm $form): User
     {
@@ -92,17 +92,18 @@ final class UserCreateCase
         $user->setIsAdmin($form->is_admin);
         $user->setRoles($form->roles);
 
-        // init status workflow
         $user->setStatus(UserInterface::STATUS_ACTIVE);
         $this->userStatusWorkflow->getMarking($user);
 
-        // save to DB
-        $this->entityManager->persist($user);
-        $this->entityManager->flush();
+        try {
+            $this->entityManager->persist($user);
+            $this->entityManager->flush();
 
-        // user created event
-        $this->eventDispatcher->dispatch(new UserCreatedEvent($user), UserCreatedEvent::NAME);
+            $this->eventDispatcher->dispatch(new UserCreatedEvent($user), UserCreatedEvent::NAME);
+        } catch (\Throwable $e) {
+            throw new ServiceException($e->getMessage(), $e->getCode(), $e->getPrevious());
+        }
 
-        return $user;
+        return $this->userFindCase->getUserById($user->getId());
     }
 }

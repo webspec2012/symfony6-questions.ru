@@ -55,7 +55,7 @@ final class Paginator
      * @return Paginator
      * @throws
      */
-    public function paginate(int $page = 1): self
+    public function paginate(int $page = 1): Paginator
     {
         $this->currentPage = max(1, $page);
 

@@ -3,6 +3,7 @@ namespace App\Controller\Frontend;
 
 use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
+use App\Core\Exception\ServiceException;
 use App\Users\Dto\User\UserChangePasswordForm;
 use App\Users\Dto\User\UserProfileUpdateForm;
 use App\Users\Form\User\UserChangePasswordFormType;
@@ -73,13 +74,15 @@ final class UserProfileController extends AppController
      * @Route("/update/", name="update")
      *
      * @param Request $request Request
+     *
      * @param UserUpdateCase $userUpdateCase User Update Case
      *
      * @return Response
      */
     public function update(
         Request $request,
-        UserUpdateCase $userUpdateCase
+
+        UserUpdateCase $userUpdateCase,
     ): Response
     {
         try {
@@ -88,17 +91,14 @@ final class UserProfileController extends AppController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $formData = new UserProfileUpdateForm();
-        $formData->id = $user->getId();
-        $formData->name = $user->getUsername();
-        $formData->email = $user->getEmail();
-        $formData->about = $user->getAbout();
-
-        $form = $this->createForm(UserProfileUpdateFormType::class, $formData);
+        $form = $this->createForm(UserProfileUpdateFormType::class, new UserProfileUpdateForm($user));
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $userUpdateCase->updateProfile($form->getData());
+                if (!$userUpdateCase->updateProfile($form->getData())) {
+                    throw new ServiceException("Ошибка при обновлении профиля. Попробуйте позже.");
+                }
+
                 $this->addFlash('success', 'Профиль успешно обновлён!');
 
                 return $this->redirectToRoute('frontend_user_profile_update');
@@ -122,13 +122,15 @@ final class UserProfileController extends AppController
      * @Route("/change-password/", name="change_password")
      *
      * @param Request $request Request
+     *
      * @param UserChangePasswordCase $userChangePasswordCase User Change Password Case
      *
      * @return Response
      */
     public function changePassword(
         Request $request,
-        UserChangePasswordCase $userChangePasswordCase
+
+        UserChangePasswordCase $userChangePasswordCase,
     ): Response
     {
         try {
@@ -144,7 +146,10 @@ final class UserProfileController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $userChangePasswordCase->changePassword($form->getData());
+                if (!$userChangePasswordCase->changePassword($form->getData())) {
+                    throw new ServiceException("Ошибка при изменении пароля. Попробуйте позже.");
+                }
+
                 $this->addFlash('success', 'Пароль успешно изменен!');
 
                 return $this->redirectToRoute('frontend_user_profile_index');
