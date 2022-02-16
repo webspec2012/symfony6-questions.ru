@@ -1,5 +1,3 @@
-# https://help.github.com/en/actions
-name: PHPUnit Tests
 on:
     push:
     pull_request:
