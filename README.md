@@ -1,5 +1,8 @@
 # Symfony6 Questions (в разработке)
 
+[![PHPUnit Tests](https://github.com/webspec2012/symfony6-questions.ru/actions/workflows/phpunit.yml/badge.svg?branch=master)](https://github.com/webspec2012/symfony6-questions.ru/actions/workflows/phpunit.yml)
+[![Static analysis](https://github.com/webspec2012/symfony6-questions.ru/actions/workflows/psalm.yml/badge.svg?branch=master)](https://github.com/webspec2012/symfony6-questions.ru/actions/workflows/psalm.yml)
+
 Простой пример реализации сервиса вопросы-ответы.
 
 ## Используемые технологии в проекте
