@@ -27,6 +27,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Контроллер для управления пользователями.
  *
+ * @psalm-suppress PropertyNotSetInConstructor
+ *
  * @IsGranted("ROLE_MANAGER_USERS")
  *
  * @Route("/users/user", name="users_user_")
@@ -124,7 +126,7 @@ final class UserController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
-            $page = (int) $request->get('page', 1);
+            $page = (int) $request->request->get('page', 1);
             $paginator = $userListingCase->listingWithPaginate($form->getData(), $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());

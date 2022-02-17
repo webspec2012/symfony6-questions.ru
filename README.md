@@ -48,6 +48,10 @@ sudo docker-compose exec -T -u www-data php-fpm sh -c "make dev"
 127.0.0.1 symfony6-questions.ru backend.symfony6-questions.ru
 ```
 
+Современные браузеры не дают заходить на сайты без https, и делают редирект даже в том случае,
+если https версии у сайта нет. Для Firefox решение следующее: вводим в адресной строке `about:config`, находим
+параметр `browser.urlbar.autoFill` и устанавливаем его в `false`.
+
 * Frontend доступен тут: http://symfony6-questions.ru:8110
 * Backend доступен тут: http://backend.symfony6-questions.ru:8110
 

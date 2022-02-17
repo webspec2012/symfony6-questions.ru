@@ -16,6 +16,7 @@ final class Paginator
     private QueryBuilder $queryBuilder;
 
     /**
+     * @psalm-suppress PropertyNotSetInConstructor
      * @var int Текущая страница
      */
     private int $currentPage;
@@ -26,11 +27,13 @@ final class Paginator
     private int $pageSize;
 
     /**
+     * @psalm-suppress PropertyNotSetInConstructor
      * @var iterable Результаты выборки
      */
     private iterable $results;
 
     /**
+     * @psalm-suppress PropertyNotSetInConstructor
      * @var int Общее количество выборки
      */
     private int $numResults;
@@ -53,7 +56,6 @@ final class Paginator
      *
      * @param int $page Текущая страница
      * @return Paginator
-     * @throws
      */
     public function paginate(int $page = 1): Paginator
     {

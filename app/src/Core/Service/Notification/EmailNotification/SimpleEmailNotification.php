@@ -67,18 +67,22 @@ class SimpleEmailNotification implements EmailNotificationInterface
 
         try {
             $tpl = (new TemplatedEmail())
-                ->from(new Address($message->getFrom()->getAddress(), $message->getFrom()->getName()))
+                ->from(new Address((string) $message->getFrom()?->getAddress(), (string) $message->getFrom()?->getName()))
                 ->to(...array_map(function (EmailAddressInterface $email) {
                     return new Address($email->getAddress(), $email->getName());
                 }, $message->getTo()))
-                ->subject($message->getSubject())
-                ->htmlTemplate("mail/".$message->getTemplate().".html.twig")
+                ->subject((string) $message->getSubject())
+                ->htmlTemplate(sprintf("mail/%s.html.twig", (string) $message->getTemplate()))
                 ->context($message->getContext())
             ;
 
             $this->mailer->send($tpl);
         } catch (\Throwable $e) {
-            throw new EmailNotificationException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            throw new EmailNotificationException(
+                message: $e->getMessage(),
+                code: (int) $e->getCode(),
+                previous: $e
+            );
         }
     }
 }

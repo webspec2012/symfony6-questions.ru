@@ -24,7 +24,7 @@ abstract class BaseFixture extends Fixture
     /**
      * @inheritdoc
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         $this->faker = Factory::create('ru_RU');
         $this->manager = $manager;

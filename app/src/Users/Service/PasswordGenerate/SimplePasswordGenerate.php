@@ -50,7 +50,11 @@ final class SimplePasswordGenerate implements PasswordGenerateInterface
 
             return $password;
         } catch (\Throwable $e) {
-            throw new ServiceException(sprintf("Ошибка при формировании случайного пароля: %s", $e->getMessage()), $e->getCode(), $e);
+            throw new ServiceException(
+                message: sprintf("Ошибка при формировании случайного пароля: %s", $e->getMessage()),
+                code: (int) $e->getCode(),
+                previous: $e
+            );
         }
     }
 }

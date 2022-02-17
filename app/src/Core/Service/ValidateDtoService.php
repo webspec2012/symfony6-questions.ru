@@ -21,7 +21,7 @@ final class ValidateDtoService
     public static function validateDto(DtoInterface $dto): void
     {
         $validator = Validation::createValidatorBuilder()
-            ->enableAnnotationMapping(true)
+            ->enableAnnotationMapping()
             ->addDefaultDoctrineAnnotationReader()
             ->getValidator();
 

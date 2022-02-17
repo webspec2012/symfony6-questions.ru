@@ -21,6 +21,8 @@ use Symfony\Component\HttpFoundation\Response;
 /**
  * Контроллер для работы с профилем пользователя
  *
+ * @psalm-suppress PropertyNotSetInConstructor
+ *
  * @IsGranted("ROLE_USER")
  *
  * @Route("/user/profile", name="user_profile_")
@@ -60,7 +62,7 @@ final class UserProfileController extends AppController
     public function index(): Response
     {
         try {
-            $user = $this->userFindCase->getUserByEmail($this->getUser()->getUserIdentifier());
+            $user = $this->userFindCase->getUserByEmail((string) $this->getUser()?->getUserIdentifier());
         } catch (NotFoundEntityException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -86,7 +88,7 @@ final class UserProfileController extends AppController
     ): Response
     {
         try {
-            $user = $this->userFindCase->getUserByEmail($this->getUser()->getUserIdentifier());
+            $user = $this->userFindCase->getUserByEmail((string) $this->getUser()?->getUserIdentifier());
         } catch (NotFoundEntityException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
@@ -134,7 +136,7 @@ final class UserProfileController extends AppController
     ): Response
     {
         try {
-            $user = $this->userFindCase->getUserByEmail($this->getUser()->getUserIdentifier());
+            $user = $this->userFindCase->getUserByEmail((string) $this->getUser()?->getUserIdentifier());
         } catch (NotFoundEntityException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }

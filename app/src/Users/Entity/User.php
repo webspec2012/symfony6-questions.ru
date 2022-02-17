@@ -12,6 +12,8 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 /**
  * Сущность "Пользователь"
  *
+ * @psalm-suppress MissingConstructor
+ *
  * @ORM\Table(
  *     name="`user`",
  *     indexes={
@@ -505,7 +507,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @inheritdoc
      */
-    public function eraseCredentials()
+    public function eraseCredentials(): void
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;

@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DTO для поиска с фильтрацией по пользователям
+ *
+ * @psalm-suppress MissingConstructor
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class UserSearchForm implements DtoInterface
 {

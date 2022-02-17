@@ -11,6 +11,8 @@ use Doctrine\Persistence\ObjectManager;
 
 /**
  * User Fixtures
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class UserFixtures extends BaseFixture
 {
@@ -37,7 +39,7 @@ final class UserFixtures extends BaseFixture
      * @inheritdoc
      * @throws AppException
      */
-    public function load(ObjectManager $manager)
+    public function load(ObjectManager $manager): void
     {
         parent::load($manager);
 

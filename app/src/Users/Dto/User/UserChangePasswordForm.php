@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DTO для изменения пароля пользователю
+ *
+ * @psalm-suppress MissingConstructor
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class UserChangePasswordForm implements DtoInterface
 {

@@ -22,6 +22,8 @@ use Symfony\Component\Security\Http\Authentication\UserAuthenticatorInterface;
 /**
  * Контроллер для работы с пользователями
  *
+ * @psalm-suppress PropertyNotSetInConstructor
+ *
  * @Route("/user", name="user_")
  */
 final class UserController extends AppController
@@ -128,7 +130,7 @@ final class UserController extends AppController
      *
      * @Route("/logout/", name="logout")
      */
-    public function logout()
+    public function logout(): void
     {
         throw new \LogicException('This method can be blank - it will be intercepted by the logout key on your firewall.');
     }
@@ -203,7 +205,7 @@ final class UserController extends AppController
     ): Response
     {
         try {
-            if (!$userPasswordRestoreCase->handle($request->get('token', ''))) {
+            if (!$userPasswordRestoreCase->handle((string) $request->request->get('token'))) {
                 throw new ServiceException("Ошибка при сбросе пароля. Попробуйте позже.");
             }
 
@@ -235,7 +237,7 @@ final class UserController extends AppController
     ): Response
     {
         try {
-            if (!$userEmailVerificationCase->handle($request->get('token', ''))) {
+            if (!$userEmailVerificationCase->handle((string) $request->request->get('token'))) {
                 throw new ServiceException("Ошибка при подтверждении e-mail адреса. Попробуйте позже.");
             }
 

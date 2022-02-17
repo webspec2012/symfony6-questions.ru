@@ -44,7 +44,7 @@ final class UserEmailVerificationSubscriber implements EventSubscriberInterface
     /**
      * @param UserCreatedEvent $event
      */
-    public function onUserCreated(UserCreatedEvent $event)
+    public function onUserCreated(UserCreatedEvent $event): void
     {
         $this->sendEmailVerification($event->getUser());
     }
@@ -52,7 +52,7 @@ final class UserEmailVerificationSubscriber implements EventSubscriberInterface
     /**
      * @param UserEmailChangedEvent $event
      */
-    public function onUserEmailChanged(UserEmailChangedEvent $event)
+    public function onUserEmailChanged(UserEmailChangedEvent $event): void
     {
         $this->sendEmailVerification($event->getUser());
     }
@@ -63,6 +63,6 @@ final class UserEmailVerificationSubscriber implements EventSubscriberInterface
      */
     private function sendEmailVerification(UserInterface $user): void
     {
-        $this->messageBus->dispatch(new UserEmailVerification($user->getId()));
+        $this->messageBus->dispatch(new UserEmailVerification((int) $user->getId()));
     }
 }

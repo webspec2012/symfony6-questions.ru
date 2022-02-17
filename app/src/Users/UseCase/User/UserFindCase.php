@@ -54,6 +54,10 @@ final class UserFindCase
     public function getUserByEmail(string $email, bool $isActive = true): User
     {
         $email = trim(mb_strtolower($email));
+        if (empty($email)) {
+            throw new NotFoundEntityException("Не указан E-mail адрес.");
+        }
+
         $user = $this->userRepository->findOneByEmail($email, $isActive);
         if (empty($user)) {
             throw new NotFoundEntityException(sprintf("Пользователь с E-mail '%s' не найден.", $email));
@@ -70,6 +74,10 @@ final class UserFindCase
     public function getUserByEmailVerificationToken(string $token): User
     {
         $token = trim(strip_tags($token));
+        if (empty($token)) {
+            throw new NotFoundEntityException("Не указан Token.");
+        }
+
         $user = $this->userRepository->findOneByEmailVerifiedToken($token);
         if (empty($user)) {
             throw new NotFoundEntityException(sprintf("Пользователь с E-mail Verified Token '%s' не найден.", $token));
@@ -86,6 +94,10 @@ final class UserFindCase
     public function getUserByPasswordRestoreToken(string $token): User
     {
         $token = trim(strip_tags($token));
+        if (empty($token)) {
+            throw new NotFoundEntityException("Не указан Token.");
+        }
+
         $user = $this->userRepository->findOneByPasswordRestoreToken($token);
         if (empty($user)) {
             throw new NotFoundEntityException(sprintf("Пользователь с Password Reset Token '%s' не найден.", $token));

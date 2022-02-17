@@ -91,7 +91,10 @@
     "scripts": {
         "auto-scripts": {
             "cache:clear": "symfony-cmd"
-        }
+        },
+        "psalm": [
+            "vendor/bin/psalm --no-cache --show-info=true"
+        ]
     },
 
     "conflict": {

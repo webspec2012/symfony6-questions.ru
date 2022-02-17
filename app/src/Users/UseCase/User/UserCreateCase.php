@@ -101,7 +101,11 @@ final class UserCreateCase
 
             $this->eventDispatcher->dispatch(new UserCreatedEvent($user), UserCreatedEvent::NAME);
         } catch (\Throwable $e) {
-            throw new ServiceException($e->getMessage(), $e->getCode(), $e->getPrevious());
+            throw new ServiceException(
+                message: $e->getMessage(),
+                code: (int) $e->getCode(),
+                previous: $e
+            );
         }
 
         return $this->userFindCase->getUserById($user->getId());

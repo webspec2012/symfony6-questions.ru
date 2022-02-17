@@ -7,6 +7,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DTO для редактирования пользователя
+ *
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class UserUpdateForm implements DtoInterface
 {

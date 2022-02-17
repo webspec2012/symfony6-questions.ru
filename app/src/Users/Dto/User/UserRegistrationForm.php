@@ -6,6 +6,9 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * DTO для регистрации пользователя
+ *
+ * @psalm-suppress MissingConstructor
+ * @psalm-suppress PropertyNotSetInConstructor
  */
 final class UserRegistrationForm  implements DtoInterface
 {
