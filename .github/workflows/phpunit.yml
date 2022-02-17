@@ -1,0 +1,92 @@
+name: PHPUnit Tests
+on:
+    push:
+        branches:
+            - master
+    pull_request:
+        branches:
+            - master
+
+defaults:
+    run:
+        shell: bash
+
+jobs:
+    # PHPUnit
+    phpunit:
+        name: PHPUnit (PHP ${{ matrix.php }})
+        runs-on: ${{ matrix.os }}
+        strategy:
+            fail-fast: false
+            matrix:
+                os: ['ubuntu-latest']
+                php: ['8.1']
+                mysql: ['8.0']
+                redis: ['6.2']
+
+        services:
+            mysql:
+                image: mysql:${{ matrix.mysql }}
+                ports:
+                    - 3306/tcp
+                env:
+                    MYSQL_ALLOW_EMPTY_PASSWORD: false
+                    MYSQL_ROOT_PASSWORD: root_password
+                    MYSQL_DATABASE: project_database
+                options: >-
+                    --health-cmd="mysqladmin ping"
+                    --health-interval=10s
+                    --health-timeout=5s
+                    --health-retries=3
+
+            redis:
+                image: redis:${{ matrix.redis }}
+                ports:
+                    - 6379/tcp
+                options: >-
+                    --health-cmd "redis-cli ping"
+                    --health-interval 10s
+                    --health-timeout 5s
+                    --health-retries 5
+
+        steps:
+            - name: Checkout target branch
+              uses: actions/checkout@v2
+
+            - name: Setup PHP
+              uses: shivammathur/setup-php@v2
+              with:
+                  php-version: ${{ matrix.php }}
+                  extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, mysql
+                  coverage: xdebug
+
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                  cd app/
+                  echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v2
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/app/composer.lock') }}
+                restore-keys: |
+                    ${{ runner.os }}-composer-
+
+            - name: Install dependencies
+              run: |
+                cd app/
+                composer install --no-interaction --no-plugins --no-progress --no-scripts --ansi
+                composer require symfony/runtime
+
+            - name: Run Tests
+              run: |
+                cd app/
+                php bin/console doctrine:migrations:migrate -n
+                php bin/console doctrine:fixtures:load -n
+                php bin/phpunit --testdox --colors=always
+              env:
+                APP_ENV: test
+                DATABASE_URL: mysql://root:root_password@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/project_database?serverVersion=${{ matrix.mysql }}
+                REDIS_DSN: redis://127.0.0.1:${{ job.services.redis.ports['6379'] }}/1

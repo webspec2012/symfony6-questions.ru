@@ -18,19 +18,35 @@ jobs:
         name: Psalm
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout target branch
+              uses: actions/checkout@v2
+
             - name: Setup PHP
               uses: shivammathur/setup-php@v2
               with:
                   php-version: '8.1'
                   coverage: none
 
-            - name: Checkout target branch
-              uses: actions/checkout@v2
+            - name: Get composer cache directory
+              id: composer-cache
+              run: |
+                cd app/
+                echo "::set-output name=dir::$(composer config cache-files-dir)"
+
+            - name: Cache composer dependencies
+              uses: actions/cache@v2
+              with:
+                path: ${{ steps.composer-cache.outputs.dir }}
+                key: ${{ runner.os }}-composer-${{ hashFiles('**/app/composer.lock') }}
+                restore-keys: |
+                    ${{ runner.os }}-composer-
 
             - name: Install dependencies
               run: |
-                  composer install --working-dir=app/ --no-interaction --no-plugins --no-progress --no-scripts --ansi
+                  cd app/
+                  composer install --no-interaction --no-plugins --no-progress --no-scripts --ansi
 
             - name: Run Psalm
               run: |
-                  php ./app/vendor/bin/psalm  --no-cache --show-info=true --config=./app/psalm.xml --no-progress || php ./app/vendor/bin/psalm  --no-cache --show-info=true --config=./app/psalm.xml --output-format=github --no-progress
+                  cd app/
+                  php ./vendor/bin/psalm  --no-cache --show-info=true --no-progress || php ./vendor/bin/psalm  --no-cache --show-info=true --output-format=github --no-progress

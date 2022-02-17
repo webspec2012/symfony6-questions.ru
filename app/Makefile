@@ -29,7 +29,7 @@ tests:
 	php bin/console cache:clear -n
 	php bin/console doctrine:migrations:migrate -n
 	php bin/console doctrine:fixtures:load -n
-	php bin/phpunit --testdox
+	php bin/phpunit --testdox --colors=always
 .PHONY: tests
 
 psalm:
