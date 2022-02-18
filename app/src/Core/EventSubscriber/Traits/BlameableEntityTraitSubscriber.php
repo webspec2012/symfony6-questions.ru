@@ -1,7 +1,6 @@
 <?php
 namespace App\Core\EventSubscriber\Traits;
 
-use App\Core\Entity\Traits\BlameableEntityTrait;
 use Doctrine\ORM\Events;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;

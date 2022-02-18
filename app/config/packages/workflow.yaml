@@ -23,3 +23,72 @@ framework:
                 delete:
                     from: BLOCKED
                     to: DELETED
+        # Questions Category Status
+        questions_category_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Questions\Entity\Category\CategoryInterface
+            initial_marking: UNPUBLISHED
+            places:
+                - UNPUBLISHED
+                - PUBLISHED
+                - DELETED
+            transitions:
+                publish:
+                    from: UNPUBLISHED
+                    to: PUBLISHED
+                unpublish:
+                    from: PUBLISHED
+                    to: UNPUBLISHED
+                delete:
+                    from: UNPUBLISHED
+                    to: DELETED
+        # Questions Question Status
+        questions_question_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Questions\Entity\Question\QuestionInterface
+            initial_marking: UNPUBLISHED
+            places:
+                - UNPUBLISHED
+                - PUBLISHED
+                - DELETED
+            transitions:
+                publish:
+                    from: UNPUBLISHED
+                    to: PUBLISHED
+                unpublish:
+                    from: PUBLISHED
+                    to: UNPUBLISHED
+                delete:
+                    from: UNPUBLISHED
+                    to: DELETED
+        # Questions Question Status
+        questions_answer_status:
+            type: 'state_machine'
+            marking_store:
+                type: 'method'
+                property: 'status'
+            supports:
+                - App\Questions\Entity\Answer\AnswerInterface
+            initial_marking: UNPUBLISHED
+            places:
+                - UNPUBLISHED
+                - PUBLISHED
+                - DELETED
+            transitions:
+                publish:
+                    from: UNPUBLISHED
+                    to: PUBLISHED
+                unpublish:
+                    from: PUBLISHED
+                    to: UNPUBLISHED
+                delete:
+                    from: UNPUBLISHED
+                    to: DELETED

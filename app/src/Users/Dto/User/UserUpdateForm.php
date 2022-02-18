@@ -88,5 +88,5 @@ final class UserUpdateForm implements DtoInterface
      *     max=1000
      * )
      */
-    public ?string $about;
+    public ?string $about = null;
 }

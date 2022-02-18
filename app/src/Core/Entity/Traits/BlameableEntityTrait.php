@@ -1,7 +1,7 @@
 <?php
 namespace App\Core\Entity\Traits;
 
-use Symfony\Component\Security\Core\User\UserInterface;
+use App\Users\Entity\UserInterface;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

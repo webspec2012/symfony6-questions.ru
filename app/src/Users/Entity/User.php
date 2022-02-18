@@ -2,6 +2,7 @@
 namespace App\Users\Entity;
 
 use App\Core\Entity\Traits\BlameableEntityTrait;
+use App\Core\Entity\Traits\CreatedByIpEntityTrait;
 use App\Core\Entity\Traits\StatusesEntityTrait;
 use App\Core\Entity\Traits\TimestampableEntityTrait;
 use App\Core\Exception\EntityValidationException;
@@ -30,9 +31,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use BlameableEntityTrait;
     use TimestampableEntityTrait;
     use StatusesEntityTrait;
+    use CreatedByIpEntityTrait;
 
     /**
-     * @var array Список статусов пользователя
+     * @var array Список статусов
      */
     public static array $statusList = [
         self::STATUS_ACTIVE => 'ACTIVE',
@@ -41,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ];
 
     /**
-     * @var array Список ролей пользователя
+     * @var array Список ролей
      */
     public static array $rolesList = [
         self::ROLE_USER => 'ROLE_USER',
@@ -181,7 +183,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private string $about = '';
 
     /**
-     * @return int ID пользователя
+     * @return int ID
      */
     public function getId(): int
     {
@@ -189,7 +191,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string Username пользователя
+     * @return string Username
      */
     public function getUsername(): string
     {
@@ -197,7 +199,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Установить Username пользователя
+     * Установить Username
      *
      * @param string $username Username
      * @return static
@@ -210,7 +212,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string E-mail пользователя
+     * @return string E-mail
      */
     public function getEmail(): string
     {
@@ -218,7 +220,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Установить E-mail пользователя
+     * Установить E-mail
      *
      * @param string $email E-mail
      * @return static
@@ -357,7 +359,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return bool Пользователь является администратором?
+     * @return bool Является администратором?
      */
     public function getIsAdmin(): bool
     {
@@ -365,7 +367,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Установить Пользователь является администратором?
+     * Установить Является администратором?
      *
      * @param bool $is_admin Is Admin?
      * @return static
@@ -378,7 +380,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @inheritdoc
+     * @inheritdocACTIVE
      */
     public function getRoles(): array
     {
@@ -410,7 +412,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string About пользователя
+     * @return string About
      */
     public function getAbout(): string
     {
@@ -418,7 +420,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * Установить About пользователя
+     * Установить About
      *
      * @param string $about About
      * @return static

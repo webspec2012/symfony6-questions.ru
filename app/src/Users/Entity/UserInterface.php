@@ -42,17 +42,17 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
     public const STATUS_DELETED = 'DELETED';
 
     /**
-     * @return int|null ID пользователя
+     * @return int ID
      */
-    public function getId(): ?int;
+    public function getId(): int;
 
     /**
-     * @return string Имя пользователя
+     * @return string Имя
      */
     public function getUsername(): string;
 
     /**
-     * @return string E-mail пользователя
+     * @return string E-mail
      */
     public function getEmail(): string;
 
@@ -67,32 +67,32 @@ interface UserInterface extends \Symfony\Component\Security\Core\User\UserInterf
     public function getEmailSubscribed(): bool;
 
     /**
-     * @return string Статус пользователя
+     * @return string Статус
      */
     public function getStatus(): string;
 
     /**
-     * @return string[] Роли пользователя
+     * @return string[] Роли
      */
     public function getRoles(): array;
 
     /**
-     * @return bool Пользователь активен?
+     * @return bool Активен?
      */
     public function isActive(): bool;
 
     /**
-     * @return bool Пользователь заблокирован?
+     * @return bool Заблокирован?
      */
     public function isBlocked(): bool;
 
     /**
-     * @return bool Пользователь удалён?
+     * @return bool Удалён?
      */
     public function isDeleted(): bool;
 
     /**
-     * @return bool Пользователь администратор?
+     * @return bool Администратор?
      */
     public function isAdmin(): bool;
 }

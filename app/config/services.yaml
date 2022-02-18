@@ -90,3 +90,7 @@ services:
     App\Questions\DataFixtures\ORM\:
         resource: '../src/Questions/DataFixtures/ORM/'
         tags: [ 'doctrine.fixture.orm' ]
+
+    # Сервис генерации slug
+    App\Questions\Service\SlugGenerate\SimpleSlugGenerate: ~
+    App\Questions\Service\SlugGenerate\SlugGenerateInterface: '@App\Questions\Service\SlugGenerate\SimpleSlugGenerate'

@@ -12,6 +12,10 @@
         {% else %}
             в <b>NULL</b>
         {% endif %}
+
+        {% if entity.createdByIp %}
+            IP {{ entity.createdByIp }}
+        {% endif %}
     </td>
 </tr>
 
