@@ -63,6 +63,6 @@ final class UserEmailVerificationSubscriber implements EventSubscriberInterface
      */
     private function sendEmailVerification(UserInterface $user): void
     {
-        $this->messageBus->dispatch(new UserEmailVerification((int) $user->getId()));
+        $this->messageBus->dispatch(new UserEmailVerification($user->getId()));
     }
 }
