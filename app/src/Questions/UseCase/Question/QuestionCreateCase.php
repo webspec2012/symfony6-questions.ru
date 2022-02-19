@@ -99,10 +99,6 @@ final class QuestionCreateCase
             $this->entityManager->persist($question);
             $this->entityManager->flush();
 
-            // set href with PK
-            $question->setHref(sprintf("/q/%d-%s/", $question->getId(), $question->getSlug()));
-            $this->entityManager->flush();
-
             // publish
             $this->questionSwitchStatusCase->publish($question->getId());
         } catch (\Throwable $e) {

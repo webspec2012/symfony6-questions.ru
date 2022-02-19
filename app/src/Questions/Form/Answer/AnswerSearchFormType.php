@@ -2,9 +2,7 @@
 namespace App\Questions\Form\Answer;
 
 use App\Questions\Dto\Answer\AnswerSearchForm;
-use App\Questions\Dto\Question\QuestionSearchForm;
 use App\Questions\Entity\Answer\Answer;
-use App\Questions\Entity\Question\Question;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -47,8 +45,8 @@ final class AnswerSearchFormType extends AbstractType
                 'label' => 'ID вопроса',
                 'required' => false,
             ])
-            ->add('text', TextType::class, [
-                'label' => 'Текст',
+            ->add('query', TextType::class, [
+                'label' => 'Поисковой запрос',
                 'required' => false,
             ])
         ;

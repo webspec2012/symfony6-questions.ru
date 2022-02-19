@@ -77,6 +77,9 @@ final class AnswerListingCase
     {
         $query = $this->answerRepository->createQueryBuilder('u');
 
+        // joins
+        $query->leftJoin('u.created_by', 'cb');
+
         // filters
         if (!empty($form->id)) {
             $query->andWhere('u.id = :id')
@@ -93,13 +96,13 @@ final class AnswerListingCase
         }
 
         if (!empty($form->question)) {
-            $query->andWhere('u.question_id = :question_id')
-                ->setParameter('question_id_id', $form->question);
+            $query->andWhere('u.question = :question')
+                ->setParameter('question', $form->question);
         }
 
-        if (!empty($form->text)) {
-            $query->andWhere("MATCH (u.text AGAINST :text)")
-                ->setParameter('text', $form->text.'*');
+        if (!empty($form->query)) {
+            $query->andWhere('u.text like :query')
+                ->setParameter('query', '%'.$form->query.'%');
         }
 
         // order by

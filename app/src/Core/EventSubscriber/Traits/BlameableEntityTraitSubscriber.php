@@ -48,8 +48,7 @@ final class BlameableEntityTraitSubscriber implements EventSubscriberInterface
      */
     public function prePersist(LifecycleEventArgs $eventArgs): void
     {
-        $entity = $eventArgs->getEntity();
-        $this->updateEntity($entity);
+        $this->updateEntity($eventArgs->getEntity());
     }
 
     /**

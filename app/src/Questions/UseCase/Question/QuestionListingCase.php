@@ -6,6 +6,7 @@ use App\Core\Pagination\Paginator;
 use App\Questions\Dto\Question\QuestionSearchForm;
 use App\Questions\Entity\Question\QuestionInterface;
 use App\Questions\Repository\QuestionRepository;
+use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -75,7 +76,12 @@ final class QuestionListingCase
      */
     protected function buildQuery(QuestionSearchForm $form): QueryBuilder
     {
-        $query = $this->questionRepository->createQueryBuilder('u');
+        $query = $this->questionRepository
+            ->createQueryBuilder('u');
+
+        // joins
+        $query->leftJoin('u.created_by', 'cb');
+        $query->leftJoin('u.category', 'c');
 
         // filters
         if (!empty($form->id)) {
@@ -93,18 +99,13 @@ final class QuestionListingCase
         }
 
         if (!empty($form->category)) {
-            $query->andWhere('u.category_id = :category_id')
-                ->setParameter('category_id', $form->category);
+            $query->andWhere('u.category = :category')
+                ->setParameter('category', $form->category);
         }
 
-        if (!empty($form->title)) {
-            $query->andWhere('u.title like :title')
-                ->setParameter('title', '%'.$form->title.'%');
-        }
-
-        if (!empty($form->text)) {
-            $query->andWhere("MATCH (u.text AGAINST :text)")
-                ->setParameter('text', $form->text.'*');
+        if (!empty($form->query)) {
+            $query->andWhere('u.title like :query OR u.text like :query')
+                ->setParameter('query', '%'.$form->query.'%');
         }
 
         // order by

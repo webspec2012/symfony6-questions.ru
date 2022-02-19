@@ -1,0 +1,30 @@
+{# Меню в sidebar #}
+{% set currentRoute = app.request.get('_route') %}
+{% set menuType = menuType|default('group') %}
+{% set menuItems = [
+    {
+        'label': '<i class="fa-solid fa-tag"></i> Категории',
+        'route': 'backend_questions_category_list',
+        'visible': true,
+        'active': 'backend_questions_category_' in currentRoute,
+    }, {
+        'label': '<i class="fa-solid fa-circle-question"></i> Вопросы',
+        'route': 'backend_questions_question_list',
+        'visible': true,
+        'active': 'backend_questions_question_' in currentRoute,
+    }, {
+        'label': '<i class="fa-solid fa-comment-dots"></i> Ответы',
+        'route': 'backend_questions_answer_list',
+        'visible': true,
+        'active': 'backend_questions_answer_' in currentRoute,
+    }
+] %}
+<div class="card">
+    <div class="card-header">
+        <b>Меню</b>
+    </div>
+
+    <div class="card-body">
+        {% include '@backend/components/sidebar-menu.html.twig' with { 'menuItems': menuItems } only %}
+    </div>
+</div>

@@ -69,7 +69,6 @@ final class CategoryCreateCase
         $category = new Category();
         $category->setTitle($form->title);
         $category->setSlug($form->slug);
-        $category->setHref(sprintf("/category/%s/", $category->getSlug()));
         $category->setDescription((string) $form->description);
         $category->setStatus(CategoryInterface::STATUS_UNPUBLISHED);
         $this->categoryStatusWorkflow->getMarking($category);

@@ -33,6 +33,40 @@ final class CategoryListingCase
     }
 
     /**
+     * @param bool $isPublished Только опубликованных?
+     * @return array Список категорий для dropDown списка
+     * @throws ServiceException В случае ошибки
+     */
+    public function getCategoriesForDropdown(bool $isPublished): array
+    {
+        $items = [];
+        $categories = $this->getCategories($isPublished);
+        if (!empty($categories)) {
+            foreach ($categories as $category) {
+                $items[$category->getId()] = $category->getTitle();
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * @param bool $isPublished Только опубликованных?
+     * @return CategoryInterface[] Список категорий
+     * @throws ServiceException В случае ошибки
+     */
+    public function getCategories(bool $isPublished): array
+    {
+        $formData = new CategorySearchForm();
+        $formData->orderBy = 'u.title_ASC';
+        if ($isPublished) {
+            $formData->status = CategoryInterface::STATUS_PUBLISHED;
+        }
+
+        return $this->iterableToArray($this->listingWithoutPaginate($formData));
+    }
+
+    /**
      * Постраничный листинг категорий
      *
      * @param CategorySearchForm $form Форма поиска
@@ -106,6 +140,8 @@ final class CategoryListingCase
         $availableOrdersBy = [
             'u.id_DESC' => ['u.id' => 'DESC'],
             'u.id_ASC' => ['u.id' => 'ASC'],
+            'u.title_DESC' => ['u.title' => 'DESC'],
+            'u.title_ASC' => ['u.title' => 'ASC'],
         ];
 
         if (!empty($form->orderBy)) {
@@ -119,5 +155,16 @@ final class CategoryListingCase
         }
 
         return $query;
+    }
+
+    /**
+     * Iterable to Array
+     *
+     * @param iterable $iterable
+     * @return array
+     */
+    private function iterableToArray(iterable $iterable): array
+    {
+        return $iterable instanceof \Traversable ? iterator_to_array($iterable) : $iterable;
     }
 }

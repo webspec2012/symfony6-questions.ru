@@ -3,8 +3,10 @@ namespace App\Questions\UseCase\Category;
 
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
+use App\Questions\Event\Category\CategoryStatusChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -33,12 +35,18 @@ final class CategorySwitchStatusCase
     private LoggerInterface $logger;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param CategoryFindCase $categoryFindCase Category Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $questionsCategoryStatusStateMachine Workflow Interface
      * @param LoggerInterface $logger Logger
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
@@ -47,12 +55,14 @@ final class CategorySwitchStatusCase
         EntityManagerInterface $entityManager,
         WorkflowInterface $questionsCategoryStatusStateMachine,
         LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->categoryFindCase = $categoryFindCase;
         $this->entityManager = $entityManager;
         $this->categoryStatusWorkflow = $questionsCategoryStatusStateMachine;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -115,8 +125,8 @@ final class CategorySwitchStatusCase
         }
 
         try {
-            $this->entityManager->persist($category);
             $this->entityManager->flush();
+            $this->eventDispatcher->dispatch(new CategoryStatusChangedEvent($category), CategoryStatusChangedEvent::NAME);
 
             return true;
         } catch (\Throwable $e) {

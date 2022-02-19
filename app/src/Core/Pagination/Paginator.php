@@ -60,21 +60,12 @@ final class Paginator
     public function paginate(int $page = 1): Paginator
     {
         $this->currentPage = max(1, $page);
-
         $query = $this->queryBuilder
             ->setFirstResult(($this->currentPage - 1) * $this->pageSize)
             ->setMaxResults($this->pageSize)
             ->getQuery();
 
-        if (0 === \count($this->queryBuilder->getDQLPart('join'))) {
-            $query->setHint(CountWalker::HINT_DISTINCT, false);
-        }
-
         $paginator = new DoctrinePaginator($query, true);
-
-        $useOutputWalkers = \count($this->queryBuilder->getDQLPart('having') ?: []) > 0;
-        $paginator->setUseOutputWalkers($useOutputWalkers);
-
         $this->results = $paginator->getIterator();
         $this->numResults = $paginator->count();
 

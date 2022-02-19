@@ -1,0 +1,26 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Редактировать категорию '{{ category.title }}' - Категории - Вопросы и ответы{% endblock %}
+{% block header %}Редактировать категорию '{{ category.title }}'{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_questions_category_list') }}">Категории</a></li>
+    <li class="breadcrumb-item">Редактировать категорию '{{ category.title }}'</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(updateForm) }}
+    {{ form_row(updateForm.title) }}
+    {{ form_row(updateForm.slug) }}
+    {{ form_row(updateForm.description) }}
+
+    <button class="btn btn-primary">Сохранить</button>
+    {{ form_end(updateForm) }}
+{% endblock %}

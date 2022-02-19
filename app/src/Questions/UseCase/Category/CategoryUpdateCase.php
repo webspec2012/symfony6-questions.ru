@@ -72,11 +72,33 @@ final class CategoryUpdateCase
 
         $category->setTitle($form->title);
         $category->setSlug($form->slug);
-        $category->setHref(sprintf("/category/%s/", $category->getSlug()));
         $category->setDescription((string) $form->description);
 
         try {
-            $this->entityManager->persist($category);
+            $this->entityManager->flush();
+
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    /**
+     * Обновить количество опубликованных вопросов у категории
+     *
+     * @param int $categoryId ID категории
+     * @param int $count Количество
+     * @return bool Результат выполнения операции
+     * @throws NotFoundEntityException
+     */
+    public function updateTotalPublishedQuestions(int $categoryId, int $count): bool
+    {
+        $category = $this->categoryFindCase->getCategoryById($categoryId, false);
+        $category->setTotalPublishedQuestions($count);
+
+        try {
             $this->entityManager->flush();
 
             return true;

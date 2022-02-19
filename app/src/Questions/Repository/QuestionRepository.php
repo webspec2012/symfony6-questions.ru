@@ -28,4 +28,17 @@ class QuestionRepository extends ServiceEntityRepository
 
         return $this->findOneBy($criteria);
     }
+
+    /**
+     * @param int $categoryId ID категории
+     * @param string|null $status Статус вопросов
+     * @return int Количество вопросов в указанной категории и статусе
+     */
+    public function countQuestionsByCategory(int $categoryId, ?string $status = null): int
+    {
+        $criteria = $status ? ['status' => $status] : [];
+        $criteria['category'] = $categoryId;
+
+        return $this->count($criteria);
+    }
 }

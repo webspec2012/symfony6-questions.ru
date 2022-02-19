@@ -45,6 +45,8 @@ final class CategorySearchForm implements DtoInterface
         return [
             'u.id_DESC' => 'ID, DESC',
             'u.id_ASC' => 'ID, ASC',
+            'u.title_DESC' => 'TITLE, DESC',
+            'u.title_ASC' => 'TITLE, ASC',
         ];
     }
 }

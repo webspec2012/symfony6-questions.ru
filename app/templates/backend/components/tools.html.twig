@@ -17,3 +17,13 @@
 
     <span class="badge bg-{{ userStatusLabels[key] ?? 'light' }}">{{ value }}</span>
 {% endmacro %}
+
+{% macro statusLabel(key, value) %}
+    {% set statusLabels = {
+        'PUBLISHED': 'success',
+        'UNPUBLISHED': 'warning',
+        'DELETED': 'danger'
+    } %}
+
+    <span class="badge bg-{{ statusLabels[key] ?? 'light' }}">{{ value }}</span>
+{% endmacro %}

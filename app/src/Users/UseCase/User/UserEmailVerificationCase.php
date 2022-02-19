@@ -76,7 +76,6 @@ final class UserEmailVerificationCase
             $token = $this->getRandomToken()."___".strtotime('+5 days');
             $user->setEmailVerifiedToken($token);
 
-            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // отправка письма пользователю

@@ -54,7 +54,6 @@ final class UserController extends AppController
      * @param FrontendLoginFormAuthenticator $loginFormAuthenticator Login Form Authenticator
      * @param UserAuthenticatorInterface $userAuthenticator User Authenticator
      * @param RateLimiterFactory $userRegistrationLimiter Rate Limiter
-     *
      * @param UserRegistrationCase $userRegistrationCase User Registration Case
      *
      * @return Response Response
@@ -64,7 +63,6 @@ final class UserController extends AppController
         FrontendLoginFormAuthenticator $loginFormAuthenticator,
         UserAuthenticatorInterface $userAuthenticator,
         RateLimiterFactory $userRegistrationLimiter,
-
         UserRegistrationCase $userRegistrationCase,
     ): Response
     {
@@ -142,7 +140,6 @@ final class UserController extends AppController
      *
      * @param Request $request Request
      * @param RateLimiterFactory $userPasswordRestoreLimiter Rate Limiter
-     *
      * @param UserFindCase $userFindCase User Find Case
      * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
      *
@@ -151,7 +148,6 @@ final class UserController extends AppController
     public function passwordRestoreRequest(
         Request $request,
         RateLimiterFactory $userPasswordRestoreLimiter,
-
         UserFindCase $userFindCase,
         UserPasswordRestoreCase $userPasswordRestoreCase,
     ): Response
@@ -193,19 +189,17 @@ final class UserController extends AppController
      * @Route("/password-restore/reset/", name="password_restore_reset")
      *
      * @param Request $request Request
-     *
      * @param UserPasswordRestoreCase $userPasswordRestoreCase User Password Restore Case
      *
      * @return Response Response
      */
     public function passwordRestoreReset(
         Request $request,
-
         UserPasswordRestoreCase $userPasswordRestoreCase,
     ): Response
     {
         try {
-            if (!$userPasswordRestoreCase->handle((string) $request->request->get('token'))) {
+            if (!$userPasswordRestoreCase->handle((string) $request->query->get('token'))) {
                 throw new ServiceException("Ошибка при сбросе пароля. Попробуйте позже.");
             }
 
@@ -225,19 +219,17 @@ final class UserController extends AppController
      * @Route("/email-verification/", name="email_verification")
      *
      * @param Request $request Request
-     *
      * @param UserEmailVerificationCase $userEmailVerificationCase User Email Verification Case
      *
      * @return Response Response
      */
     public function emailVerification(
         Request $request,
-
         UserEmailVerificationCase $userEmailVerificationCase,
     ): Response
     {
         try {
-            if (!$userEmailVerificationCase->handle((string) $request->request->get('token'))) {
+            if (!$userEmailVerificationCase->handle((string) $request->query->get('token'))) {
                 throw new ServiceException("Ошибка при подтверждении e-mail адреса. Попробуйте позже.");
             }
 

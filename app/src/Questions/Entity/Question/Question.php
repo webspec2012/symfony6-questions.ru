@@ -177,6 +177,19 @@ class Question implements QuestionInterface
     }
 
     /**
+     * Установить Количество опубликованных вопросов
+     *
+     * @param int $count Количество
+     * @return static
+     */
+    public function setTotalPublishedAnswers(int $count): static
+    {
+        $this->total_published_answers = $count;
+
+        return $this;
+    }
+
+    /**
      * @inheritDoc
      */
     public function isPublished(): bool

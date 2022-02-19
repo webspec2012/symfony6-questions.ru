@@ -7,15 +7,15 @@
         'visible': true,
         'active': currentRoute == 'backend_index',
     }, {
+        'label': 'Вопросы и ответы',
+        'route': 'backend_questions_category_list',
+        'visible': is_granted('ROLE_MANAGER_QUESTIONS'),
+        'active': 'backend_questions_' in currentRoute,
+    }, {
         'label': 'Пользователи',
         'route': 'backend_users_user_list',
         'visible': is_granted('ROLE_MANAGER_USERS'),
         'active': 'backend_users_' in currentRoute,
-    }, {
-        'label': 'Вопросы-ответы',
-        'route': 'backend_questions_question_list',
-        'visible': false and is_granted('ROLE_MANAGER_QUESTIONS'),
-        'active': 'backend_questions_' in currentRoute,
     }, {
         'label': 'Выход',
         'route': 'backend_logout',

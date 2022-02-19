@@ -115,7 +115,6 @@ final class UserSwitchStatusCase
         }
 
         try {
-            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             return true;

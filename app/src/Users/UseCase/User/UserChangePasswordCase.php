@@ -93,7 +93,6 @@ final class UserChangePasswordCase
         $user->setPlainPassword($form->password, $this->passwordEncoder);
 
         try {
-            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             return true;

@@ -1,0 +1,24 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Редактировать ответ #{{ answer.id }} - Ответы - Вопросы и ответы{% endblock %}
+{% block header %}Редактировать ответ #{{ answer.id }}{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_questions_answer_list') }}">Ответы</a></li>
+    <li class="breadcrumb-item">Редактировать ответ #{{ answer.id }}</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(updateForm) }}
+    {{ form_row(updateForm.text) }}
+
+    <button class="btn btn-primary">Сохранить</button>
+    {{ form_end(updateForm) }}
+{% endblock %}

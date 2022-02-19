@@ -1,0 +1,90 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Категории - Вопросы и ответы{% endblock %}
+{% block header %}Категории{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item">Категории</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    <div class="control-buttons">
+        <a class="btn btn-success btn-sm" href="{{ path('backend_questions_category_create') }}" title="Создать категорию">
+            <i class="fa-solid fa-plus"></i> Создать категорию
+        </a>
+    </div>
+
+    <table class="table table-striped table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">ID</th>
+            <th scope="col">Название</th>
+            <th scope="col">Slug</th>
+            <th scope="col">Href</th>
+            <th scope="col">Вопросов</th>
+            <th scope="col">Статус</th>
+            <th scope="col">#</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% set categories = paginator.results %}
+        {% if categories|length > 0 %}
+            {% for category in categories %}
+                <tr>
+                    <td>{{ category.id }}</td>
+                    <td>{{ category.title }}</td>
+                    <td>{{ category.slug }}</td>
+                    <td>{{ category.href }}</td>
+                    <td>{{ category.totalPublishedQuestions }}</td>
+                    <td>{{ tools.statusLabel(category.status, category.statusAsText) }}</td>
+                    <td>
+                        <a class="btn btn-success btn-sm" href="{{ path('backend_questions_category_view', {'id': category.id}) }}" title="Просмотр">
+                            <i class="fa-solid fa-eye"></i>
+                        </a>
+
+                        {% if not category.isDeleted %}
+                            <a class="btn btn-primary btn-sm" href="{{ path('backend_questions_category_update', {'id': category.id}) }}" title="Редактировать">
+                                <i class="fa-solid fa-edit"></i>
+                            </a>
+                        {% endif %}
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endif %}
+        </tbody>
+    </table>
+
+    {% if categories|length > 0 %}
+        {% include "@backend/components/paginator.html.twig" %}
+    {% else %}
+        {{ tools.alert('info', "Ничего не найдено. Попробуйте изменить критерии поиска.") }}
+    {% endif %}
+{% endblock %}
+
+{% block filters %}
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+            <b>Фильтр</b>
+        </div>
+
+        <div class="card-body">
+            {{ form_start(filterForm) }}
+            {{ form_row(filterForm.orderBy) }}
+
+            {{ form_row(filterForm.id) }}
+            {{ form_row(filterForm.status) }}
+            {{ form_row(filterForm.title) }}
+            {{ form_row(filterForm.slug) }}
+
+            <button class="btn btn-primary">Найти</button>
+            {{ form_end(filterForm) }}
+        </div>
+    </div>
+{% endblock %}

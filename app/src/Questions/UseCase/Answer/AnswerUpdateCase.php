@@ -64,7 +64,6 @@ final class AnswerUpdateCase
         $answer->setText($form->text);
 
         try {
-            $this->entityManager->persist($answer);
             $this->entityManager->flush();
 
             return true;

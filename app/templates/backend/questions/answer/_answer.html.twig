@@ -1,0 +1,58 @@
+{% import "@backend/components/tools.html.twig" as tools %}
+<div class="card" style="margin-bottom: 20px;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                #{{ answer.id }} {{ tools.statusLabel(answer.status, answer.statusAsText) }}
+            </div>
+
+            <div class="col-md-6 text-end">
+                <a class="btn btn-success btn-sm" href="{{ path('backend_questions_answer_view', {'id': answer.id}) }}" title="Просмотр">
+                    <i class="fa-solid fa-eye"></i> Открыть
+                </a>
+
+                {% if not answer.isDeleted %}
+                    <a class="btn btn-primary btn-sm" href="{{ path('backend_questions_answer_update', {'id': answer.id}) }}" title="Редактировать">
+                        <i class="fa-solid fa-edit"></i> Редактировать
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        {{ answer.text|nl2br }}
+    </div>
+
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-md-4">
+
+            </div>
+
+            <div class="col-md-4">
+                {% if answer.createdBy %}
+                    <a href="{{ path('backend_users_user_view', {'id': answer.createdBy.id}) }}" target="_blank">{{ answer.createdBy.username }}</a>
+                {% else %}
+                    <b>NULL</b>
+                {% endif %}
+
+                {% if answer.createdAt %}
+                    в {{ answer.createdAt|date('d.m.Y H:i:s') }}
+                {% else %}
+                    в <b>NULL</b>
+                {% endif %}
+
+                {% if answer.createdByIp %}
+                    (IP {{ answer.createdByIp }})
+                {% else %}
+                    (IP <b>NULL</b>)
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 text-end">
+
+            </div>
+        </div>
+    </div>
+</div>

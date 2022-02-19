@@ -1,0 +1,57 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Ответы - Вопросы и ответы{% endblock %}
+{% block header %}Ответы{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item">Ответы</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    <div class="control-buttons">
+
+    </div>
+
+    <div class="answers-listing">
+        {% set answers = paginator.results %}
+        {% if answers|length > 0 %}
+            {% for answer in answers %}
+                {% include '@backend/questions/answer/_answer.html.twig' with { 'answer': answer } only %}
+            {% endfor %}
+        {% endif %}
+    </div>
+
+    {% if answers|length > 0 %}
+        {% include "@backend/components/paginator.html.twig" %}
+    {% else %}
+        {{ tools.alert('info', "Ничего не найдено. Попробуйте изменить критерии поиска.") }}
+    {% endif %}
+{% endblock %}
+
+{% block filters %}
+    <div class="card" style="margin-top: 20px;">
+        <div class="card-header">
+            <b>Фильтр</b>
+        </div>
+
+        <div class="card-body">
+            {{ form_start(filterForm) }}
+            {{ form_row(filterForm.orderBy) }}
+
+            {{ form_row(filterForm.id) }}
+            {{ form_row(filterForm.status) }}
+            {{ form_row(filterForm.question) }}
+            {{ form_row(filterForm.query) }}
+
+            <button class="btn btn-primary">Найти</button>
+            {{ form_end(filterForm) }}
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,60 @@
+{% import "@backend/components/tools.html.twig" as tools %}
+<div class="card" style="margin-bottom: 20px;">
+    <div class="card-header">
+        <div class="row">
+            <div class="col-md-6">
+                #{{ question.id }} {{ tools.statusLabel(question.status, question.statusAsText) }}
+            </div>
+
+            <div class="col-md-6 text-end">
+                <a class="btn btn-success btn-sm" href="{{ path('backend_questions_question_view', {'id': question.id}) }}" title="Просмотр">
+                    <i class="fa-solid fa-eye"></i> Открыть
+                </a>
+
+                {% if not question.isDeleted %}
+                    <a class="btn btn-primary btn-sm" href="{{ path('backend_questions_question_update', {'id': question.id}) }}" title="Редактировать">
+                        <i class="fa-solid fa-edit"></i> Редактировать
+                    </a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <div class="card-body">
+        <h5>{{ question.title }}</h5>
+
+        {{ question.text|nl2br }}
+    </div>
+
+    <div class="card-footer">
+        <div class="row">
+            <div class="col-md-4">
+                Ответов: {{ question.totalPublishedAnswers }}
+            </div>
+
+            <div class="col-md-4">
+                {% if question.createdBy %}
+                    <a href="{{ path('backend_users_user_view', {'id': question.createdBy.id}) }}" target="_blank">{{ question.createdBy.username }}</a>
+                {% else %}
+                    <b>NULL</b>
+                {% endif %}
+
+                {% if question.createdAt %}
+                    в {{ question.createdAt|date('d.m.Y H:i:s') }}
+                {% else %}
+                    в <b>NULL</b>
+                {% endif %}
+
+                {% if question.createdByIp %}
+                    (IP {{ question.createdByIp }})
+                {% else %}
+                    (IP <b>NULL</b>)
+                {% endif %}
+            </div>
+
+            <div class="col-md-4 text-end">
+                {{ question.category.title }}
+            </div>
+        </div>
+    </div>
+</div>

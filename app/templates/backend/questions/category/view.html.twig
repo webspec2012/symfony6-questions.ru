@@ -1,0 +1,118 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Категория '{{ category.title }}' - Категории - Вопросы и ответы{% endblock %}
+{% block header %}Категория '{{ category.title }}'{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_questions_category_list') }}">Категории</a></li>
+    <li class="breadcrumb-item">Категория '{{ category.title }}'</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {% if category.isDeleted %}
+        {{ tools.alert('danger', "Внимание! Категория удалена.") }}
+    {% endif %}
+
+    <div class="control-buttons">
+        {% set csrf_token = csrf_token('questions_category') %}
+        {% if not category.isDeleted %}
+            <a class="btn btn-primary" href="{{ path('backend_questions_category_update', {'id': category.id}) }}" title="Редактировать">
+                <i class="fa-solid fa-edit"></i> Редактировать
+            </a>
+        {% endif %}
+
+        {% if workflow_can(category, 'publish') %}
+            <form name="category_publish" method="POST" action="{{ path('backend_questions_category_publish', {'id': category.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-success" onclick="return confirm('Вы действительно хотите опубликовать категорию?');"><i class="fa-solid fa-trash-restore"></i> Опубликовать</button>
+            </form>
+        {% endif %}
+
+        {% if workflow_can(category, 'unpublish') %}
+            <form name="category_unpublish" method="POST" action="{{ path('backend_questions_category_unpublish', {'id': category.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-warning" onclick="return confirm('Вы действительно хотите снять с публикации категорию?');"><i class="fa-solid fa-ban"></i> Снять с публикации</button>
+            </form>
+        {% endif %}
+
+        {% if workflow_can(category, 'delete') %}
+            <form name="category_delete" method="POST" action="{{ path('backend_questions_category_delete', {'id': category.id}) }}" style="display: inline-block;">
+                <input type="hidden" name="_csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Вы действительно хотите удалить категорию?');"><i class="fa-solid fa-trash"></i> Удалить</button>
+            </form>
+        {% endif %}
+    </div>
+
+    <div class="detail-view">
+        <table class="table table-striped table-bordered">
+            <colgroup>
+                <col style="width: 30%"/>
+                <col style="width: 70%"/>
+            </colgroup>
+            <tbody>
+            <tr>
+                <th scope="row">ID</th>
+                <td>{{ category.id }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Статус</th>
+                <td>{{ tools.statusLabel(category.status, category.statusAsText) }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Название</th>
+                <td>{{ category.title }}</td>
+            </tr>
+
+            <tr>
+                <th scope="row">Slug</th>
+                <td>
+                    {{ category.slug }}
+                </td>
+            </tr>
+
+            <tr>
+                <th scope="row">Href</th>
+                <td>
+                    {{ category.href }}
+                </td>
+            </tr>
+
+            {% if totalQuestions %}
+                <tr>
+                    <th scope="row">Всего вопросов</th>
+                    <td>
+                        {{ totalQuestions }}
+                    </td>
+                </tr>
+            {% endif %}
+
+            {% if publishedQuestions %}
+                <tr>
+                    <th scope="row">Из низ опубликовано</th>
+                    <td>
+                        {{ publishedQuestions }} ({{ category.totalPublishedQuestions }})
+                    </td>
+                </tr>
+            {% endif %}
+
+            <tr>
+                <th scope="row">Описание</th>
+                <td>
+                    {{ category.description|nl2br }}
+                </td>
+            </tr>
+
+            {% include '@backend/components/_detail_view_created_log.html.twig' with {'entity': category} only %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

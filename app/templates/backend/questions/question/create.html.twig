@@ -1,0 +1,27 @@
+{% extends '@backend/layouts/controlbox.html.twig' %}
+{% import "@backend/components/tools.html.twig" as tools %}
+
+{% block title %}Создать вопрос - Вопросы - Вопросы и ответы{% endblock %}
+{% block header %}Создать вопрос{% endblock %}
+
+{% block breadcrumbs %}
+    <li class="breadcrumb-item"><a href="{{ path('backend_index') }}">Главная</a></li>
+    <li class="breadcrumb-item">Вопросы и ответы</li>
+    <li class="breadcrumb-item"><a href="{{ path('backend_questions_question_list') }}">Вопросы</a></li>
+    <li class="breadcrumb-item">Создать вопрос</li>
+{% endblock %}
+
+{% block menu %}
+    {% include '@backend/questions/_menu.html.twig' only %}
+{% endblock %}
+
+{% block content %}
+    {{ form_start(createForm) }}
+    {{ form_row(createForm.category) }}
+    {{ form_row(createForm.title) }}
+    {{ form_row(createForm.text) }}
+
+    <button class="btn btn-lg btn-primary" type="submit">Создать</button>
+
+    {{ form_end(createForm) }}
+{% endblock %}

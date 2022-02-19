@@ -1,8 +1,10 @@
 <?php
 namespace App\Questions\Form\Question;
 
+use App\Core\Exception\ServiceException;
 use App\Questions\Dto\Question\QuestionSearchForm;
 use App\Questions\Entity\Question\Question;
+use App\Questions\UseCase\Category\CategoryListingCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
@@ -15,7 +17,25 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class QuestionSearchFormType extends AbstractType
 {
     /**
+     * @var CategoryListingCase Category Listing Case
+     */
+    private CategoryListingCase $categoryListingCase;
+
+    /**
+     * Конструктор
+     *
+     * @param CategoryListingCase $categoryListingCase Category Listing Case
+     */
+    public function __construct(
+        CategoryListingCase $categoryListingCase,
+    )
+    {
+        $this->categoryListingCase = $categoryListingCase;
+    }
+
+    /**
      * @inheritdoc
+     * @throws ServiceException
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -43,15 +63,14 @@ final class QuestionSearchFormType extends AbstractType
             ])
             ->add('category', ChoiceType::class, [
                 'label' => 'Категория',
-                'choices' => [],
-                'required' => true,
-            ])
-            ->add('title', TextType::class, [
-                'label' => 'Название',
+                'choices' => array_flip($this->categoryListingCase->getCategoriesForDropdown(false)),
                 'required' => false,
+                'attr' => [
+                    'onchange' => 'this.form.submit()',
+                ],
             ])
-            ->add('text', TextType::class, [
-                'label' => 'Текст',
+            ->add('query', TextType::class, [
+                'label' => 'Поисковой запрос',
                 'required' => false,
             ])
         ;

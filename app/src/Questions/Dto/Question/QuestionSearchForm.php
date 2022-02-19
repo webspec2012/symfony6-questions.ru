@@ -28,14 +28,9 @@ final class QuestionSearchForm implements DtoInterface
     public ?int $category = null;
 
     /**
-     * @var string|null Заголовок вопроса
+     * @var string|null Поисковой запрос
      */
-    public ?string $title = null;
-
-    /**
-     * @var string|null Текст вопроса
-     */
-    public ?string $text = null;
+    public ?string $query = null;
 
     /**
      * @var string|null Сортировка

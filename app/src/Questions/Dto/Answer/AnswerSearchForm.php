@@ -28,9 +28,9 @@ final class AnswerSearchForm implements DtoInterface
     public ?int $question = null;
 
     /**
-     * @var string|null Текст ответа
+     * @var string|null Поисковой запрос
      */
-    public ?string $text = null;
+    public ?string $query = null;
 
     /**
      * @var string|null Сортировка

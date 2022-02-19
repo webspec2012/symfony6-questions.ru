@@ -3,8 +3,10 @@ namespace App\Questions\UseCase\Answer;
 
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
+use App\Questions\Event\Answer\AnswerStatusChangedEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -33,12 +35,18 @@ final class AnswerSwitchStatusCase
     private LoggerInterface $logger;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param AnswerFindCase $answerFindCase Answer Find Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $questionsAnswerStatusStateMachine Workflow Interface
      * @param LoggerInterface $logger Logger
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
@@ -47,12 +55,14 @@ final class AnswerSwitchStatusCase
         EntityManagerInterface $entityManager,
         WorkflowInterface $questionsAnswerStatusStateMachine,
         LoggerInterface $logger,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->answerFindCase = $answerFindCase;
         $this->entityManager = $entityManager;
         $this->answerStatusWorkflow = $questionsAnswerStatusStateMachine;
         $this->logger = $logger;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -115,8 +125,8 @@ final class AnswerSwitchStatusCase
         }
 
         try {
-            $this->entityManager->persist($answer);
             $this->entityManager->flush();
+            $this->eventDispatcher->dispatch(new AnswerStatusChangedEvent($answer), AnswerStatusChangedEvent::NAME);
 
             return true;
         } catch (\Throwable $e) {

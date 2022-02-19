@@ -76,7 +76,6 @@ final class UserController extends AppController
      */
     public function create(
         Request $request,
-
         UserCreateCase $userCreateCase,
         PasswordGenerateInterface $passwordGenerate,
     ): Response
@@ -117,7 +116,6 @@ final class UserController extends AppController
      */
     public function list(
         Request $request,
-
         UserListingCase $userListingCase,
     ): Response
     {
@@ -126,7 +124,7 @@ final class UserController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
-            $page = (int) $request->request->get('page', 1);
+            $page = (int) $request->query->get('page', 1);
             $paginator = $userListingCase->listingWithPaginate($form->getData(), $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
@@ -152,7 +150,6 @@ final class UserController extends AppController
      */
     public function view(
         int $id,
-
         UserFindCase $userFindCase,
     ): Response
     {
@@ -180,7 +177,6 @@ final class UserController extends AppController
     public function update(
         int $id,
         Request $request,
-
         UserFindCase $userFindCase,
         UserUpdateCase $userUpdateCase
     ): Response
@@ -230,7 +226,6 @@ final class UserController extends AppController
     public function block(
         int $id,
         Request $request,
-
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
@@ -266,7 +261,6 @@ final class UserController extends AppController
     public function delete(
         int $id,
         Request $request,
-
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
@@ -302,7 +296,6 @@ final class UserController extends AppController
     public function restore(
         int $id,
         Request $request,
-
         UserSwitchStatusCase $userSwitchStatusCase
     ): Response
     {
@@ -338,7 +331,6 @@ final class UserController extends AppController
     public function changePassword(
         int $id,
         Request $request,
-
         UserChangePasswordCase $userChangePasswordCase,
     ): Response
     {

@@ -84,7 +84,6 @@ final class UserPasswordRestoreCase
             $token = $this->getRandomToken()."___".strtotime('+5 days');
             $user->setPasswordRestoreToken($token);
 
-            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // отправка письма пользователю

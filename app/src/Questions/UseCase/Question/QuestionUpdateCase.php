@@ -75,7 +75,30 @@ final class QuestionUpdateCase
         $question->setText((string) $form->text);
 
         try {
-            $this->entityManager->persist($question);
+            $this->entityManager->flush();
+
+            return true;
+        } catch (\Throwable $e) {
+            $this->logger->error(__METHOD__.': '.$e->getMessage());
+
+            return false;
+        }
+    }
+
+    /**
+     * Обновить количество опубликованных ответов у вопроса
+     *
+     * @param int $questionId ID вопроса
+     * @param int $count Количество
+     * @return bool Результат выполнения операции
+     * @throws NotFoundEntityException
+     */
+    public function updateTotalPublishedAnswers(int $questionId, int $count): bool
+    {
+        $question = $this->questionFindCase->getQuestionById($questionId, false);
+        $question->setTotalPublishedAnswers($count);
+
+        try {
             $this->entityManager->flush();
 
             return true;

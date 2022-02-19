@@ -95,7 +95,6 @@ final class UserUpdateCase
         $user->setAbout((string) $form->about);
 
         try {
-            $this->entityManager->persist($user);
             $this->entityManager->flush();
 
             // user changed e-mail event

@@ -1,7 +1,9 @@
 <?php
 namespace App\Questions\Form\Question;
 
+use App\Core\Exception\ServiceException;
 use App\Questions\Dto\Question\QuestionUpdateForm;
+use App\Questions\UseCase\Category\CategoryListingCase;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
@@ -15,14 +17,33 @@ use Symfony\Component\OptionsResolver\OptionsResolver;
 final class QuestionUpdateFormType extends AbstractType
 {
     /**
+     * @var CategoryListingCase Category Listing Case
+     */
+    private CategoryListingCase $categoryListingCase;
+
+    /**
+     * Конструктор
+     *
+     * @param CategoryListingCase $categoryListingCase Category Listing Case
+     */
+    public function __construct(
+        CategoryListingCase $categoryListingCase,
+    )
+    {
+        $this->categoryListingCase = $categoryListingCase;
+    }
+
+    /**
      * @inheritdoc
+     * @throws ServiceException
      */
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
             ->add('category', ChoiceType::class, [
                 'label' => 'Категория',
-                'choices' => [],
+                'choices' => array_flip($this->categoryListingCase->getCategoriesForDropdown(false)),
+                'placeholder' => '-- Выберите категорию --',
                 'required' => true,
             ])
             ->add('title', TextType::class, [
