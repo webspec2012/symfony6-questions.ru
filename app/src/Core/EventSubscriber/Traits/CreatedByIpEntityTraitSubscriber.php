@@ -50,7 +50,7 @@ final class CreatedByIpEntityTraitSubscriber implements EventSubscriberInterface
     public function prePersist(LifecycleEventArgs $eventArgs): void
     {
         $entity = $eventArgs->getEntity();
-        if (!method_exists($entity, 'setCreatedByIp')) {
+        if (method_exists($entity, 'setCreatedByIp')) {
             /* @var CreatedByIpEntityTrait $entity */
             if ($this->request && !empty($this->request->getClientIp())) {
                 $entity->setCreatedByIp($this->request->getClientIp());
