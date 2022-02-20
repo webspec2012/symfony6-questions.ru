@@ -3,7 +3,8 @@ namespace App\Users\Tests\UseCase\User;
 
 use App\Core\Exception\AppException;
 use App\Core\Exception\ServiceException;
-use App\Core\Pagination\Paginator;
+use App\Core\Service\Pagination\Paginator;
+use App\Core\Service\Pagination\PaginatorInterface;
 use App\Tests\Unit\BaseUnitTest;
 use App\Users\Dto\User\UserCreateForm;
 use App\Users\Dto\User\UserSearchForm;
@@ -57,7 +58,7 @@ class UserListingCaseTest extends BaseUnitTest
         $formData->email = 'listing-user-10@listing-example.com';
 
         $withPaginate = static::$userListingCase->listingWithPaginate($formData);
-        $this->assertInstanceOf(Paginator::class, $withPaginate);
+        $this->assertInstanceOf(PaginatorInterface::class, $withPaginate);
 
         $withPaginateResults = $this->iterableToArray($withPaginate->getResults());
         $this->assertCount(1, $withPaginateResults);

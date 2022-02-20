@@ -1,14 +1,14 @@
 <?php
-namespace App\Core\Pagination;
+namespace App\Core\Service\Pagination;
 
+use Iterator;
 use Doctrine\ORM\QueryBuilder;
-use Doctrine\ORM\Tools\Pagination\CountWalker;
 use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
- * Разбивает Query Builder на постраничный вывод
+ * Paginator для реализации через базы данных с использованием Doctrine
  */
-final class Paginator
+final class DbPaginator implements PaginatorInterface
 {
     /**
      * @var QueryBuilder Query Builder
@@ -19,18 +19,18 @@ final class Paginator
      * @psalm-suppress PropertyNotSetInConstructor
      * @var int Текущая страница
      */
-    private int $currentPage;
+    private int $currentPage = 1;
 
     /**
      * @var int Размер страницы
      */
-    private int $pageSize;
+    private int $pageSize = 30;
 
     /**
      * @psalm-suppress PropertyNotSetInConstructor
-     * @var iterable Результаты выборки
+     * @var Iterator Результаты выборки
      */
-    private iterable $results;
+    private Iterator $results;
 
     /**
      * @psalm-suppress PropertyNotSetInConstructor
@@ -42,24 +42,28 @@ final class Paginator
      * Конструктор
      *
      * @param QueryBuilder $queryBuilder Query Builder
-     * @param int $pageSize Размер страницы
+     *
      * @return void
      */
-    public function __construct(QueryBuilder $queryBuilder, int $pageSize)
+    public function __construct(QueryBuilder $queryBuilder)
     {
         $this->queryBuilder = $queryBuilder;
-        $this->pageSize = $pageSize;
     }
 
     /**
      * Сформировать пагинацию
      *
      * @param int $page Текущая страница
-     * @return Paginator
+     * @param int $pageSize Размер страницы
+     *
+     * @return PaginatorInterface
+     * @throws \Exception
      */
-    public function paginate(int $page = 1): Paginator
+    public function paginate(int $page = 1, int $pageSize = 30): PaginatorInterface
     {
         $this->currentPage = max(1, $page);
+        $this->pageSize = max(1, $pageSize);
+
         $query = $this->queryBuilder
             ->setFirstResult(($this->currentPage - 1) * $this->pageSize)
             ->setMaxResults($this->pageSize)
@@ -73,7 +77,7 @@ final class Paginator
     }
 
     /**
-     * @return int Текущая страница
+     * @inheritdoc
      */
     public function getCurrentPage(): int
     {
@@ -81,7 +85,7 @@ final class Paginator
     }
 
     /**
-     * @return int Последняя страница
+     * @inheritdoc
      */
     public function getLastPage(): int
     {
@@ -89,7 +93,7 @@ final class Paginator
     }
 
     /**
-     * @return int Размер страницы
+     * @inheritdoc
      */
     public function getPageSize(): int
     {
@@ -97,7 +101,7 @@ final class Paginator
     }
 
     /**
-     * @return bool Имеет предыдущую страницу?
+     * @inheritdoc
      */
     public function hasPreviousPage(): bool
     {
@@ -105,7 +109,7 @@ final class Paginator
     }
 
     /**
-     * @return int Предыдущая страница
+     * @inheritdoc
      */
     public function getPreviousPage(): int
     {
@@ -113,7 +117,7 @@ final class Paginator
     }
 
     /**
-     * @return bool Имеет следующую страницу?
+     * @inheritdoc
      */
     public function hasNextPage(): bool
     {
@@ -121,7 +125,7 @@ final class Paginator
     }
 
     /**
-     * @return int Следующая страница
+     * @inheritdoc
      */
     public function getNextPage(): int
     {
@@ -129,7 +133,7 @@ final class Paginator
     }
 
     /**
-     * @return bool Имеет постраничный вывод?
+     * @inheritdoc
      */
     public function hasToPaginate(): bool
     {
@@ -137,7 +141,7 @@ final class Paginator
     }
 
     /**
-     * @return int Общее количество выборки
+     * @inheritdoc
      */
     public function getNumResults(): int
     {
@@ -145,9 +149,9 @@ final class Paginator
     }
 
     /**
-     * @return iterable Результаты выборки
+     * @inheritdoc
      */
-    public function getResults(): iterable
+    public function getResults(): Iterator
     {
         return $this->results;
     }

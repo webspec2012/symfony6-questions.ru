@@ -2,7 +2,8 @@
 namespace App\Questions\UseCase\Answer;
 
 use App\Core\Exception\ServiceException;
-use App\Core\Pagination\Paginator;
+use App\Core\Service\Pagination\DbPaginator;
+use App\Core\Service\Pagination\PaginatorInterface;
 use App\Questions\Dto\Answer\AnswerSearchForm;
 use App\Questions\Entity\Answer\AnswerInterface;
 use App\Questions\Repository\AnswerRepository;
@@ -38,13 +39,13 @@ final class AnswerListingCase
      * @param AnswerSearchForm$form Форма поиска
      * @param int $page Номер страницы
      * @param int $pageSize Количество записей на страницу
-     * @return Paginator
+     * @return PaginatorInterface
      * @throws ServiceException
      */
-    public function listingWithPaginate(AnswerSearchForm$form, int $page = 1, int $pageSize = 30): Paginator
+    public function listingWithPaginate(AnswerSearchForm$form, int $page = 1, int $pageSize = 30): PaginatorInterface
     {
         try {
-            return (new Paginator($this->buildQuery($form), $pageSize))->paginate($page);
+            return (new DbPaginator($this->buildQuery($form)))->paginate($page, $pageSize);
         } catch (\Exception $e) {
             throw new ServiceException($e->getMessage());
         }

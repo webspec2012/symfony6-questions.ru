@@ -2,11 +2,11 @@
 namespace App\Questions\UseCase\Question;
 
 use App\Core\Exception\ServiceException;
-use App\Core\Pagination\Paginator;
+use App\Core\Service\Pagination\DbPaginator;
+use App\Core\Service\Pagination\PaginatorInterface;
 use App\Questions\Dto\Question\QuestionSearchForm;
 use App\Questions\Entity\Question\QuestionInterface;
 use App\Questions\Repository\QuestionRepository;
-use Doctrine\ORM\Query\Expr\Join;
 use Doctrine\ORM\QueryBuilder;
 
 /**
@@ -39,13 +39,13 @@ final class QuestionListingCase
      * @param QuestionSearchForm $form Форма поиска
      * @param int $page Номер страницы
      * @param int $pageSize Количество записей на страницу
-     * @return Paginator
+     * @return PaginatorInterface
      * @throws ServiceException
      */
-    public function listingWithPaginate(QuestionSearchForm $form, int $page = 1, int $pageSize = 30): Paginator
+    public function listingWithPaginate(QuestionSearchForm $form, int $page = 1, int $pageSize = 30): PaginatorInterface
     {
         try {
-            return (new Paginator($this->buildQuery($form), $pageSize))->paginate($page);
+            return (new DbPaginator($this->buildQuery($form)))->paginate($page, $pageSize);
         } catch (\Exception $e) {
             throw new ServiceException($e->getMessage());
         }

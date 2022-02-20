@@ -2,7 +2,8 @@
 namespace App\Users\UseCase\User;
 
 use App\Core\Exception\ServiceException;
-use App\Core\Pagination\Paginator;
+use App\Core\Service\Pagination\DbPaginator;
+use App\Core\Service\Pagination\PaginatorInterface;
 use App\Users\Dto\User\UserSearchForm;
 use App\Users\Repository\UserRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -37,13 +38,13 @@ final class UserListingCase
      * @param UserSearchForm $form Форма поиска
      * @param int $page Номер страницы
      * @param int $pageSize Количество записей на страницу
-     * @return Paginator
+     * @return PaginatorInterface
      * @throws ServiceException
      */
-    public function listingWithPaginate(UserSearchForm $form, int $page = 1, int $pageSize = 30): Paginator
+    public function listingWithPaginate(UserSearchForm $form, int $page = 1, int $pageSize = 30): PaginatorInterface
     {
         try {
-            return (new Paginator($this->buildQuery($form), $pageSize))->paginate($page);
+            return (new DbPaginator($this->buildQuery($form)))->paginate($page, $pageSize);
         } catch (\Exception $e) {
             throw new ServiceException($e->getMessage());
         }
