@@ -6,9 +6,11 @@ use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
 use App\Questions\Entity\Question\Question;
 use App\Questions\Entity\Question\QuestionInterface;
+use App\Questions\Event\Question\QuestionCreatedEvent;
 use App\Questions\Service\SlugGenerate\SlugGenerateInterface;
 use App\Questions\UseCase\Category\CategoryFindCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -47,6 +49,11 @@ final class QuestionCreateCase
     private SlugGenerateInterface $slugGenerate;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param CategoryFindCase $categoryFindCase Category Find Case
@@ -55,6 +62,7 @@ final class QuestionCreateCase
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $questionsQuestionStatusStateMachine Workflow Interface
      * @param SlugGenerateInterface $slugGenerate Slug Generate
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
@@ -65,6 +73,7 @@ final class QuestionCreateCase
         EntityManagerInterface $entityManager,
         WorkflowInterface $questionsQuestionStatusStateMachine,
         SlugGenerateInterface $slugGenerate,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->categoryFindCase = $categoryFindCase;
@@ -73,6 +82,7 @@ final class QuestionCreateCase
         $this->entityManager = $entityManager;
         $this->questionStatusWorkflow = $questionsQuestionStatusStateMachine;
         $this->slugGenerate = $slugGenerate;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -98,6 +108,9 @@ final class QuestionCreateCase
             // save to DB
             $this->entityManager->persist($question);
             $this->entityManager->flush();
+
+            // created event
+            $this->eventDispatcher->dispatch(new QuestionCreatedEvent($question), QuestionCreatedEvent::NAME);
 
             // publish
             $this->questionSwitchStatusCase->publish($question->getId());

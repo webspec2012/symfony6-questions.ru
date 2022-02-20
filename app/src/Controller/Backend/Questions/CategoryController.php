@@ -138,14 +138,12 @@ final class CategoryController extends AppController
      *
      * @param int $id ID категории
      * @param CategoryFindCase $categoryFindCase Category Find Case
-     * @param QuestionFindCase $questionFindCase Question Find Case
      *
      * @return Response
      */
     public function view(
         int $id,
         CategoryFindCase $categoryFindCase,
-        QuestionFindCase $questionFindCase,
     ): Response
     {
         try {
@@ -154,10 +152,7 @@ final class CategoryController extends AppController
             throw new NotFoundHttpException($e->getMessage());
         }
 
-        $totalQuestions = $questionFindCase->countQuestionsByCategory($id, null);
-        $publishedQuestions = $questionFindCase->countQuestionsByCategory($id, QuestionInterface::STATUS_PUBLISHED);
-
-        return $this->render('questions/category/view', compact('category', 'totalQuestions', 'publishedQuestions'));
+        return $this->render('questions/category/view', compact('category'));
     }
 
     /**

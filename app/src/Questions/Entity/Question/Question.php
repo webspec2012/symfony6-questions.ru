@@ -95,6 +95,14 @@ class Question implements QuestionInterface
      *     nullable=false
      * )
      */
+    private int $total_answers = 0;
+
+    /**
+     * @ORM\Column(
+     *     type="integer",
+     *     nullable=false
+     * )
+     */
     private int $total_published_answers = 0;
 
     /**
@@ -171,13 +179,34 @@ class Question implements QuestionInterface
     /**
      * @inheritDoc
      */
+    public function getTotalAnswers(): int
+    {
+        return $this->total_answers;
+    }
+
+    /**
+     * Установить Общее количество ответов
+     *
+     * @param int $count Количество
+     * @return static
+     */
+    public function setTotalAnswers(int $count): static
+    {
+        $this->total_answers = $count;
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
     public function getTotalPublishedAnswers(): int
     {
         return $this->total_published_answers;
     }
 
     /**
-     * Установить Количество опубликованных вопросов
+     * Установить Количество опубликованных ответов
      *
      * @param int $count Количество
      * @return static

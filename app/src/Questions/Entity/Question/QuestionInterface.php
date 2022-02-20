@@ -61,6 +61,11 @@ interface QuestionInterface
     public function getHref(): string;
 
     /**
+     * @return int Общее количество ответов
+     */
+    public function getTotalAnswers(): int;
+
+    /**
      * @return int Количество опубликованных ответов
      */
     public function getTotalPublishedAnswers(): int;

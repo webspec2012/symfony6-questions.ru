@@ -1,6 +1,8 @@
 <?php
 namespace App\Core\EventSubscriber\Traits;
 
+use App\Core\Entity\Traits\BlameableEntityTrait;
+use App\Users\Entity\UserInterface;
 use Doctrine\ORM\Events;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -78,7 +80,12 @@ final class BlameableEntityTraitSubscriber implements EventSubscriberInterface
             return false;
         }
 
-        $entity->updatedBlameables($this->security->getUser());
+        /* @var UserInterface|null $user */
+        $user = $this->security->getUser();
+
+        /* @var BlameableEntityTrait $entity */
+        $entity->updatedBlameables($user);
+
         return true;
     }
 }

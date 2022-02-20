@@ -6,8 +6,10 @@ use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
 use App\Questions\Entity\Answer\Answer;
 use App\Questions\Entity\Answer\AnswerInterface;
+use App\Questions\Event\Answer\AnswerCreatedEvent;
 use App\Questions\UseCase\Question\QuestionFindCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\EventDispatcher\EventDispatcherInterface;
 use Symfony\Component\Workflow\WorkflowInterface;
 
 /**
@@ -41,6 +43,11 @@ final class AnswerCreateCase
     private WorkflowInterface $answerStatusWorkflow;
 
     /**
+     * @var EventDispatcherInterface Event Dispatcher
+     */
+    private EventDispatcherInterface $eventDispatcher;
+
+    /**
      * Конструктор сервиса
      *
      * @param QuestionFindCase $questionFindCase Question Find Case
@@ -48,6 +55,7 @@ final class AnswerCreateCase
      * @param AnswerSwitchStatusCase $answerSwitchStatusCase Answer Switch Status Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $questionsAnswerStatusStateMachine Workflow Interface
+     * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
      */
@@ -57,6 +65,7 @@ final class AnswerCreateCase
         AnswerSwitchStatusCase $answerSwitchStatusCase,
         EntityManagerInterface $entityManager,
         WorkflowInterface $questionsAnswerStatusStateMachine,
+        EventDispatcherInterface $eventDispatcher,
     )
     {
         $this->questionFindCase = $questionFindCase;
@@ -64,6 +73,7 @@ final class AnswerCreateCase
         $this->answerSwitchStatusCase = $answerSwitchStatusCase;
         $this->entityManager = $entityManager;
         $this->answerStatusWorkflow = $questionsAnswerStatusStateMachine;
+        $this->eventDispatcher = $eventDispatcher;
     }
 
     /**
@@ -86,6 +96,9 @@ final class AnswerCreateCase
         try {
             $this->entityManager->persist($answer);
             $this->entityManager->flush();
+
+            // created event
+            $this->eventDispatcher->dispatch(new AnswerCreatedEvent($answer), AnswerCreatedEvent::NAME);
 
             // publish
             $this->answerSwitchStatusCase->publish($answer->getId());

@@ -2,7 +2,6 @@
 namespace App\Questions\EventSubscriber;
 
 use App\Questions\Entity\Category\CategoryInterface;
-use App\Questions\UseCase\Question\QuestionFindCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\Workflow\Event\GuardEvent;
 
@@ -11,23 +10,6 @@ use Symfony\Component\Workflow\Event\GuardEvent;
  */
 class CategoryStatusWorkflowSubscriber implements EventSubscriberInterface
 {
-    /**
-     * @var QuestionFindCase Question Find Case
-     */
-    private QuestionFindCase $questionFindCase;
-
-    /**
-     * Конструктор
-     *
-     * @param QuestionFindCase $questionFindCase Question Find Case
-     */
-    public function __construct(
-        QuestionFindCase $questionFindCase
-    )
-    {
-        $this->questionFindCase = $questionFindCase;
-    }
-
     /**
      * Проверка разрешения на действие "delete".
      * Запрещено удаление категории, если в ней есть вопросы.
@@ -38,7 +20,7 @@ class CategoryStatusWorkflowSubscriber implements EventSubscriberInterface
     {
         /* @var CategoryInterface $category */
         $category = $event->getSubject();
-        if ($this->questionFindCase->countQuestionsByCategory($category->getId())) {
+        if ($category->getTotalQuestions() > 0) {
             $event->setBlocked(true, "Невозможно удалить категорию, т.к. в ней содержатся вопросы.");
         }
     }

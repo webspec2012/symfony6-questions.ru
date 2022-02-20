@@ -29,7 +29,13 @@
     <div class="card-footer">
         <div class="row">
             <div class="col-md-4">
-                Ответов: {{ question.totalPublishedAnswers }}
+                Ответов:
+
+                {% if question.totalAnswers == question.totalPublishedAnswers %}
+                    {{ question.totalPublishedAnswers }}
+                {% else %}
+                    {{ question.totalPublishedAnswers }} / {{ question.totalAnswers }}
+                {% endif %}
             </div>
 
             <div class="col-md-4">

@@ -104,23 +104,12 @@
                 </td>
             </tr>
 
-            {% if totalAnswers %}
-                <tr>
-                    <th scope="row">Всего ответов</th>
-                    <td>
-                        {{ totalAnswers }}
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if publishedAnswers %}
-                <tr>
-                    <th scope="row">Из низ опубликовано</th>
-                    <td>
-                        {{ publishedAnswers }} ({{ question.totalPublishedAnswers }})
-                    </td>
-                </tr>
-            {% endif %}
+            <tr>
+                <th scope="row">Количество ответов</th>
+                <td>
+                    {{ question.totalPublishedAnswers }} / {{ question.totalAnswers }}
+                </td>
+            </tr>
 
             {% include '@backend/components/_detail_view_created_log.html.twig' with {'entity': question} only %}
             </tbody>

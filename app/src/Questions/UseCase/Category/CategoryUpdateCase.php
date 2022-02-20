@@ -6,6 +6,8 @@ use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
 use App\Questions\Dto\Category\CategoryUpdateForm;
+use App\Questions\Entity\Question\QuestionInterface;
+use App\Questions\Repository\QuestionRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 
@@ -18,6 +20,11 @@ final class CategoryUpdateCase
      * @var CategoryFindCase Category Find Case
      */
     private CategoryFindCase $categoryFindCase;
+
+    /**
+     * @var QuestionRepository Question Repository
+     */
+    private QuestionRepository $questionRepository;
 
     /**
      * @var EntityManagerInterface Entity Manager
@@ -33,6 +40,7 @@ final class CategoryUpdateCase
      * Конструктор сервиса
      *
      * @param CategoryFindCase $categoryFindCase Category Find Case
+     * @param QuestionRepository $questionRepository Question Repository
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param LoggerInterface $logger Logger
      *
@@ -40,11 +48,13 @@ final class CategoryUpdateCase
      */
     public function __construct(
         CategoryFindCase $categoryFindCase,
+        QuestionRepository $questionRepository,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger,
     )
     {
         $this->categoryFindCase = $categoryFindCase;
+        $this->questionRepository = $questionRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -86,17 +96,21 @@ final class CategoryUpdateCase
     }
 
     /**
-     * Обновить количество опубликованных вопросов у категории
+     * Обновить счётчики категории
      *
      * @param int $categoryId ID категории
-     * @param int $count Количество
      * @return bool Результат выполнения операции
      * @throws NotFoundEntityException
      */
-    public function updateTotalPublishedQuestions(int $categoryId, int $count): bool
+    public function updateCounters(int $categoryId): bool
     {
         $category = $this->categoryFindCase->getCategoryById($categoryId, false);
-        $category->setTotalPublishedQuestions($count);
+
+        // totalQuestions
+        $category->setTotalQuestions($this->questionRepository->countQuestionsByCategory($categoryId, null));
+
+        // totalPublishedQuestions
+        $category->setTotalPublishedQuestions($this->questionRepository->countQuestionsByCategory($categoryId, QuestionInterface::STATUS_PUBLISHED));
 
         try {
             $this->entityManager->flush();

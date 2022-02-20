@@ -42,7 +42,7 @@
                     <td>{{ category.title }}</td>
                     <td>{{ category.slug }}</td>
                     <td>{{ category.href }}</td>
-                    <td>{{ category.totalPublishedQuestions }}</td>
+                    <td>{{ category.totalPublishedQuestions }} / {{ category.totalQuestions }}</td>
                     <td>{{ tools.statusLabel(category.status, category.statusAsText) }}</td>
                     <td>
                         <a class="btn btn-success btn-sm" href="{{ path('backend_questions_category_view', {'id': category.id}) }}" title="Просмотр">

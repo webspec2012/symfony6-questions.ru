@@ -83,6 +83,14 @@ class Category implements CategoryInterface
      *     nullable=false
      * )
      */
+    private int $total_questions = 0;
+
+    /**
+     * @ORM\Column(
+     *     type="integer",
+     *     nullable=false
+     * )
+     */
     private int $total_published_questions = 0;
 
     /**
@@ -131,6 +139,27 @@ class Category implements CategoryInterface
     public function setDescription(string $description): static
     {
         $this->description = trim(strip_tags($description));
+
+        return $this;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getTotalQuestions(): int
+    {
+        return $this->total_questions;
+    }
+
+    /**
+     * Установить Общее количество вопросов
+     *
+     * @param int $count Количество
+     * @return static
+     */
+    public function setTotalQuestions(int $count): static
+    {
+        $this->total_questions = $count;
 
         return $this;
     }

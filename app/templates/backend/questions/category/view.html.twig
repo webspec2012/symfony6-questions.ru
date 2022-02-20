@@ -86,23 +86,12 @@
                 </td>
             </tr>
 
-            {% if totalQuestions %}
-                <tr>
-                    <th scope="row">Всего вопросов</th>
-                    <td>
-                        {{ totalQuestions }}
-                    </td>
-                </tr>
-            {% endif %}
-
-            {% if publishedQuestions %}
-                <tr>
-                    <th scope="row">Из низ опубликовано</th>
-                    <td>
-                        {{ publishedQuestions }} ({{ category.totalPublishedQuestions }})
-                    </td>
-                </tr>
-            {% endif %}
+            <tr>
+                <th scope="row">Количество вопросов</th>
+                <td>
+                    {{ category.totalPublishedQuestions }} / {{ category.totalQuestions }}
+                </td>
+            </tr>
 
             <tr>
                 <th scope="row">Описание</th>

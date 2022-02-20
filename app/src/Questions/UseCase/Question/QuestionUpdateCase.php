@@ -6,6 +6,8 @@ use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Core\Service\ValidateDtoService;
 use App\Questions\Dto\Question\QuestionUpdateForm;
+use App\Questions\Entity\Answer\AnswerInterface;
+use App\Questions\Repository\AnswerRepository;
 use App\Questions\UseCase\Category\CategoryFindCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -26,6 +28,11 @@ final class QuestionUpdateCase
     private QuestionFindCase $questionFindCase;
 
     /**
+     * @var AnswerRepository Answer Repository
+     */
+    private AnswerRepository $answerRepository;
+
+    /**
      * @var EntityManagerInterface Entity Manager
      */
     private EntityManagerInterface $entityManager;
@@ -40,6 +47,7 @@ final class QuestionUpdateCase
      *
      * @param CategoryFindCase $categoryFindCase Category Find Case
      * @param QuestionFindCase $questionFindCase Question Find Case
+     * @param AnswerRepository $answerRepository Answer Repository
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param LoggerInterface $logger Logger
      *
@@ -48,12 +56,14 @@ final class QuestionUpdateCase
     public function __construct(
         CategoryFindCase $categoryFindCase,
         QuestionFindCase $questionFindCase,
+        AnswerRepository $answerRepository,
         EntityManagerInterface $entityManager,
         LoggerInterface $logger,
     )
     {
         $this->categoryFindCase = $categoryFindCase;
         $this->questionFindCase = $questionFindCase;
+        $this->answerRepository = $answerRepository;
         $this->entityManager = $entityManager;
         $this->logger = $logger;
     }
@@ -86,17 +96,21 @@ final class QuestionUpdateCase
     }
 
     /**
-     * Обновить количество опубликованных ответов у вопроса
+     * Обновить счётчики вопроса
      *
      * @param int $questionId ID вопроса
-     * @param int $count Количество
      * @return bool Результат выполнения операции
      * @throws NotFoundEntityException
      */
-    public function updateTotalPublishedAnswers(int $questionId, int $count): bool
+    public function updateCounters(int $questionId): bool
     {
         $question = $this->questionFindCase->getQuestionById($questionId, false);
-        $question->setTotalPublishedAnswers($count);
+
+        // totalAnswers
+        $question->setTotalAnswers($this->answerRepository->countAnswersByQuestion($questionId, null));
+
+        // totalPublishedAnswers
+        $question->setTotalPublishedAnswers($this->answerRepository->countAnswersByQuestion($questionId, AnswerInterface::STATUS_PUBLISHED));
 
         try {
             $this->entityManager->flush();

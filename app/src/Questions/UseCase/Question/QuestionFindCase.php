@@ -44,14 +44,4 @@ final class QuestionFindCase
 
         return $question;
     }
-
-    /**
-     * @param int $categoryId ID категории
-     * @param string|null $status Статус вопросов
-     * @return int Количество вопросов в указанной категории и статусе
-     */
-    public function countQuestionsByCategory(int $categoryId, ?string $status = null): int
-    {
-        return $this->questionRepository->countQuestionsByCategory($categoryId, $status);
-    }
 }

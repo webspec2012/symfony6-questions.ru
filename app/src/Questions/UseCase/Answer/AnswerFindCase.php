@@ -44,14 +44,4 @@ final class AnswerFindCase
 
         return $answer;
     }
-
-    /**
-     * @param int $questionId ID вопроса
-     * @param string|null $status Статус ответов
-     * @return int Количество ответов в указанном вопросе и статусе
-     */
-    public function countAnswersByQuestion(int $questionId, ?string $status = null): int
-    {
-        return $this->answerRepository->countAnswersByQuestion($questionId, $status);
-    }
 }

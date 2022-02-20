@@ -1,6 +1,7 @@
 <?php
 namespace App\Core\EventSubscriber\Traits;
 
+use App\Core\Entity\Traits\TimestampableEntityTrait;
 use Doctrine\ORM\Events;
 use Doctrine\Bundle\DoctrineBundle\EventSubscriber\EventSubscriberInterface;
 use Doctrine\ORM\Event\LifecycleEventArgs;
@@ -60,7 +61,9 @@ final class TimestampableEntityTraitSubscriber implements EventSubscriberInterfa
             return false;
         }
 
+        /* @var TimestampableEntityTrait $entity */
         $entity->updatedTimestamps();
+
         return true;
     }
 }

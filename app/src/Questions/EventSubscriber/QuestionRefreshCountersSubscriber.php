@@ -2,10 +2,9 @@
 namespace App\Questions\EventSubscriber;
 
 use App\Core\Exception\NotFoundEntityException;
-use App\Questions\Entity\Answer\AnswerInterface;
+use App\Questions\Event\Answer\AnswerCreatedEvent;
 use App\Questions\Event\Answer\AnswerStatusChangedEvent;
 use App\Questions\Event\Answer\BaseAnswerEvent;
-use App\Questions\UseCase\Answer\AnswerFindCase;
 use App\Questions\UseCase\Question\QuestionUpdateCase;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 
@@ -15,11 +14,6 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 class QuestionRefreshCountersSubscriber implements EventSubscriberInterface
 {
     /**
-     * @var AnswerFindCase Answer Find Case
-     */
-    private AnswerFindCase $answerFindCase;
-
-    /**
      * @var QuestionUpdateCase Question Update Case
      */
     private QuestionUpdateCase $questionUpdateCase;
@@ -27,15 +21,12 @@ class QuestionRefreshCountersSubscriber implements EventSubscriberInterface
     /**
      * Конструктор
      *
-     * @param AnswerFindCase $answerFindCase Answer Find Case
      * @param QuestionUpdateCase $questionUpdateCase Question Update Case
      */
     public function __construct(
-        AnswerFindCase $answerFindCase,
         QuestionUpdateCase $questionUpdateCase,
     )
     {
-        $this->answerFindCase = $answerFindCase;
         $this->questionUpdateCase = $questionUpdateCase;
     }
 
@@ -45,6 +36,7 @@ class QuestionRefreshCountersSubscriber implements EventSubscriberInterface
     public static function getSubscribedEvents(): array
     {
         return [
+            AnswerCreatedEvent::NAME => ['refreshCounters'],
             AnswerStatusChangedEvent::NAME => ['refreshCounters'],
         ];
     }
@@ -57,8 +49,6 @@ class QuestionRefreshCountersSubscriber implements EventSubscriberInterface
     public function refreshCounters(BaseAnswerEvent $event): void
     {
         $question = $event->getAnswer()->getQuestion();
-
-        $totalPublishedAnswers = $this->answerFindCase->countAnswersByQuestion($question->getId(), AnswerInterface::STATUS_PUBLISHED);
-        $this->questionUpdateCase->updateTotalPublishedAnswers($question->getId(), $totalPublishedAnswers);
+        $this->questionUpdateCase->updateCounters($question->getId());
     }
 }

@@ -8,7 +8,6 @@ use App\Core\Exception\ServiceException;
 use App\Questions\Dto\Answer\AnswerCreateForm;
 use App\Questions\Dto\Answer\AnswerSearchForm;
 use App\Questions\Dto\Question\QuestionUpdateForm;
-use App\Questions\Entity\Answer\AnswerInterface;
 use App\Questions\Form\Answer\AnswerCreateFormType;
 use App\Questions\Form\Answer\AnswerSearchFormType;
 use App\Questions\Form\Question\QuestionCreateFormType;
@@ -166,9 +165,6 @@ final class QuestionController extends AppController
         } catch (NotFoundEntityException $e) {
             throw new NotFoundHttpException($e->getMessage());
         }
-
-        $totalAnswers = $answerFindCase->countAnswersByQuestion($id, null);
-        $publishedAnswers = $answerFindCase->countAnswersByQuestion($id, AnswerInterface::STATUS_PUBLISHED);
         // =====
 
         // for answers listing
@@ -217,8 +213,6 @@ final class QuestionController extends AppController
         return $this->render('questions/question/view', [
             // for view
             'question' => $question,
-            'totalAnswers' => $totalAnswers,
-            'publishedAnswers' => $publishedAnswers,
 
             // for answers listing
             'filterForm' => $listingForm->createView(),

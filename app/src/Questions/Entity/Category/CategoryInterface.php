@@ -52,6 +52,11 @@ interface CategoryInterface
     public function getDescription(): string;
 
     /**
+     * @return int Общее количество вопросов
+     */
+    public function getTotalQuestions(): int;
+
+    /**
      * @return int Количество опубликованных вопросов
      */
     public function getTotalPublishedQuestions(): int;
