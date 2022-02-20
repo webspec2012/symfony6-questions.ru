@@ -3,6 +3,11 @@
 {% set menuType = menuType|default('group') %}
 {% set menuItems = [
     {
+        'label': '<i class="fa-solid fa-dashboard"></i> Dashboard',
+        'route': 'backend_questions_main_dashboard',
+        'visible': true,
+        'active': 'backend_questions_main_dashboard' == currentRoute,
+    }, {
         'label': '<i class="fa-solid fa-tag"></i> Категории',
         'route': 'backend_questions_category_list',
         'visible': true,

@@ -65,7 +65,9 @@ final class CreatedByIpEntityTraitSubscriber implements EventSubscriberInterface
         }
 
         /* @var CreatedByIpEntityTrait $entity */
-        $entity->setCreatedByIp($this->request->getClientIp());
+        if ($this->request?->getClientIp()) {
+            $entity->setCreatedByIp((string) $this->request->getClientIp());
+        }
 
         return true;
     }
