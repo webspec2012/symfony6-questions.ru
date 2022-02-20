@@ -4,9 +4,6 @@
 /var/
 /vendor/
 /public/media
-/public/psalm-xml.xml
-/public/psalm-html.html
 
 .phpunit.result.cache
 /phpunit.xml
-

@@ -83,9 +83,9 @@ jobs:
             - name: Run Tests
               run: |
                 cd app/
-                php bin/console doctrine:migrations:migrate -n
-                php bin/console doctrine:fixtures:load -n
-                php bin/phpunit --testdox --colors=always
+                composer migrate
+                composer fixtures
+                composer tests
               env:
                 APP_ENV: test
                 DATABASE_URL: mysql://root:root_password@127.0.0.1:${{ job.services.mysql.ports['3306'] }}/project_database?serverVersion=${{ matrix.mysql }}
