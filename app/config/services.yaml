@@ -102,5 +102,6 @@ services:
             - { name: doctrine.orm.entity_listener, event: preUpdate, entity: App\Questions\Entity\Category\Category, lazy: true }
     App\Questions\EventListener\QuestionListener:
         tags:
+            - { name: doctrine.orm.entity_listener, event: prePersist, entity: App\Questions\Entity\Question\Question, lazy: true }
             - { name: doctrine.orm.entity_listener, event: postPersist, entity: App\Questions\Entity\Question\Question, lazy: true }
             - { name: doctrine.orm.entity_listener, event: preUpdate, entity: App\Questions\Entity\Question\Question, lazy: true }

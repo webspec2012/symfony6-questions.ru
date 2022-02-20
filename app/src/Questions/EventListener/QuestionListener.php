@@ -1,8 +1,10 @@
 <?php
 namespace App\Questions\EventListener;
 
+use App\Core\Exception\ServiceException;
 use App\Core\Service\FrontendUrlGenerator;
 use App\Questions\Entity\Question\Question;
+use App\Questions\Service\SlugGenerate\SlugGenerateInterface;
 use Doctrine\Persistence\Event\LifecycleEventArgs;
 
 /**
@@ -16,19 +18,39 @@ class QuestionListener
     private FrontendUrlGenerator $urlGenerator;
 
     /**
+     * @var SlugGenerateInterface Slug Generate
+     */
+    private SlugGenerateInterface $slugGenerate;
+
+    /**
      * Конструктор
      *
      * @param FrontendUrlGenerator $urlGenerator Url Generator
+     * @param SlugGenerateInterface $slugGenerate Slug Generate
      */
     public function __construct(
         FrontendUrlGenerator $urlGenerator,
+        SlugGenerateInterface $slugGenerate,
     )
     {
         $this->urlGenerator = $urlGenerator;
+        $this->slugGenerate = $slugGenerate;
     }
 
     /**
-     * Событие, которое вызвано после создания категории.
+     * Событие, которое вызвано до создания вопроса.
+     *
+     * @param Question $question
+     * @param LifecycleEventArgs $eventArgs
+     * @throws ServiceException
+     */
+    public function prePersist(Question $question, LifecycleEventArgs $eventArgs): void
+    {
+        $question->setSlug($this->slugGenerate->generate($question->getTitle()));
+    }
+
+    /**
+     * Событие, которое вызвано после создания вопроса.
      *
      * @param Question $question
      * @param LifecycleEventArgs $eventArgs
@@ -41,7 +63,7 @@ class QuestionListener
     }
 
     /**
-     * Событие, которое вызвано до обновления категории.
+     * Событие, которое вызвано до обновления вопроса.
      *
      * @param Question $question
      * @param LifecycleEventArgs $eventArgs

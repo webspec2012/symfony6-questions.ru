@@ -7,7 +7,6 @@ use App\Core\Service\ValidateDtoService;
 use App\Questions\Entity\Question\Question;
 use App\Questions\Entity\Question\QuestionInterface;
 use App\Questions\Event\Question\QuestionCreatedEvent;
-use App\Questions\Service\SlugGenerate\SlugGenerateInterface;
 use App\Questions\UseCase\Category\CategoryFindCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\EventDispatcher\EventDispatcherInterface;
@@ -44,11 +43,6 @@ final class QuestionCreateCase
     private WorkflowInterface $questionStatusWorkflow;
 
     /**
-     * @var SlugGenerateInterface Slug Generate
-     */
-    private SlugGenerateInterface $slugGenerate;
-
-    /**
      * @var EventDispatcherInterface Event Dispatcher
      */
     private EventDispatcherInterface $eventDispatcher;
@@ -61,7 +55,6 @@ final class QuestionCreateCase
      * @param QuestionSwitchStatusCase $questionSwitchStatusCase Question Switch Status Case
      * @param EntityManagerInterface $entityManager Entity Manager
      * @param WorkflowInterface $questionsQuestionStatusStateMachine Workflow Interface
-     * @param SlugGenerateInterface $slugGenerate Slug Generate
      * @param EventDispatcherInterface $eventDispatcher Event Dispatcher
      *
      * @return void
@@ -72,7 +65,6 @@ final class QuestionCreateCase
         QuestionSwitchStatusCase $questionSwitchStatusCase,
         EntityManagerInterface $entityManager,
         WorkflowInterface $questionsQuestionStatusStateMachine,
-        SlugGenerateInterface $slugGenerate,
         EventDispatcherInterface $eventDispatcher,
     )
     {
@@ -81,7 +73,6 @@ final class QuestionCreateCase
         $this->questionSwitchStatusCase = $questionSwitchStatusCase;
         $this->entityManager = $entityManager;
         $this->questionStatusWorkflow = $questionsQuestionStatusStateMachine;
-        $this->slugGenerate = $slugGenerate;
         $this->eventDispatcher = $eventDispatcher;
     }
 
@@ -100,7 +91,6 @@ final class QuestionCreateCase
         $question->setCategory($this->categoryFindCase->getCategoryById($form->category));
         $question->setTitle($form->title);
         $question->setText((string) $form->text);
-        $question->setSlug($this->slugGenerate->generate($form->title));
         $question->setStatus(QuestionInterface::STATUS_UNPUBLISHED);
         $this->questionStatusWorkflow->getMarking($question);
 
