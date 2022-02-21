@@ -5,6 +5,7 @@ use App\Controller\Backend\AppController;
 use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
+use App\Questions\Dto\Answer\AnswerSearchForm;
 use App\Questions\Dto\Answer\AnswerUpdateForm;
 use App\Questions\Form\Answer\AnswerSearchFormType;
 use App\Questions\Form\Answer\AnswerUpdateFormType;
@@ -77,8 +78,9 @@ final class AnswerController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
+            $formData = $this->formLoadData($form->getData(), AnswerSearchForm::class);
             $page = (int) $request->query->get('page', 1);
-            $paginator = $answerListingCase->listingWithPaginate($form->getData(), $page);
+            $paginator = $answerListingCase->listingWithPaginate($formData, $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
             $paginator = null;
@@ -147,7 +149,8 @@ final class AnswerController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$answerUpdateCase->update($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), AnswerUpdateForm::class);
+                if (!$answerUpdateCase->update($formData)) {
                     throw new ServiceException("Ошибка в процессе обновления ответа. Попробуйте позже.");
                 }
 

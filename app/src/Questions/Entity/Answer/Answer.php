@@ -34,7 +34,7 @@ class Answer implements AnswerInterface
     use StatusesEntityTrait;
 
     /**
-     * @var array Список статусов
+     * @var array<string, string> Список статусов
      */
     public static array $statusList = [
         self::STATUS_PUBLISHED => 'PUBLISHED',

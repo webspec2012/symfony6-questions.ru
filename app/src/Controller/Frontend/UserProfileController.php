@@ -97,7 +97,8 @@ final class UserProfileController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$userUpdateCase->updateProfile($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), UserProfileUpdateForm::class);
+                if (!$userUpdateCase->updateProfile($formData)) {
                     throw new ServiceException("Ошибка при обновлении профиля. Попробуйте позже.");
                 }
 
@@ -148,7 +149,8 @@ final class UserProfileController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$userChangePasswordCase->changePassword($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), UserChangePasswordForm::class);
+                if (!$userChangePasswordCase->changePassword($formData)) {
                     throw new ServiceException("Ошибка при изменении пароля. Попробуйте позже.");
                 }
 

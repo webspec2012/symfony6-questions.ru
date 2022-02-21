@@ -4,6 +4,7 @@ namespace App\Controller\Frontend;
 use App\Core\Exception\AppException;
 use App\Core\Exception\ServiceException;
 use App\Core\Security\FrontendLoginFormAuthenticator;
+use App\Users\Dto\User\UserRegistrationForm;
 use App\Users\Form\User\UserRegistrationFormType;
 use App\Users\Form\User\UserRestorePasswordRequestFormType;
 use App\Users\UseCase\User\UserEmailVerificationCase;
@@ -81,7 +82,8 @@ final class UserController extends AppController
                 }
 
                 // Регистрация
-                $user = $userRegistrationCase->registration($form->getData());
+                $formData = $this->formLoadData($form->getData(), UserRegistrationForm::class);
+                $user = $userRegistrationCase->registration($formData);
 
                 // Авторизация
                 $userAuthenticator->authenticateUser($user, $loginFormAuthenticator, $request);
@@ -162,7 +164,7 @@ final class UserController extends AppController
                     throw new ServiceException("Превышен лимит на количество запросов восстановления пароля. Попробуйте позже.");
                 }
 
-                $user = $userFindCase->getUserByEmail($form->getData()['email'] ?? '');
+                $user = $userFindCase->getUserByEmail((string) ($form->getData()['email'] ?? ''));
                 if (!$userPasswordRestoreCase->sendEmail($user->getId())) {
                     throw new ServiceException("Ошибка при запросе восстановления пароля. Попробуйте позже.");
                 }

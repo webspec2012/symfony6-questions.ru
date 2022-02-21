@@ -44,7 +44,7 @@ final class SimplePasswordGenerate implements PasswordGenerateInterface
             $characterListLength = mb_strlen(SimplePasswordGenerate::$characters, '8bit') - 1;
 
             $password = '';
-            foreach(range(1, $length) as $i){
+            foreach(range(1, $length) as $_){
                 $password .= SimplePasswordGenerate::$characters[random_int(0, $characterListLength)];
             }
 

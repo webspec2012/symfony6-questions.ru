@@ -8,6 +8,8 @@ use Faker\Generator;
 
 /**
  * Базовый класс для Fixtures ORM
+ *
+ * @psalm-suppress MixedAssignment
  */
 abstract class BaseFixture extends Fixture
 {
@@ -26,7 +28,7 @@ abstract class BaseFixture extends Fixture
      */
     public function load(ObjectManager $manager): void
     {
-        $this->faker = Factory::create('ru_RU');
         $this->manager = $manager;
+        $this->faker = Factory::create('ru_RU');
     }
 }

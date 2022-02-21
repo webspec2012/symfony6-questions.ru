@@ -6,6 +6,7 @@ use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Users\Dto\User\UserCreateForm;
+use App\Users\Dto\User\UserSearchForm;
 use App\Users\Dto\User\UserUpdateForm;
 use App\Users\Form\User\UserCreateFormType;
 use App\Users\Form\User\UserSearchFormType;
@@ -87,7 +88,8 @@ final class UserController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $user = $userCreateCase->create($form->getData());
+                $formData = $this->formLoadData($form->getData(), UserCreateForm::class);
+                $user = $userCreateCase->create($formData);
                 $this->addFlash('success', sprintf("Пользователь успешно создан. Пароль: '%s'", $formData->password));
 
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $user->getId()]);
@@ -124,8 +126,9 @@ final class UserController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
+            $formData = $this->formLoadData($form->getData(), UserSearchForm::class);
             $page = (int) $request->query->get('page', 1);
-            $paginator = $userListingCase->listingWithPaginate($form->getData(), $page);
+            $paginator = $userListingCase->listingWithPaginate($formData, $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
             $paginator = null;
@@ -191,7 +194,8 @@ final class UserController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$userUpdateCase->update($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), UserUpdateForm::class);
+                if (!$userUpdateCase->update($formData)) {
                     throw new ServiceException("Ошибка в процессе обновления пользователя. Попробуйте позже.");
                 }
 

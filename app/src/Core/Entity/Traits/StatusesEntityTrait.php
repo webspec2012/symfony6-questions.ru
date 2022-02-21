@@ -55,7 +55,7 @@ trait StatusesEntityTrait
     }
 
     /**
-     * @return array Список возможных статусов
+     * @return array<string, string> Список возможных статусов
      */
     abstract public static function getStatusList(): array;
 }

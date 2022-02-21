@@ -5,6 +5,8 @@ use App\Controller\Backend\AppController;
 use App\Core\Exception\AppException;
 use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
+use App\Questions\Dto\Category\CategoryCreateForm;
+use App\Questions\Dto\Category\CategorySearchForm;
 use App\Questions\Dto\Category\CategoryUpdateForm;
 use App\Questions\Entity\Question\QuestionInterface;
 use App\Questions\Form\Category\CategoryCreateFormType;
@@ -80,7 +82,8 @@ final class CategoryController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $category = $categoryCreateCase->create($form->getData());
+                $formData = $this->formLoadData($form->getData(), CategoryCreateForm::class);
+                $category = $categoryCreateCase->create($formData);
                 $this->addFlash('success', "Категория успешно создана.");
 
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $category->getId()]);
@@ -117,8 +120,9 @@ final class CategoryController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
+            $formData = $this->formLoadData($form->getData(), CategorySearchForm::class);
             $page = (int) $request->query->get('page', 1);
-            $paginator = $categoryListingCase->listingWithPaginate($form->getData(), $page);
+            $paginator = $categoryListingCase->listingWithPaginate($formData, $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
             $paginator = null;
@@ -188,7 +192,8 @@ final class CategoryController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$categoryUpdateCase->update($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), CategoryUpdateForm::class);
+                if (!$categoryUpdateCase->update($formData)) {
                     throw new ServiceException("Ошибка в процессе обновления категории. Попробуйте позже.");
                 }
 

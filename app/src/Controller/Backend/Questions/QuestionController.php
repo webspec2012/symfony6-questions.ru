@@ -7,6 +7,8 @@ use App\Core\Exception\NotFoundEntityException;
 use App\Core\Exception\ServiceException;
 use App\Questions\Dto\Answer\AnswerCreateForm;
 use App\Questions\Dto\Answer\AnswerSearchForm;
+use App\Questions\Dto\Question\QuestionCreateForm;
+use App\Questions\Dto\Question\QuestionSearchForm;
 use App\Questions\Dto\Question\QuestionUpdateForm;
 use App\Questions\Form\Answer\AnswerCreateFormType;
 use App\Questions\Form\Answer\AnswerSearchFormType;
@@ -85,7 +87,8 @@ final class QuestionController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                $question = $questionCreateCase->create($form->getData());
+                $formData = $this->formLoadData($form->getData(), QuestionCreateForm::class);
+                $question = $questionCreateCase->create($formData);
                 $this->addFlash('success', "Вопрос успешно создан.");
 
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $question->getId()]);
@@ -122,8 +125,9 @@ final class QuestionController extends AppController
         $filters = $form->isSubmitted() && $form->isValid() ? (array) $form->getData() : [];
 
         try {
+            $formData = $this->formLoadData($form->getData(), QuestionSearchForm::class);
             $page = (int) $request->query->get('page', 1);
-            $paginator = $questionListingCase->listingWithPaginate($form->getData(), $page);
+            $paginator = $questionListingCase->listingWithPaginate($formData, $page);
         } catch (AppException $e) {
             $this->addFlash('error', $e->getMessage());
             $paginator = null;
@@ -174,8 +178,7 @@ final class QuestionController extends AppController
             $filters = array_merge(compact('id'), (array) $listingForm->getData());
         }
 
-        /* @var AnswerSearchForm $formData */
-        $formData = $listingForm->getData();
+        $formData = $this->formLoadData($listingForm->getData(), AnswerSearchForm::class);
         $formData->question = $question->getId();
         $formData->orderBy = 'u.id_ASC';
 
@@ -196,7 +199,8 @@ final class QuestionController extends AppController
         $createAnswerForm->handleRequest($request);
         if ($createAnswerForm->isSubmitted() && $createAnswerForm->isValid()) {
             try {
-                $answerCreateCase->create($createAnswerForm->getData());
+                $formData = $this->formLoadData($createAnswerForm->getData(), AnswerCreateForm::class);
+                $answerCreateCase->create($formData);
                 $this->addFlash('success', "Ответ успешно добавлен.");
 
                 return $this->redirectToRoute($this->getRoute('view'), ['id' => $id]);
@@ -256,7 +260,8 @@ final class QuestionController extends AppController
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
             try {
-                if (!$questionUpdateCase->update($form->getData())) {
+                $formData = $this->formLoadData($form->getData(), QuestionUpdateForm::class);
+                if (!$questionUpdateCase->update($formData)) {
                     throw new ServiceException("Ошибка в процессе обновления вопроса. Попробуйте позже.");
                 }
 

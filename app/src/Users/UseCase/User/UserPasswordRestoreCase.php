@@ -121,7 +121,7 @@ final class UserPasswordRestoreCase
             throw new ServiceException("Указан невалидный token для восстановления пароля.", $e->getCode(), $e->getPrevious());
         }
 
-        list($tokenString, $tokenTime) = explode('___', $token);
+        list(, $tokenTime) = explode('___', $token);
         if (empty($tokenTime) || $tokenTime < time()) {
             $this->sendEmail($user->getId());
 

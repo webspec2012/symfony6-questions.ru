@@ -34,7 +34,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     use CreatedByIpEntityTrait;
 
     /**
-     * @var array Список статусов
+     * @var array<string, string> Список статусов
      */
     public static array $statusList = [
         self::STATUS_ACTIVE => 'ACTIVE',
@@ -43,7 +43,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     ];
 
     /**
-     * @var array Список ролей
+     * @var array<string, string> Список ролей
      */
     public static array $rolesList = [
         self::ROLE_USER => 'ROLE_USER',
@@ -380,7 +380,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @inheritdocACTIVE
+     * @inheritdoc
      */
     public function getRoles(): array
     {
@@ -397,13 +397,13 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setRoles(array $roles): static
     {
         array_map(function (string $role) {
-            if (!isset(static::getRolesList()[$role])) {
+            if (!isset(self::getRolesList()[$role])) {
                 throw new EntityValidationException(sprintf("Некорректная роль для пользователя: '%s'", $role));
             }
         }, $roles);
 
         if (!in_array(static::ROLE_USER, $roles)) {
-            $roles[] = static::ROLE_USER;
+            $roles[] = self::ROLE_USER;
         }
 
         $this->roles = $roles;
@@ -441,7 +441,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @return string[] Список возможных ролей пользователя
+     * @return array<string, string> Список возможных ролей пользователя
      */
     public static function getRolesList(): array
     {

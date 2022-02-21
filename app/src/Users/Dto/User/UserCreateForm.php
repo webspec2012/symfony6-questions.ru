@@ -57,7 +57,7 @@ final class UserCreateForm  implements DtoInterface
     public bool $is_admin = false;
 
     /**
-     * @var array Роли
+     * @var string[] Роли
      *
      * @Assert\NotBlank()
      * @Assert\All({

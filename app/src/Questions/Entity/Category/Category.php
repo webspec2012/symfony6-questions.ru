@@ -37,7 +37,7 @@ class Category implements CategoryInterface
     use SluggableEntityTrait;
 
     /**
-     * @var array Список статусов
+     * @var array<string, string> Список статусов
      */
     public static array $statusList = [
         self::STATUS_PUBLISHED => 'PUBLISHED',

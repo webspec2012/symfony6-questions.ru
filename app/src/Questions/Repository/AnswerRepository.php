@@ -8,6 +8,8 @@ use Doctrine\Persistence\ManagerRegistry;
 
 /**
  * Repository for Answer Entity
+ *
+ * @method Answer|null findOneBy(array $criteria, array $orderBy = null)
  */
 class AnswerRepository extends ServiceEntityRepository
 {

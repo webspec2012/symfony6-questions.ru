@@ -113,7 +113,7 @@ final class UserEmailVerificationCase
             throw new ServiceException("Указан невалидный token подтверждения e-mail адреса", $e->getCode(), $e->getPrevious());
         }
 
-        list($tokenString, $tokenTime) = explode('___', $token);
+        list(, $tokenTime) = explode('___', $token);
         if (empty($tokenTime) || $tokenTime < time()) {
             $this->sendEmail($user->getId());
 

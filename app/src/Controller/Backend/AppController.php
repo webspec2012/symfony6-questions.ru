@@ -1,7 +1,9 @@
 <?php
 namespace App\Controller\Backend;
 
+use App\Core\Dto\DtoInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormFactoryInterface;
 use Symfony\Component\Form\FormInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Security\Core\Exception\AccessDeniedException;
@@ -40,7 +42,20 @@ abstract class AppController extends AbstractController
      */
     protected function createNamedForm(string $name, string $type, $data = null, array $options = []): FormInterface
     {
-        return $this->container->get('form.factory')->createNamed($name, $type, $data, $options);
+        try {
+            $factory = $this->container->get('form.factory');
+            if (!$factory instanceof FormFactoryInterface) {
+                throw new \LogicException(sprintf("Failed init form.factory for '%s'", $type));
+            }
+
+            return $factory->createNamed($name, $type, $data, $options);
+        } catch (\Throwable $e) {
+            throw new \LogicException(
+                message: $e->getMessage(),
+                code: (int) $e->getCode(),
+                previous: $e->getPrevious()
+            );
+        }
     }
 
     /**
@@ -65,5 +80,25 @@ abstract class AppController extends AbstractController
     protected function getRoute(string $route): string
     {
         return $this->routePrefix.$route;
+    }
+
+    /**
+     * Form Load Data
+     *
+     * @param mixed $object Object
+     * @param string $className ClassName
+     * @return DtoInterface DTO object
+     *
+     * @psalm-template T
+     * @psalm-param class-string<T> $className
+     * @psalm-return T
+     */
+    protected function formLoadData(mixed $object, string $className)
+    {
+        if (!$object instanceof $className) {
+            throw new \LogicException(sprintf("%s Failed load Data for '%s'", __METHOD__, $className));
+        }
+
+        return $object;
     }
 }

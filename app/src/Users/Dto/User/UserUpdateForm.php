@@ -70,7 +70,7 @@ final class UserUpdateForm implements DtoInterface
     public bool $is_admin;
 
     /**
-     * @var array Роли
+     * @var string[] Роли
      *
      * @Assert\NotBlank()
      * @Assert\All({

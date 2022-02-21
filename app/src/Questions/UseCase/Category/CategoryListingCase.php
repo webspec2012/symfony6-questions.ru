@@ -162,10 +162,20 @@ final class CategoryListingCase
      * Iterable to Array
      *
      * @param iterable $iterable
-     * @return array
+     * @return array<int, CategoryInterface> Categories
      */
     private function iterableToArray(iterable $iterable): array
     {
-        return $iterable instanceof \Traversable ? iterator_to_array($iterable) : $iterable;
+        $items = [];
+
+        foreach ($iterable as $iterableItem) {
+            if (!$iterableItem instanceof CategoryInterface) {
+                continue;
+            }
+
+            $items[] = $iterableItem;
+        }
+
+        return $items;
     }
 }

@@ -1,6 +1,7 @@
 <?php
 namespace App\Controller\Frontend;
 
+use App\Core\Dto\DtoInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 
@@ -35,5 +36,25 @@ abstract class AppController extends AbstractController
     protected function redirectToUserProfile(): Response
     {
         return $this->redirectToRoute('frontend_user_profile_index');
+    }
+
+    /**
+     * Form Load Data
+     *
+     * @param mixed $object Object
+     * @param string $className ClassName
+     * @return DtoInterface DTO object
+     *
+     * @psalm-template T
+     * @psalm-param class-string<T> $className
+     * @psalm-return T
+     */
+    protected function formLoadData(mixed $object, string $className)
+    {
+        if (!$object instanceof $className) {
+            throw new \LogicException(sprintf("%s Failed load Data for '%s'", __METHOD__, $className));
+        }
+
+        return $object;
     }
 }

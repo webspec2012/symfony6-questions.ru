@@ -20,6 +20,10 @@ class CategoryStatusWorkflowSubscriber implements EventSubscriberInterface
     {
         /* @var CategoryInterface $category */
         $category = $event->getSubject();
+        if (!$category instanceof CategoryInterface) {
+            throw new \LogicException(sprintf("%s Subject is not instanceof of %s", __METHOD__, CategoryInterface::class));
+        }
+
         if ($category->getTotalQuestions() > 0) {
             $event->setBlocked(true, "Невозможно удалить категорию, т.к. в ней содержатся вопросы.");
         }
